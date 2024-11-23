@@ -75,6 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
 
+
                             } else {
                                 Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
                                 // 进一步打印错误信息
@@ -87,7 +88,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             }
                         }
-
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
                             // 处理错误

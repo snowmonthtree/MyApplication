@@ -77,17 +77,23 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             String data = response.body();
                             // 处理数据
+                            if (data.equals("User not found"))
+                            {
                             runOnUiThread(() -> {
-
-                                if (data!=null)Log.d("test",data);
                                 new AlertDialog.Builder(LoginActivity.this)
-                                        .setTitle("hhaha")
-                                        .setMessage(data)
+                                        .setTitle("错误")
+                                        .setMessage("用户名或密码错误")
                                         .setPositiveButton("确定", (dialog, which) -> {
                                             // 确定按钮的点击事件
                                         })
                                         .show();
                             });
+                        }
+                            else {
+                                Intent intent = new Intent(LoginActivity.this, ParkActivity.class);
+                                startActivity(intent);
+                            }
+
                         }
                         else {
                             Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
