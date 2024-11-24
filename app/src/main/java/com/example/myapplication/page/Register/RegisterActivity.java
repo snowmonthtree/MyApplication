@@ -1,6 +1,4 @@
-package com.example.myapplication;
-
-import static java.security.AccessController.getContext;
+package com.example.myapplication.page.Register;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -16,6 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.myapplication.ApiService;
+import com.example.myapplication.R;
+import com.example.myapplication.RetrofitClient;
+import com.example.myapplication.User;
 
 import java.io.IOException;
 

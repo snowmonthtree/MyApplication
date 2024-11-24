@@ -18,21 +18,21 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".ParkActivity"
+            android:name=".page.Park.ParkActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name=".page.ChangePassword.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".page.Login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".page.Register.RegisterActivity"
             android:exported="false" />
-        <activity android:name=".SwitchUserActivity"
+        <activity android:name=".page.SwitchUser.SwitchUserActivity"
             android:exported="false"/>
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".page.Welcome.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

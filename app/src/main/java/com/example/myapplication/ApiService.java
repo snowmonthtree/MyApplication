@@ -6,7 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-interface ApiService {
+public interface ApiService {
     @GET("api/login")
     Call<String> getData(@Query("param1") String param1, @Query("param2") String param2);
     @POST("api/insert")

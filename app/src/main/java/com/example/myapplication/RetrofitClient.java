@@ -12,10 +12,12 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitClient {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://10.69.255.200:8081/";
+    private static final String BASE_URL = "https://192.168.43.224:8081/";
 
     public static Retrofit getClient(Context context) throws Exception{
         try {
+
+
             if (retrofit == null) {
                 retrofit = new Retrofit.Builder()
                         .baseUrl(BASE_URL)
