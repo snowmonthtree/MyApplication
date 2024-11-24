@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.R;
+import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 
@@ -39,7 +40,7 @@ public class SwitchUserActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(SwitchUserActivity.this, ParkActivity.class);
+                Intent intent=new Intent(SwitchUserActivity.this, BluetoothActivity.class);
                 startActivity(intent);
             }
         });
