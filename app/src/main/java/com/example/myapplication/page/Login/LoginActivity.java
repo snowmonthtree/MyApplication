@@ -15,8 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.ApiService;
+import com.example.myapplication.User;
+import com.example.myapplication.UserViewModel;
 import com.example.myapplication.page.ChangePassword.ChangePasswordActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.R;
@@ -42,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        //跳转注册页面
         TextView register_now = findViewById(R.id.register_now);
         register_now.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        //跳转修改密码页面
         TextView change_password = findViewById(R.id.change_password_1);
         change_password.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,10 +63,12 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        EditText userId = findViewById(R.id.getUsername);
+        EditText userEmail = findViewById(R.id.getEmail);
         EditText passWord = findViewById(R.id.Password);
         Button button = findViewById(R.id.login);
         CheckBox checkBox = findViewById(R.id.checkBox1);
+
+        UserViewModel userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
 
         Retrofit retrofit1;
         try {
@@ -74,19 +81,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ApiService apiService1= finalRetrofit.create(ApiService.class);
-                Call<String> call = apiService1.getData(userId.getText().toString(),passWord.getText().toString());
-                call.enqueue(new Callback<String>() {
+                Call<User> call = apiService1.getUser(userEmail.getText().toString(),passWord.getText().toString());
+                call.enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
+                    public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
-                            String data = response.body();
+                            User data = response.body();
                             // 处理数据
-                            if (data.equals("User not found"))
+                            if (data==null)
                             {
                             runOnUiThread(() -> {
                                 new AlertDialog.Builder(LoginActivity.this)
                                         .setTitle("错误")
-                                        .setMessage("用户名或密码错误")
+                                        .setMessage("邮箱或密码错误")
                                         .setPositiveButton("确定", (dialog, which) -> {
                                             // 确定按钮的点击事件
                                         })
@@ -94,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                             });
                         }
                             else {
+                                userViewModel.setUser(data);
                                 Intent intent = new Intent(LoginActivity.this, ParkActivity.class);
                                 startActivity(intent);
                             }
@@ -113,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<String> call, Throwable t) {
+                    public void onFailure(Call<User> call, Throwable t) {
                         // 处理错误
                         Log.e("NetworkRequest", "onFailure triggered");
                         Log.e("error",t.getClass().getName() + ", Message: " + t.getMessage());

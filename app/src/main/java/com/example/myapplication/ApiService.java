@@ -8,7 +8,9 @@ import retrofit2.http.Query;
 
 public interface ApiService {
     @GET("api/login")
-    Call<String> getData(@Query("param1") String param1, @Query("param2") String param2);
+    Call<User> getUser(@Query("param1") String param1, @Query("param2") String param2);
     @POST("api/insert")
     Call<String> insertUser(@Body User user);
+    @POST("api/changePassword")
+    Call<String> changePassword(@Body User user);
 }
