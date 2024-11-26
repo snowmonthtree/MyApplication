@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:background="@drawable/title_background"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,16 +23,17 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="end"
+            android:gravity="center_vertical|end"
             android:text="@string/creation_center_text_1"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
 
         <ImageView
             android:id="@+id/center_pic1"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_create_top" />
 
@@ -41,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="start"
+            android:gravity="center_vertical|start"
             android:text="@string/center_text_2"
             android:textAlignment="viewStart"
             android:textColor="@color/white"
@@ -65,7 +66,7 @@
         android:id="@+id/button_doodle"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:background="@drawable/button_red"
+        android:background="@color/red"
         android:text="@string/doodle"
         android:textColor="@color/white"
         android:textSize="14sp"
@@ -75,13 +76,13 @@
         app:layout_constraintEnd_toStartOf="@id/button_animation"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="150dp" />
+        android:layout_marginTop="120dp" />
 
     <Button
         android:id="@+id/button_animation"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:background="@drawable/button_orange"
+        android:background="@color/orange"
         android:text="@string/animation"
         android:textColor="@color/white"
         android:textSize="14sp"
@@ -89,13 +90,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/button_doodle"
         app:layout_constraintEnd_toStartOf="@id/button_music"
-        android:layout_marginTop="150dp" />
+        android:layout_marginTop="120dp" />
 
     <Button
         android:id="@+id/button_music"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:background="@drawable/button_yellow"
+        android:background="@color/yellow"
         android:text="@string/music"
         android:textColor="@color/white"
         android:textSize="14sp"
@@ -103,46 +104,46 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/button_animation"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="50dp" />
 
     <Button
         android:id="@+id/button_image"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="48dp"
-        android:background="@drawable/button_green"
+        android:background="@color/green"
         android:drawableTop="@drawable/ic_image"
         android:text="@string/image"
         android:textColor="@color/white"
         android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="@id/button_animation"
         app:layout_constraintStart_toEndOf="@id/button_photo"
-        app:layout_constraintTop_toBottomOf="@id/button_music" />
+        app:layout_constraintEnd_toStartOf="@id/button_text"
+        android:layout_marginTop="140dp"/>
 
     <Button
         android:id="@+id/button_photo"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:background="@drawable/button_cyan"
-        android:text="@string/photo"
+        android:background="@color/cyan"
+        android:text="@string/doodle"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:drawableTop="@drawable/ic_photo"
-        app:layout_constraintTop_toBottomOf="@id/button_doodle"
+        app:layout_constraintTop_toTopOf="@id/button_doodle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_image"
-        android:layout_marginTop="50dp"
-        android:layout_marginStart="50dp" />
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="140dp" />
 
-    <!-- 添加 BottomNavigationView -->
     <Button
         android:id="@+id/button_text"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="50dp"
-        android:background="@drawable/button_purple"
+        android:background="@color/purple"
         android:drawableTop="@drawable/ic_text"
         android:text="@string/text"
         android:textColor="@color/white"
@@ -151,6 +152,18 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/button_image"
         app:layout_constraintTop_toBottomOf="@id/button_music" />
+
+    <ImageButton
+        android:id="@+id/image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_creation_center_passsenger_login" />
 
 
 

@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".ProfileActivity">
 
     <LinearLayout
         android:id="@+id/layout1"
@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical|end"
-            android:text="@string/home_text1"
+            android:text="@string/profile_text_1"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
             android:textSize="28sp" />
@@ -33,9 +33,9 @@
             android:id="@+id/imageView6"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            app:srcCompat="@drawable/ic_welcomelogo" />
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_profile_passenger" />
 
         <TextView
             android:id="@+id/textView8"
@@ -43,50 +43,36 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical|start"
-            android:text="@string/home_text2"
+            android:text="@string/profile_text_2"
             android:textAlignment="viewStart"
             android:textColor="@color/white"
             android:textSize="28sp" />
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/home_searchbox"
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:background="#E5E5E5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout1"
-        app:layout_constraintHorizontal_bias="0.5" /> <!-- 设置水平偏置为0.5实现居中 -->
-
-    <!-- 新增的图片按钮 -->
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:adjustViewBounds="true"
+        android:layout_marginTop="16dp"
+        android:background="?android:selectableItemBackground"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_bluetooth"
-        app:layout_constraintTop_toBottomOf="@id/home_searchbox"
+        app:layout_constraintTop_toBottomOf="@id/layout1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:srcCompat="@drawable/ic_passenger_more" />
 
-    <!-- 添加广告位招租文本框 -->
-    <TextView
-        android:id="@+id/advertisement_text"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/light_gray"
-        android:gravity="center"
-        android:text="@string/welcome_money"
-        android:textColor="@color/black"
-        android:textSize="28sp"
+    <!-- 添加登录按钮 -->
+    <Button
+        android:id="@+id/login"
+        android:layout_width="220dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#82F00D"
+        android:text="@string/action_sign_in_short"
+        android:textColor="#101010"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/imageButton"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

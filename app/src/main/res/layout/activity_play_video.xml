@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:background="@drawable/title_background"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,17 +22,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="end"
+            android:gravity="center_vertical|end"
             android:text="@string/park_text_1"
             android:textAlignment="textEnd"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
 
         <ImageView
             android:id="@+id/imageView6"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/ant_outline_tag_1" />
 
         <TextView
@@ -40,11 +41,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="start"
+            android:gravity="center_vertical|start"
             android:text="@string/park_text_2"
             android:textAlignment="viewStart"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="28sp" />
 
     </LinearLayout>
 
@@ -97,6 +98,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/edittext_background"
                 android:hint="@string/video_request"
+                android:inputType="textMultiLine"
                 android:minHeight="48dp"
                 android:padding="10dp" />
 

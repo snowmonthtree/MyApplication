@@ -15,7 +15,7 @@ import androidx.core.graphics.Insets;
 
 public class ShoppingActivity extends AppCompatActivity {
 
-    private static final String PRODUCT_URL = "https://item.jd.com/10103645274300.html?extension_id=eyJhZCI6IiIsImNoIjoiIiwic2hvcCI6IiIsInNrdSI6IiIsInRzIjoiIiwidW5pcWlkIjoie1wiY2xpY2tfaWRcIjpcImEwMmI2ODBlLTY5M2MtNGY1NC05YTEyLTQ5MjNiYjk1NjZkZVwiLFwicG9zX2lkXCI6XCIyNjE3XCIsXCJzaWRcIjpcIjQwNjYyNzNkLTU0Y2UtNDc3NC1hY2IxLTUyODllMjE4YzE5N1wiLFwic2t1X2lkXCI6XCIxMDEwMzY0NTI3NDMwMFwifSJ9&jd_pop=a02b680e-693c-4f54-9a12-4923bb9566de";
+    private static final String PRODUCT_URL = "https://item.jd.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

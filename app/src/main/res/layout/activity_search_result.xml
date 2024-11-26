@@ -6,11 +6,11 @@
     tools:context=".SearchResultActivity">
 
     <!-- 搜索栏 -->
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:queryHint="搜索关键词"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="16dp" />
@@ -23,7 +23,8 @@
         android:layout_below="@id/searchView"
         android:layout_above="@id/noResultsTextView"
         android:scrollbars="vertical"
-        android:layout_marginHorizontal="16dp" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp" />
 
     <!-- 没有结果时的提示 -->
     <TextView

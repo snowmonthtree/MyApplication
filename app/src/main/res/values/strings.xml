@@ -75,6 +75,14 @@
     <string name="search_result_no_result">没有找到相关结果</string>
     <string name="shopping_text_1">立即</string>
     <string name="shopping_text_2">购买</string>
+    <string name="profile_text_1">游客</string>
+    <string name="profile_text_2">中心</string>
+    <string name="welcome_money">广告位招租</string>
+    <string name="doodle_button_1">清除</string>
+    <string name="doodle_button_2">撤销</string>
+    <string name="doodle_button_3">重做</string>
+    <string name="doodle_button_4">保存</string>
+    <string name="doodle_button_5">返回创作中心</string>
 
     <string-array name="size_options">
         <item>大小</item>
