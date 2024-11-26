@@ -35,7 +35,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private BluetoothSocket bluetoothSocket;
     private OutputStream outputStream;
 
-    private final String DEVICE_NAME = "HC-05"; // 目标蓝牙模块名称
+    private final String DEVICE_NAME = "Redmi Buds 5"; // 目标蓝牙模块名称
     private final UUID DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // 通用串口 UUID
 
     private Button btnConnect, btnSend;
@@ -55,6 +55,14 @@ public class BluetoothActivity extends AppCompatActivity {
         // 设置按钮点击事件
         btnConnect.setOnClickListener(v -> checkAndRequestPermissions());
         btnSend.setOnClickListener(v -> sendImageData());
+
+        // 获取传递过来的图片资源 ID
+        int imageResId = getIntent().getIntExtra("image_res_id", -1);
+        // 获取 ImageView 控件并设置图片
+        ImageView imageView = findViewById(R.id.imageView);
+        if (imageResId != -1) {
+            imageView.setImageResource(imageResId);
+        }
     }
 
     /**
