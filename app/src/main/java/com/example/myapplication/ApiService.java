@@ -12,5 +12,5 @@ public interface ApiService {
     @POST("api/insert")
     Call<String> insertUser(@Body User user);
     @POST("api/changePassword")
-    Call<String> changePassword(@Body User user);
+    Call<String> changePassword(@Query("Email")String Email,@Query("newPassword")String newPassword);
 }

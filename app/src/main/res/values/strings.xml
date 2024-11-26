@@ -6,7 +6,7 @@
     <string name="no_user">游客模式</string>
 
     <string name="welcome">欢迎使用HFLED</string>
-    <string name="please_in_1">请输入邮箱</string>
+    <string name="please_in_1">请输入用户名</string>
     <string name="please_in_2">请输入密码</string>
     <string name="register">立即注册</string>
     <string name="change_password_1">忘记密码</string>
@@ -32,4 +32,54 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string name="park_text_1">"素材"</string>
+    <string name="park_text_2">"广场"</string>
+    <string name="park_text_3">"推荐素材"</string>
+    <string name="park_text_4">"热搜素材"</string>
+    <string name="park_text_5">"文字素材"</string>
+    <string name="park_size">"尺寸"</string>
+    <string name="description_image_button1">"点击以查看详细信息1"</string>
+    <string name="description_image_button2">"点击以查看详细信息2"</string>
+    <string name="description_image_button3">"点击以查看详细信息3"</string>
+    <string name="description_image_button4">"点击以查看详细信息4"</string>
+    <string name="description_image_button5">"点击以查看详细信息5"</string>
+    <string name="description_image_button6">"点击以查看详细信息6"</string>
+    <string name="description_image_button7">"点击以查看详细信息7"</string>
+    <string name="description_image_button8">"点击以查看详细信息8"</string>
+
+    <string name="home">首页</string>
+    <string name="square">广场</string>
+    <string name="creation_center">创作中心</string>
+    <string name="shopping">购物</string>
+    <string name="profile">个人中心</string>
+    <string name="video_request">请输入评论</string>
+    <string name="sendout">发送</string>
+    <string name="creation_center_text_1">创作</string>
+    <string name="center_text_2">中心</string>
+    <string name="doodle">涂鸦</string>
+    <string name="animation">动画</string>
+    <string name="music">音乐</string>
+    <string name="image">图片</string>
+    <string name="photo">拍照</string>
+    <string name="text">文字</string>
+    <string name="comment_text_1">John Doe</string>
+    <string name="comment_text_2">This is a sample comment.</string>
+    <string name="comment_text_3">1 day ago</string>
+    <string name="home_text1">欢迎</string>
+    <string name="home_text2">使用</string>
+    <string name="search_result_text">搜索结果</string>
+    <string name="search_result_icon">结果图标</string>
+    <string name="search_result_headline">标题</string>
+    <string name="search_result_describe">描述</string>
+    <string name="search_result_no_result">没有找到相关结果</string>
+    <string name="shopping_text_1">立即</string>
+    <string name="shopping_text_2">购买</string>
+
+    <string-array name="size_options">
+        <item>大小</item>
+        <item>小</item>
+        <item>中</item>
+        <item>大</item>
+    </string-array>
 </resources>

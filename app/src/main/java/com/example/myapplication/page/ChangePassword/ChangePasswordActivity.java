@@ -29,7 +29,17 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ChangePasswordActivity extends AppCompatActivity {
+    private EditText userPassword;
+    private EditText userPassword1;
+    private EditText userMail;
+    private EditText newCode;
+    private Button getCode;
+    private Button reset;
+    private UserViewModel userViewModel;
+    private User user;
 
+    Retrofit retrofit;
+    ApiService apiService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,50 +50,55 @@ public class ChangePasswordActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        EditText userPassword=findViewById(R.id.newUserpassword);
-        EditText userPassword1=findViewById(R.id.newUserpassword1);
-        EditText userMail=findViewById(R.id.main);
-        EditText newCode=findViewById(R.id.newCode);
-        Button getCode=findViewById(R.id.getCode);
-        Button reset=findViewById(R.id.reset);
-
-        UserViewModel userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!userPassword.getText().toString().equals(userPassword1.getText().toString())){
-                    new AlertDialog.Builder(ChangePasswordActivity.this)
-                            .setTitle("错误")
-                            .setMessage("两次密码不一致")
-                            .setPositiveButton("确定", (dialog, which) -> {
-                                // 确定按钮的点击事件
-                            })
-                            .show();
-                }
-                else {
-                    User user=new User();
-                    user.setEmail(userMail.getText().toString());
-                    Retrofit retrofit;
-                    try {
-                        retrofit = RetrofitClient.getClient(ChangePasswordActivity.this);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    ApiService apiService = retrofit.create(ApiService.class);
-                    Call<String> call = apiService.changePassword(user);
-                    call.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            String data=response.body();
-                            Toast.makeText(ChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();
-                        }
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            Log.e("error", "change error"+t.getMessage() );
-                        }
-                    });
-                }
+        userPassword = findViewById(R.id.newUserpassword);
+        userPassword1 = findViewById(R.id.newUserpassword1);
+        userMail = findViewById(R.id.newUseremail);
+        newCode = findViewById(R.id.newCode);
+        getCode = findViewById(R.id.getCode);
+        reset = findViewById(R.id.reset);
+        userViewModel= new ViewModelProvider(this).get(UserViewModel.class);
+        reset.setOnClickListener(v->reset());
+    }
+    //重置密码按键的处理
+    private void reset() {
+        if (!userPassword.getText().toString().equals(userPassword1.getText().toString())) {
+            new AlertDialog.Builder(ChangePasswordActivity.this)
+                    .setTitle("错误")
+                    .setMessage("两次密码不一致")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        // 确定按钮的点击事件
+                    })
+                    .show();
+        }
+        else {
+            user=new User();
+            //检查邮箱
+            user.setEmail(userMail.getText().toString());
+            //设置与后端的连接
+            try {
+                retrofit = RetrofitClient.getClient(ChangePasswordActivity.this);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        });
+            //设置控制器，获得接口
+            apiService = retrofit.create(ApiService.class);
+            Call<String> call = apiService.changePassword(userMail.getText().toString(),userPassword.getText().toString());
+            //获得服务器的返回信息
+            call.enqueue(new Callback<String>() {
+                public void onResponse(Call<String> call, Response<String> response) {
+                    String data = response.body();
+                    Toast.makeText(ChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();
+                    //如果成功,更新ViewModel
+                    if (data.equals("success")) {
+                        user.setPassword(userPassword1.getText().toString());
+                        userViewModel.setUser(user);
+                    }
+                }
+
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("error", "change error" + t.getMessage());
+                }
+            });
+        }
     }
 }

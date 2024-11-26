@@ -13,8 +13,8 @@
         android:layout_height="50dp"
         android:background="@drawable/title_background"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toStartOf="@id/layout2"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -22,9 +22,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="2938128931"
-            android:textColor="@color/white" />
+            android:gravity="end"
+            android:text="@string/park_text_1"
+            android:textAlignment="textEnd"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/imageView6"
@@ -38,9 +40,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="TextView"
-            android:textColor="@color/white" />
+            android:gravity="start"
+            android:text="@string/park_text_2"
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
@@ -51,11 +55,12 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout1">
 
-        <SearchView
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/park_searchbox"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:background="#E5E5E5" />
@@ -69,8 +74,8 @@
         android:layout_marginTop="10dp"
         android:background="#82f00d"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout2">
 
         <TextView
@@ -79,7 +84,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TextView"
+            android:text="@string/park_text_3"
             android:textSize="20sp" />
 
         <TextView
@@ -88,7 +93,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TextView"
+            android:text="@string/park_text_4"
             android:textSize="20sp" />
 
         <TextView
@@ -97,14 +102,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TextView"
+            android:text="@string/park_text_5"
             android:textSize="20sp" />
 
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -112,13 +116,13 @@
         android:id="@+id/layout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout3">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center">
 
             <ImageButton
@@ -126,18 +130,20 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button7" />
 
             <ImageButton
                 android:id="@+id/imageButton8"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button8" />
         </TableRow>
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
 
@@ -146,18 +152,20 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button1" />
 
             <ImageButton
                 android:id="@+id/imageButton2"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button2" />
         </TableRow>
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
 
@@ -166,18 +174,20 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button3" />
 
             <ImageButton
                 android:id="@+id/imageButton4"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button4" />
         </TableRow>
 
         <TableRow
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
 
@@ -186,30 +196,31 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button5" />
 
             <ImageButton
                 android:id="@+id/imageButton6"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview" />
+                app:srcCompat="@drawable/empty_preview"
+                android:contentDescription="@string/description_image_button6" />
         </TableRow>
 
     </TableLayout>
 
+   <!-- 添加 BottomNavigationView -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/menu_park"
-        app:layout_constraintTop_toBottomOf="@id/layout4"
+        android:background="?android:attr/windowBackground"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:itemRippleColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/layout4"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:padding="0dp"
-        app:itemIconSize="12dp"
-        />
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
