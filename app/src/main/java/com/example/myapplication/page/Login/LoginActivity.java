@@ -4,11 +4,11 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +17,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myapplication.ApiService;
-import com.example.myapplication.User;
-import com.example.myapplication.UserViewModel;
+import com.example.myapplication.Controller.UserController;
+import com.example.myapplication.data.User.User;
+import com.example.myapplication.data.User.UserViewModel;
 import com.example.myapplication.page.ChangePassword.ChangePasswordActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.R;
@@ -89,16 +89,24 @@ public class LoginActivity extends AppCompatActivity {
                         // 确定按钮的点击事件
                     })
                     .show();
-            return;
         }
         else {
-            ApiService apiService1 = retrofit.create(ApiService.class);
-            Call<User> call = apiService1.getUser(userEmail.getText().toString(), passWord.getText().toString());
+            UserController userController1 = retrofit.create(UserController.class);
+            Call<User> call = userController1.getUser(userEmail.getText().toString(), passWord.getText().toString());
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful()) {
                         User data = response.body();
+                        if (data!=null){
+                            Toast.makeText(LoginActivity.this, data.getEmail(), Toast.LENGTH_SHORT).show();
+                        }
+                        Log.e("NetworkRequest", "Response Code: " + response.code());
+                        if (response.body() == null) {
+                            Log.e("NetworkRequest", "Response Body is null");
+                        } else {
+                            Log.e("NetworkRequest", "Response Body: " + response.body());
+                        }
                         // 处理数据
                         if (data == null) {
                             runOnUiThread(() -> {
@@ -132,6 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
                     // 处理错误
+
                     Log.e("NetworkRequest", "onFailure triggered");
                     Log.e("error", t.getClass().getName() + ", Message: " + t.getMessage());
                 }

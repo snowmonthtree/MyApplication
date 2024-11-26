@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.Comment;
 
 public class Comment {
     private String author;

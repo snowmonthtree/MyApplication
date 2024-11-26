@@ -1,0 +1,356 @@
+Index: app/src/main/java/com/example/myapplication/page/Login/LoginActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.myapplication.page.Login;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.CheckBox;\r\nimport android.widget.EditText;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.graphics.Insets;\r\nimport androidx.core.view.ViewCompat;\r\nimport androidx.core.view.WindowInsetsCompat;\r\nimport androidx.lifecycle.ViewModelProvider;\r\n\r\nimport com.example.myapplication.ApiService;\r\nimport com.example.myapplication.User;\r\nimport com.example.myapplication.UserViewModel;\r\nimport com.example.myapplication.page.ChangePassword.ChangePasswordActivity;\r\nimport com.example.myapplication.page.Park.ParkActivity;\r\nimport com.example.myapplication.R;\r\nimport com.example.myapplication.page.Register.RegisterActivity;\r\nimport com.example.myapplication.RetrofitClient;\r\n\r\nimport java.io.IOException;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.Callback;\r\nimport retrofit2.Response;\r\nimport retrofit2.Retrofit;\r\n\r\npublic class LoginActivity extends AppCompatActivity {\r\n    private TextView register_now ;\r\n    private TextView change_password;\r\n    private EditText userEmail;\r\n    private EditText passWord;\r\n    private Button button ;\r\n    private CheckBox checkBox ;\r\n    private Retrofit retrofit;\r\n    private UserViewModel userViewModel;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.activity_login);\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\r\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\r\n            return insets;\r\n        });\r\n        register_now = findViewById(R.id.register_now);\r\n        change_password = findViewById(R.id.change_password_1);\r\n        userEmail = findViewById(R.id.getEmail);\r\n        passWord = findViewById(R.id.Password);\r\n        button = findViewById(R.id.login);\r\n        checkBox = findViewById(R.id.checkBox1);\r\n        userViewModel= new ViewModelProvider(this).get(UserViewModel.class);\r\n        //跳转修改密码\r\n        change_password.setOnClickListener(view -> toChangePassword());\r\n        //跳转注册\r\n        register_now.setOnClickListener(v ->toRegister());\r\n        UserViewModel userViewModel=new ViewModelProvider(this).get(UserViewModel.class);\r\n\r\n        try {\r\n            retrofit = RetrofitClient.getClient(LoginActivity.this);\r\n        } catch (Exception e) {\r\n            throw new RuntimeException(e);\r\n        }\r\n        button.setOnClickListener(view -> login());\r\n    }\r\n    private void toRegister(){\r\n        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);\r\n        startActivity(intent);\r\n    }\r\n    private void toChangePassword(){\r\n        Intent intent = new Intent(LoginActivity.this, ChangePasswordActivity.class);\r\n        startActivity(intent);\r\n    }\r\n    private void login(){\r\n        if (!checkBox.isChecked()) {\r\n            new AlertDialog.Builder(LoginActivity.this)\r\n                    .setTitle(\"错误\")\r\n                    .setMessage(\"请同意用户协议\")\r\n                    .setPositiveButton(\"确定\", (dialog, which) -> {\r\n                        // 确定按钮的点击事件\r\n                    })\r\n                    .show();\r\n            return;\r\n        }\r\n        else {\r\n            ApiService apiService1 = retrofit.create(ApiService.class);\r\n            Call<User> call = apiService1.getUser(userEmail.getText().toString(), passWord.getText().toString());\r\n            call.enqueue(new Callback<User>() {\r\n                @Override\r\n                public void onResponse(Call<User> call, Response<User> response) {\r\n                    if (response.isSuccessful()) {\r\n                        User data = response.body();\r\n                        // 处理数据\r\n                        if (data == null) {\r\n                            runOnUiThread(() -> {\r\n                                new AlertDialog.Builder(LoginActivity.this)\r\n                                        .setTitle(\"错误\")\r\n                                        .setMessage(\"邮箱或密码错误\")\r\n                                        .setPositiveButton(\"确定\", (dialog, which) -> {\r\n                                            // 确定按钮的点击事件\r\n                                        })\r\n                                        .show();\r\n                            });\r\n                        } else {\r\n                            userViewModel.setUser(data);\r\n                            Intent intent = new Intent(LoginActivity.this, ParkActivity.class);\r\n                            startActivity(intent);\r\n                        }\r\n\r\n                    } else {\r\n                        Log.e(\"NetworkRequest\", \"Response not successful. Status Code: \" + response.code());\r\n                        // 进一步打印错误信息\r\n                        try {\r\n                            // 获取服务器返回的错误消息\r\n                            String errorBody = response.errorBody().string();\r\n                            Log.e(\"NetworkRequest\", \"Error Body: \" + errorBody);\r\n                        } catch (IOException e) {\r\n                            Log.e(\"NetworkRequest\", \"Error reading the error body\", e);\r\n                        }\r\n                    }\r\n                }\r\n\r\n                @Override\r\n                public void onFailure(Call<User> call, Throwable t) {\r\n                    // 处理错误\r\n                    Log.e(\"NetworkRequest\", \"onFailure triggered\");\r\n                    Log.e(\"error\", t.getClass().getName() + \", Message: \" + t.getMessage());\r\n                }\r\n            });\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/myapplication/page/Login/LoginActivity.java b/app/src/main/java/com/example/myapplication/page/Login/LoginActivity.java
+--- a/app/src/main/java/com/example/myapplication/page/Login/LoginActivity.java	(revision a825a0735a0645a907dbfbee06affc2fa944af12)
++++ b/app/src/main/java/com/example/myapplication/page/Login/LoginActivity.java	(date 1732619545409)
+@@ -4,11 +4,11 @@
+ import android.content.Intent;
+ import android.os.Bundle;
+ import android.util.Log;
+-import android.view.View;
+ import android.widget.Button;
+ import android.widget.CheckBox;
+ import android.widget.EditText;
+ import android.widget.TextView;
++import android.widget.Toast;
+ 
+ import androidx.activity.EdgeToEdge;
+ import androidx.appcompat.app.AppCompatActivity;
+@@ -17,9 +17,9 @@
+ import androidx.core.view.WindowInsetsCompat;
+ import androidx.lifecycle.ViewModelProvider;
+ 
+-import com.example.myapplication.ApiService;
+-import com.example.myapplication.User;
+-import com.example.myapplication.UserViewModel;
++import com.example.myapplication.Controller.UserController;
++import com.example.myapplication.data.User.User;
++import com.example.myapplication.data.User.UserViewModel;
+ import com.example.myapplication.page.ChangePassword.ChangePasswordActivity;
+ import com.example.myapplication.page.Park.ParkActivity;
+ import com.example.myapplication.R;
+@@ -92,13 +92,22 @@
+             return;
+         }
+         else {
+-            ApiService apiService1 = retrofit.create(ApiService.class);
+-            Call<User> call = apiService1.getUser(userEmail.getText().toString(), passWord.getText().toString());
++            UserController userController1 = retrofit.create(UserController.class);
++            Call<User> call = userController1.getUser(userEmail.getText().toString(), passWord.getText().toString());
+             call.enqueue(new Callback<User>() {
+                 @Override
+                 public void onResponse(Call<User> call, Response<User> response) {
+                     if (response.isSuccessful()) {
+                         User data = response.body();
++                        if (data!=null){
++                            Toast.makeText(LoginActivity.this, data.getEmail(), Toast.LENGTH_SHORT).show();
++                        }
++                        Log.e("NetworkRequest", "Response Code: " + response.code());
++                        if (response.body() == null) {
++                            Log.e("NetworkRequest", "Response Body is null");
++                        } else {
++                            Log.e("NetworkRequest", "Response Body: " + response.body());
++                        }
+                         // 处理数据
+                         if (data == null) {
+                             runOnUiThread(() -> {
+@@ -132,6 +141,7 @@
+                 @Override
+                 public void onFailure(Call<User> call, Throwable t) {
+                     // 处理错误
++
+                     Log.e("NetworkRequest", "onFailure triggered");
+                     Log.e("error", t.getClass().getName() + ", Message: " + t.getMessage());
+                 }
+Index: app/src/main/java/com/example/myapplication/page/Register/RegisterActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.myapplication.page.Register;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.CheckBox;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.graphics.Insets;\r\nimport androidx.core.view.ViewCompat;\r\nimport androidx.core.view.WindowInsetsCompat;\r\n\r\nimport com.example.myapplication.ApiService;\r\nimport com.example.myapplication.R;\r\nimport com.example.myapplication.RetrofitClient;\r\nimport com.example.myapplication.User;\r\n\r\nimport java.io.IOException;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.Callback;\r\nimport retrofit2.Response;\r\nimport retrofit2.Retrofit;\r\n\r\npublic class RegisterActivity extends AppCompatActivity {\r\n    private EditText userName;\r\n    private EditText userPassword;\r\n    private EditText userPassword1;\r\n    private EditText userEmail;\r\n    private EditText newCode;\r\n    private Button getCode;\r\n    private Button register;\r\n    private CheckBox checkBox;\r\n    private Retrofit retrofit;\r\n    private ApiService apiService;\r\n    private User newUser;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.activity_register);\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\r\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\r\n            return insets;\r\n        });\r\n        userName=findViewById(R.id.newUsername);\r\n        userPassword=findViewById(R.id.newUserpassword);\r\n        userPassword1=findViewById(R.id.newUserpassword1);\r\n        userEmail=findViewById(R.id.newUseremail);\r\n        newCode=findViewById(R.id.newCode);\r\n        getCode=findViewById(R.id.getCode);\r\n        register=findViewById(R.id.register);\r\n        checkBox=findViewById(R.id.checkBox);\r\n        register.setOnClickListener(view -> Register() );\r\n    }\r\n    private void Register() {\r\n        if (!userPassword.getText().toString().equals(userPassword1.getText().toString())) {\r\n            new AlertDialog.Builder(RegisterActivity.this)\r\n                    .setTitle(\"错误\")\r\n                    .setMessage(\"两次密码不一致\")\r\n                    .setPositiveButton(\"确定\", (dialog, which) -> {\r\n                        // 确定按钮的点击事件\r\n                    })\r\n                    .show();\r\n        } else {\r\n            newUser=new User();\r\n            newUser.setName(userName.getText().toString());\r\n            newUser.setPassword(userPassword.getText().toString());\r\n            newUser.setEmail(userEmail.getText().toString());\r\n            try {\r\n                retrofit = RetrofitClient.getClient(RegisterActivity.this);\r\n            } catch (Exception e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            apiService = retrofit.create(ApiService.class);\r\n            Call<String> call = apiService.insertUser(newUser);\r\n            call.enqueue(new Callback<String>() {\r\n                @Override\r\n                public void onResponse(Call<String> call, Response<String> response) {\r\n                    if (response.isSuccessful()) {\r\n                        Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();\r\n                        Log.e(\"test\", \"onResponse: \"+response.body() );\r\n\r\n                    } else {\r\n                        Log.e(\"NetworkRequest\", \"Response not successful. Status Code: \" + response.code());\r\n                        // 进一步打印错误信息\r\n                        try {\r\n                            // 获取服务器返回的错误消息\r\n                            String errorBody = response.errorBody().string();\r\n                            Log.e(\"NetworkRequest\", \"Error Body: \" + errorBody);\r\n                        } catch (IOException e) {\r\n                            Log.e(\"NetworkRequest\", \"Error reading the error body\", e);\r\n                        }\r\n                    }\r\n                }\r\n\r\n                @Override\r\n                public void onFailure(Call<String> call, Throwable t) {\r\n                    // 处理错误\r\n                    Log.e(\"NetworkRequest\", \"onFailure triggered\");\r\n                    Log.e(\"error\", t.getClass().getName() + \", Message: \" + t.getMessage());\r\n                }\r\n\r\n            });\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/myapplication/page/Register/RegisterActivity.java b/app/src/main/java/com/example/myapplication/page/Register/RegisterActivity.java
+--- a/app/src/main/java/com/example/myapplication/page/Register/RegisterActivity.java	(revision a825a0735a0645a907dbfbee06affc2fa944af12)
++++ b/app/src/main/java/com/example/myapplication/page/Register/RegisterActivity.java	(date 1732620148260)
+@@ -3,7 +3,6 @@
+ import android.app.AlertDialog;
+ import android.os.Bundle;
+ import android.util.Log;
+-import android.view.View;
+ import android.widget.Button;
+ import android.widget.CheckBox;
+ import android.widget.EditText;
+@@ -15,10 +14,10 @@
+ import androidx.core.view.ViewCompat;
+ import androidx.core.view.WindowInsetsCompat;
+ 
+-import com.example.myapplication.ApiService;
++import com.example.myapplication.Controller.UserController;
+ import com.example.myapplication.R;
+ import com.example.myapplication.RetrofitClient;
+-import com.example.myapplication.User;
++import com.example.myapplication.data.User.User;
+ 
+ import java.io.IOException;
+ 
+@@ -37,7 +36,7 @@
+     private Button register;
+     private CheckBox checkBox;
+     private Retrofit retrofit;
+-    private ApiService apiService;
++    private UserController userController;
+     private User newUser;
+ 
+     @Override
+@@ -58,7 +57,14 @@
+         getCode=findViewById(R.id.getCode);
+         register=findViewById(R.id.register);
+         checkBox=findViewById(R.id.checkBox);
++        try {
++            retrofit = RetrofitClient.getClient(RegisterActivity.this);
++        } catch (Exception e) {
++            throw new RuntimeException(e);
++        }
++        userController = retrofit.create(UserController.class);
+         register.setOnClickListener(view -> Register() );
++        getCode.setOnClickListener(view -> getCode());
+     }
+     private void Register() {
+         if (!userPassword.getText().toString().equals(userPassword1.getText().toString())) {
+@@ -69,46 +75,73 @@
+                         // 确定按钮的点击事件
+                     })
+                     .show();
+-        } else {
++        }
++
++        else {
+             newUser=new User();
+             newUser.setName(userName.getText().toString());
+             newUser.setPassword(userPassword.getText().toString());
+             newUser.setEmail(userEmail.getText().toString());
+-            try {
+-                retrofit = RetrofitClient.getClient(RegisterActivity.this);
+-            } catch (Exception e) {
+-                throw new RuntimeException(e);
+-            }
+-            apiService = retrofit.create(ApiService.class);
+-            Call<String> call = apiService.insertUser(newUser);
+-            call.enqueue(new Callback<String>() {
+-                @Override
+-                public void onResponse(Call<String> call, Response<String> response) {
+-                    if (response.isSuccessful()) {
+-                        Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+-                        Log.e("test", "onResponse: "+response.body() );
++            Call<String> call = userController.insertUser(newUser);
++            call.enqueue(new Callback<String>() {
++                @Override
++                public void onResponse(Call<String> call, Response<String> response) {
++                    if (response.isSuccessful()) {
++                        Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
++                        Log.e("test", "onResponse: "+response.body() );
++
++                    } else {
++                        Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
++                        // 进一步打印错误信息
++                        try {
++                            // 获取服务器返回的错误消息
++                            String errorBody = response.errorBody().string();
++                            Log.e("NetworkRequest", "Error Body: " + errorBody);
++                        } catch (IOException e) {
++                            Log.e("NetworkRequest", "Error reading the error body", e);
++                        }
++                    }
++                }
++
++                @Override
++                public void onFailure(Call<String> call, Throwable t) {
++                    // 处理错误
++                    Log.e("NetworkRequest", "onFailure triggered");
++                    Log.e("error", t.getClass().getName() + ", Message: " + t.getMessage());
++                }
++
++            });
++        }
++    }
++    private void getCode(){
++        Call<String> call=userController.getCode(userEmail.getText().toString());
++        call.enqueue(new Callback<String>() {
++            @Override
++            public void onResponse(Call<String> call, Response<String> response) {
++                if (response.isSuccessful()) {
++                    Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
++                    Log.e("test", "onResponse: "+response.body() );
+ 
+-                    } else {
+-                        Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
+-                        // 进一步打印错误信息
+-                        try {
+-                            // 获取服务器返回的错误消息
+-                            String errorBody = response.errorBody().string();
+-                            Log.e("NetworkRequest", "Error Body: " + errorBody);
+-                        } catch (IOException e) {
+-                            Log.e("NetworkRequest", "Error reading the error body", e);
+-                        }
+-                    }
+-                }
++                } else {
++                    Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
++                    // 进一步打印错误信息
++                    try {
++                        // 获取服务器返回的错误消息
++                        String errorBody = response.errorBody().string();
++                        Log.e("NetworkRequest", "Error Body: " + errorBody);
++                    } catch (IOException e) {
++                        Log.e("NetworkRequest", "Error reading the error body", e);
++                    }
++                }
++            }
+ 
+-                @Override
+-                public void onFailure(Call<String> call, Throwable t) {
+-                    // 处理错误
+-                    Log.e("NetworkRequest", "onFailure triggered");
+-                    Log.e("error", t.getClass().getName() + ", Message: " + t.getMessage());
+-                }
++            @Override
++            public void onFailure(Call<String> call, Throwable t) {
++                // 处理错误
++                Log.e("NetworkRequest", "onFailure triggered");
++                Log.e("error", t.getClass().getName() + ", Message: " + t.getMessage());
++            }
+ 
+-            });
+-        }
++        });
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/myapplication/ApiService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/myapplication/ApiService.java b/app/src/main/java/com/example/myapplication/Controller/UserController.java
+rename from app/src/main/java/com/example/myapplication/ApiService.java
+rename to app/src/main/java/com/example/myapplication/Controller/UserController.java
+--- a/app/src/main/java/com/example/myapplication/ApiService.java	(revision a825a0735a0645a907dbfbee06affc2fa944af12)
++++ b/app/src/main/java/com/example/myapplication/Controller/UserController.java	(date 1732620148248)
+@@ -1,4 +1,6 @@
+-package com.example.myapplication;
++package com.example.myapplication.Controller;
++
++import com.example.myapplication.data.User.User;
+ 
+ import retrofit2.Call;
+ import retrofit2.http.Body;
+@@ -6,11 +8,13 @@
+ import retrofit2.http.POST;
+ import retrofit2.http.Query;
+ 
+-public interface ApiService {
++public interface UserController {
+     @GET("api/login")
+     Call<User> getUser(@Query("param1") String param1, @Query("param2") String param2);
+     @POST("api/insert")
+     Call<String> insertUser(@Body User user);
+     @POST("api/changePassword")
+     Call<String> changePassword(@Query("Email")String Email,@Query("newPassword")String newPassword);
++    @GET("/api/getCode")
++    Call<String> getCode(@Query("Email")String Email);
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/myapplication/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/myapplication/User.java b/app/src/main/java/com/example/myapplication/data/User/User.java
+rename from app/src/main/java/com/example/myapplication/User.java
+rename to app/src/main/java/com/example/myapplication/data/User/User.java
+--- a/app/src/main/java/com/example/myapplication/User.java	(revision a825a0735a0645a907dbfbee06affc2fa944af12)
++++ b/app/src/main/java/com/example/myapplication/data/User/User.java	(date 1732619545429)
+@@ -1,4 +1,4 @@
+-package com.example.myapplication;
++package com.example.myapplication.data.User;
+ 
+ public class User {
+ 
+Index: app/src/main/java/com/example/myapplication/UserViewModel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/myapplication/UserViewModel.java b/app/src/main/java/com/example/myapplication/data/User/UserViewModel.java
+rename from app/src/main/java/com/example/myapplication/UserViewModel.java
+rename to app/src/main/java/com/example/myapplication/data/User/UserViewModel.java
+--- a/app/src/main/java/com/example/myapplication/UserViewModel.java	(revision a825a0735a0645a907dbfbee06affc2fa944af12)
++++ b/app/src/main/java/com/example/myapplication/data/User/UserViewModel.java	(date 1732619545420)
+@@ -1,4 +1,4 @@
+-package com.example.myapplication;
++package com.example.myapplication.data.User;
+ import androidx.lifecycle.LiveData;
+ import androidx.lifecycle.MutableLiveData;
+ import androidx.lifecycle.ViewModel;
+Index: app/src/main/java/com/example/myapplication/page/ChangePassword/ChangePasswordActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.myapplication.page.ChangePassword;\r\n\r\nimport android.app.AlertDialog;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.graphics.Insets;\r\nimport androidx.core.view.ViewCompat;\r\nimport androidx.core.view.WindowInsetsCompat;\r\nimport androidx.lifecycle.ViewModel;\r\nimport androidx.lifecycle.ViewModelProvider;\r\n\r\nimport com.example.myapplication.ApiService;\r\nimport com.example.myapplication.R;\r\nimport com.example.myapplication.RetrofitClient;\r\nimport com.example.myapplication.User;\r\nimport com.example.myapplication.UserViewModel;\r\nimport com.example.myapplication.page.Register.RegisterActivity;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.Callback;\r\nimport retrofit2.Response;\r\nimport retrofit2.Retrofit;\r\n\r\npublic class ChangePasswordActivity extends AppCompatActivity {\r\n    private EditText userPassword;\r\n    private EditText userPassword1;\r\n    private EditText userMail;\r\n    private EditText newCode;\r\n    private Button getCode;\r\n    private Button reset;\r\n    private UserViewModel userViewModel;\r\n    private User user;\r\n\r\n    Retrofit retrofit;\r\n    ApiService apiService;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.activity_change_password);\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\r\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\r\n            return insets;\r\n        });\r\n        userPassword = findViewById(R.id.newUserpassword);\r\n        userPassword1 = findViewById(R.id.newUserpassword1);\r\n        userMail = findViewById(R.id.newUseremail);\r\n        newCode = findViewById(R.id.newCode);\r\n        getCode = findViewById(R.id.getCode);\r\n        reset = findViewById(R.id.reset);\r\n        userViewModel= new ViewModelProvider(this).get(UserViewModel.class);\r\n        reset.setOnClickListener(v->reset());\r\n    }\r\n    //重置密码按键的处理\r\n    private void reset() {\r\n        if (!userPassword.getText().toString().equals(userPassword1.getText().toString())) {\r\n            new AlertDialog.Builder(ChangePasswordActivity.this)\r\n                    .setTitle(\"错误\")\r\n                    .setMessage(\"两次密码不一致\")\r\n                    .setPositiveButton(\"确定\", (dialog, which) -> {\r\n                        // 确定按钮的点击事件\r\n                    })\r\n                    .show();\r\n        }\r\n        else {\r\n            user=new User();\r\n            //检查邮箱\r\n            user.setEmail(userMail.getText().toString());\r\n            //设置与后端的连接\r\n            try {\r\n                retrofit = RetrofitClient.getClient(ChangePasswordActivity.this);\r\n            } catch (Exception e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n            //设置控制器，获得接口\r\n            apiService = retrofit.create(ApiService.class);\r\n            Call<String> call = apiService.changePassword(userMail.getText().toString(),userPassword.getText().toString());\r\n            //获得服务器的返回信息\r\n            call.enqueue(new Callback<String>() {\r\n                public void onResponse(Call<String> call, Response<String> response) {\r\n                    String data = response.body();\r\n                    Toast.makeText(ChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();\r\n                    //如果成功,更新ViewModel\r\n                    if (data.equals(\"success\")) {\r\n                        user.setPassword(userPassword1.getText().toString());\r\n                        userViewModel.setUser(user);\r\n                    }\r\n                }\r\n\r\n                public void onFailure(Call<String> call, Throwable t) {\r\n                    Log.e(\"error\", \"change error\" + t.getMessage());\r\n                }\r\n            });\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/myapplication/page/ChangePassword/ChangePasswordActivity.java b/app/src/main/java/com/example/myapplication/page/ChangePassword/ChangePasswordActivity.java
+--- a/app/src/main/java/com/example/myapplication/page/ChangePassword/ChangePasswordActivity.java	(revision a825a0735a0645a907dbfbee06affc2fa944af12)
++++ b/app/src/main/java/com/example/myapplication/page/ChangePassword/ChangePasswordActivity.java	(date 1732619545399)
+@@ -3,7 +3,6 @@
+ import android.app.AlertDialog;
+ import android.os.Bundle;
+ import android.util.Log;
+-import android.view.View;
+ import android.widget.Button;
+ import android.widget.EditText;
+ import android.widget.Toast;
+@@ -13,15 +12,13 @@
+ import androidx.core.graphics.Insets;
+ import androidx.core.view.ViewCompat;
+ import androidx.core.view.WindowInsetsCompat;
+-import androidx.lifecycle.ViewModel;
+ import androidx.lifecycle.ViewModelProvider;
+ 
+-import com.example.myapplication.ApiService;
++import com.example.myapplication.Controller.UserController;
+ import com.example.myapplication.R;
+ import com.example.myapplication.RetrofitClient;
+-import com.example.myapplication.User;
+-import com.example.myapplication.UserViewModel;
+-import com.example.myapplication.page.Register.RegisterActivity;
++import com.example.myapplication.data.User.User;
++import com.example.myapplication.data.User.UserViewModel;
+ 
+ import retrofit2.Call;
+ import retrofit2.Callback;
+@@ -39,7 +36,7 @@
+     private User user;
+ 
+     Retrofit retrofit;
+-    ApiService apiService;
++    UserController userController;
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+@@ -81,8 +78,8 @@
+                 throw new RuntimeException(e);
+             }
+             //设置控制器，获得接口
+-            apiService = retrofit.create(ApiService.class);
+-            Call<String> call = apiService.changePassword(userMail.getText().toString(),userPassword.getText().toString());
++            userController = retrofit.create(UserController.class);
++            Call<String> call = userController.changePassword(userMail.getText().toString(),userPassword.getText().toString());
+             //获得服务器的返回信息
+             call.enqueue(new Callback<String>() {
+                 public void onResponse(Call<String> call, Response<String> response) {

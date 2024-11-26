@@ -3,7 +3,6 @@ package com.example.myapplication.page.Register;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -15,10 +14,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.myapplication.ApiService;
+import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
-import com.example.myapplication.User;
+import com.example.myapplication.data.User.User;
 
 import java.io.IOException;
 
@@ -37,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button register;
     private CheckBox checkBox;
     private Retrofit retrofit;
-    private ApiService apiService;
+    private UserController userController;
     private User newUser;
 
     @Override
@@ -58,7 +57,14 @@ public class RegisterActivity extends AppCompatActivity {
         getCode=findViewById(R.id.getCode);
         register=findViewById(R.id.register);
         checkBox=findViewById(R.id.checkBox);
+        try {
+            retrofit = RetrofitClient.getClient(RegisterActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        userController = retrofit.create(UserController.class);
         register.setOnClickListener(view -> Register() );
+        getCode.setOnClickListener(view -> getCode());
     }
     private void Register() {
         if (!userPassword.getText().toString().equals(userPassword1.getText().toString())) {
@@ -69,18 +75,14 @@ public class RegisterActivity extends AppCompatActivity {
                         // 确定按钮的点击事件
                     })
                     .show();
-        } else {
+        }
+
+        else {
             newUser=new User();
             newUser.setName(userName.getText().toString());
             newUser.setPassword(userPassword.getText().toString());
             newUser.setEmail(userEmail.getText().toString());
-            try {
-                retrofit = RetrofitClient.getClient(RegisterActivity.this);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            apiService = retrofit.create(ApiService.class);
-            Call<String> call = apiService.insertUser(newUser);
+            Call<String> call = userController.insertUser(newUser,newCode.getText().toString());
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -110,5 +112,36 @@ public class RegisterActivity extends AppCompatActivity {
 
             });
         }
+    }
+    private void getCode(){
+        Call<String> call=userController.getCode(userEmail.getText().toString());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                    Log.e("test", "onResponse: "+response.body() );
+
+                } else {
+                    Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
+                    // 进一步打印错误信息
+                    try {
+                        // 获取服务器返回的错误消息
+                        String errorBody = response.errorBody().string();
+                        Log.e("NetworkRequest", "Error Body: " + errorBody);
+                    } catch (IOException e) {
+                        Log.e("NetworkRequest", "Error reading the error body", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                // 处理错误
+                Log.e("NetworkRequest", "onFailure triggered");
+                Log.e("error", t.getClass().getName() + ", Message: " + t.getMessage());
+            }
+
+        });
     }
 }

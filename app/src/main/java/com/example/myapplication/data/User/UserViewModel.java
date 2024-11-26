@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.User;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

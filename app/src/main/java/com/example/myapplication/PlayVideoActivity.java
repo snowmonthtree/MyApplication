@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-import android.net.Uri;
+
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import com.example.myapplication.data.Comment.Comment;
+import com.example.myapplication.ui.CommentAdapter;
 
 public class PlayVideoActivity extends AppCompatActivity {
     private VideoView videoView;
