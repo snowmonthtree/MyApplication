@@ -8,17 +8,21 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.widget.ArrayAdapter;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Spinner;
+
 
 import com.example.myapplication.CreationCenterActivity;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.ProfileActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.SearchResultActivity;
 import com.example.myapplication.ShoppingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 
 public class ParkActivity extends AppCompatActivity {
+    private SearchView parkSearch;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -33,6 +37,7 @@ public class ParkActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        parkSearch=findViewById(R.id.park_searchbox);
 
         // 获取 BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -85,25 +90,24 @@ public class ParkActivity extends AppCompatActivity {
 
         // 设置默认选中的项
         spinner.setSelection(0); // 选择第一个项，即“大小”
-
-        // 获取 SearchView 并设置点击事件
-       /* SearchView searchView = findViewById(R.id.park_searchbox);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        // 设置 OnQueryTextListener
+        parkSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // 当用户提交搜索请求时触发
-                // 这里可以启动一个新的 Activity 来显示搜索结果
-                Intent intent = new Intent(ParkActivity.this, SearchResultActivity.class);
-                intent.putExtra("search_query", query);
-                startActivity(intent);
+                // 用户提交查询时的处理逻辑
+                Intent searchIntent = new Intent(ParkActivity.this, SearchResultActivity.class);
+                searchIntent.putExtra("query", query);
+                startActivity(searchIntent);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // 当搜索文本改变时触发
+                // 用户输入搜索时的实时搜索逻辑，可以进行实时查询等
                 return false;
             }
-        });*/
+        });
+
+
     }
 }
