@@ -1,26 +1,26 @@
-package com.example.myapplication;
+package com.example.myapplication.page.Home;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.page.Profile.ProfileActivity;
+import com.example.myapplication.R;
+import com.example.myapplication.SearchResultActivity;
+import com.example.myapplication.page.Shopping.ShoppingActivity;
+import com.example.myapplication.page.Profile.UserProfileActivity;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
+import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

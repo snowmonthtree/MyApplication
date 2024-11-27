@@ -1,14 +1,22 @@
-package com.example.myapplication;
+package com.example.myapplication.page.CreationCenter;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.page.CreationCenter.Doodle.DoodleActivity;
+import com.example.myapplication.HistoryAdapter;
+import com.example.myapplication.page.Home.HomeActivity;
+import com.example.myapplication.LocalAdapter;
+import com.example.myapplication.page.Profile.ProfileActivity;
+import com.example.myapplication.R;
+import com.example.myapplication.page.Shopping.ShoppingActivity;
+import com.example.myapplication.page.Profile.UserProfileActivity;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Login.LoginActivity;

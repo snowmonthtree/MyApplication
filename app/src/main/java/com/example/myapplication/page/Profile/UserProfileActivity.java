@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.page.Profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -9,14 +9,22 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.widget.Button;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import androidx.appcompat.widget.Toolbar;
 
+import com.example.myapplication.AboutUsActivity;
+import com.example.myapplication.CheckUpdateActivity;
+import com.example.myapplication.EditInfoActivity;
+import com.example.myapplication.FunctionAdapter;
+import com.example.myapplication.FunctionItem;
+import com.example.myapplication.R;
+import com.example.myapplication.SettingsActivity;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
+import com.example.myapplication.page.Home.HomeActivity;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
+import com.example.myapplication.page.Shopping.ShoppingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;

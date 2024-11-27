@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.page.Profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -10,6 +10,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.widget.Button;
 
+import com.example.myapplication.R;
+import com.example.myapplication.page.Shopping.ShoppingActivity;
+import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
+import com.example.myapplication.page.Home.HomeActivity;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

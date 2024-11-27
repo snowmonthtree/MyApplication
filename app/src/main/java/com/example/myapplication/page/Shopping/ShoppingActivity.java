@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.page.Shopping;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,9 +8,14 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.R;
+import com.example.myapplication.page.Profile.UserProfileActivity;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
+import com.example.myapplication.page.Home.HomeActivity;
 import com.example.myapplication.page.Park.ParkActivity;
+import com.example.myapplication.page.Profile.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.core.view.ViewCompat;
 import androidx.core.graphics.Insets;

@@ -28,10 +28,10 @@
 
 
         <activity
-            android:name=".PlayVideoActivity"
+            android:name=".page.Video.PlayVideoActivity"
             android:exported="false" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".page.Profile.UserProfileActivity"
             android:exported="false" />
 
         <activity
@@ -54,23 +54,23 @@
             android:name=".SearchResultActivity"
             android:exported="false" />
         <activity
-            android:name=".DoodleActivity"
+            android:name=".page.CreationCenter.Doodle.DoodleActivity"
             android:exported="false" />
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".page.Home.HomeActivity"
             android:exported="false" />
 
         <activity
-            android:name=".CreationCenterActivity"
+            android:name=".page.CreationCenter.CreationCenterActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ShoppingActivity"
+            android:name=".page.Shopping.ShoppingActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ProfileActivity"
+            android:name=".page.Profile.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".page.Park.ParkActivity"
