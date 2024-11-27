@@ -30,6 +30,25 @@
         <activity
             android:name=".PlayVideoActivity"
             android:exported="false" />
+        <activity
+            android:name=".UserProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AboutUsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CheckUpdateActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".EditInfoActivity"
+            android:exported="false" />
 
         <activity
             android:name=".SearchResultActivity"

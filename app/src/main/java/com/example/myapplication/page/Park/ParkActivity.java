@@ -23,7 +23,10 @@ import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.SearchResultActivity;
 import com.example.myapplication.ShoppingActivity;
+import com.example.myapplication.UserProfileActivity;
 import com.example.myapplication.data.LedResource.LedResource;
+import com.example.myapplication.data.User.User;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Register.RegisterActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
@@ -81,10 +84,19 @@ public class ParkActivity extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.nav_profile) {
+                ViewSharer viewSharer=(ViewSharer)getApplication();
+                User user=viewSharer.getUser();
+                if (user.getPermissionId().equals("0")){
+                    startActivity(new Intent(ParkActivity.this, UserProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                }
                 // 跳转到个人中心
-                startActivity(new Intent(ParkActivity.this, ProfileActivity.class));
-                overridePendingTransition(0, 0);
+                else {
+                    startActivity(new Intent(ParkActivity.this, ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                }
                 return true;
+
             }
             return false;
         });

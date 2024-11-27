@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.data.Comment.Comment;
-import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.ui.CommentAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -44,42 +44,6 @@ public class PlayVideoActivity extends AppCompatActivity {
 
         // 初始化 RecyclerView
         initRecyclerView();
-
-        // 获取 BottomNavigationView
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // 设置默认选中项为个人中心
-        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
-
-        // 设置点击监听器
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                // 跳转到首页
-                startActivity(new Intent(PlayVideoActivity.this, HomeActivity.class));
-                overridePendingTransition(0, 0); // 可选，用于移除过渡动画
-                return true;
-            } else if (itemId == R.id.nav_square) {
-                // 跳转到广场页面
-                startActivity(new Intent(PlayVideoActivity.this, ParkActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-            } else if (itemId == R.id.nav_creation_center) {
-                // 跳转到创作中心
-                startActivity(new Intent(PlayVideoActivity.this, CreationCenterActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-            } else if (itemId == R.id.nav_shopping) {
-                // 跳转到购物页面
-                startActivity(new Intent(PlayVideoActivity.this, ShoppingActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-            } else if (itemId == R.id.nav_profile) {
-                // 当前已经是个人中心页面
-                return true;
-            }
-            return false;
-        });
     }
 
     private void initVideoView() {

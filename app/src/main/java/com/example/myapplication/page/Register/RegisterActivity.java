@@ -82,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
             newUser.setName(userName.getText().toString());
             newUser.setPassword(userPassword.getText().toString());
             newUser.setEmail(userEmail.getText().toString());
+
             Call<String> call = userController.insertUser(newUser,newCode.getText().toString());
             call.enqueue(new Callback<String>() {
                 @Override

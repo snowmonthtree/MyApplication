@@ -113,114 +113,119 @@
 
     </LinearLayout>
 
-    <TableLayout
-        android:id="@+id/layout4"
+    <!-- ScrollView 包裹 TableLayout -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout3">
+        app:layout_constraintTop_toBottomOf="@id/layout3"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
 
-        <TableRow
+        <TableLayout
+            android:id="@+id/layout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:stretchColumns="*">
 
-            <ImageButton
-                android:id="@+id/imageButton7"
-                android:layout_width="50dp"
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button7" />
+                android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/imageButton8"
-                android:layout_width="50dp"
+                <ImageButton
+                    android:id="@+id/imageButton7"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button7" />
+
+                <ImageButton
+                    android:id="@+id/imageButton8"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button8" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button8" />
-        </TableRow>
+                android:gravity="center">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+                <ImageButton
+                    android:id="@+id/imageButton1"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button1" />
 
-            <ImageButton
-                android:id="@+id/imageButton1"
-                android:layout_width="50dp"
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button2" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button1" />
+                android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="50dp"
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button3" />
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button4" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button2" />
-        </TableRow>
+                android:gravity="center">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+                <ImageButton
+                    android:id="@+id/imageButton5"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button5" />
 
-            <ImageButton
-                android:id="@+id/imageButton3"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button3" />
+                <ImageButton
+                    android:id="@+id/imageButton6"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/empty_preview"
+                    android:contentDescription="@string/description_image_button6" />
+            </TableRow>
 
-            <ImageButton
-                android:id="@+id/imageButton4"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button4" />
-        </TableRow>
+        </TableLayout>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+    </ScrollView>
 
-            <ImageButton
-                android:id="@+id/imageButton5"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button5" />
-
-            <ImageButton
-                android:id="@+id/imageButton6"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/empty_preview"
-                android:contentDescription="@string/description_image_button6" />
-        </TableRow>
-
-    </TableLayout>
-
-   <!-- 添加 BottomNavigationView -->
+    <!-- 添加 BottomNavigationView -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
-        app:labelVisibilityMode="labeled"
-        app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black"
-        app:itemRippleColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 

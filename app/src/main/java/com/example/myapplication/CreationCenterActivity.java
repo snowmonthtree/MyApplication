@@ -2,24 +2,30 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-
+import android.widget.ImageButton;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.data.User.User;
-import com.example.myapplication.data.User.UserViewModel;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
-import com.example.myapplication.page.SwitchUser.SwitchUserActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.view.View;
 
 public class CreationCenterActivity extends AppCompatActivity {
-    private User user;
+
+    private RecyclerView recyclerViewHistory;
+    private RecyclerView recyclerViewLocal;
+    private HistoryAdapter historyAdapter;
+    private LocalAdapter localAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +40,7 @@ public class CreationCenterActivity extends AppCompatActivity {
         Button buttonPhoto = findViewById(R.id.button_photo);
         Button buttonText = findViewById(R.id.button_text);
         ImageButton imageButton = findViewById(R.id.image_button); // 新添加的图片按钮
-        ViewSharer app = (ViewSharer) getApplication();
 
-        user=app.getUser();
         // 获取 BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -65,29 +69,30 @@ public class CreationCenterActivity extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 return true;
             } else if (itemId == R.id.nav_profile) {
+                ViewSharer viewSharer=(ViewSharer)getApplication();
+                User user=viewSharer.getUser();
+                if (user.getPermissionId().equals("0")){
+                    startActivity(new Intent(CreationCenterActivity.this, UserProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                }
                 // 跳转到个人中心
-                startActivity(new Intent(CreationCenterActivity.this, ProfileActivity.class));
-                overridePendingTransition(0, 0);
+                else {
+                    startActivity(new Intent(CreationCenterActivity.this, ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                }
                 return true;
             }
             return false;
         });
-        if (!user.getPermissionId().equals("1")){
-            imageButton.setVisibility(View.GONE);
-        }
 
         // 设置按钮点击监听器（可选）
         buttonDoodle.setOnClickListener(v -> {
-            if (user.getPermissionId().equals("1")){
-                Toast.makeText(this, "请登录", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Intent intent = new Intent(CreationCenterActivity.this, DoodleActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(CreationCenterActivity.this, DoodleActivity.class);
+            startActivity(intent);
         });
 
-       /* buttonAnimation.setOnClickListener(v -> {
+        /*
+        buttonAnimation.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, AnimationActivity.class);
             startActivity(intent);
         });
@@ -111,11 +116,65 @@ public class CreationCenterActivity extends AppCompatActivity {
             Intent intent = new Intent(CreationCenterActivity.this, TextActivity.class);
             startActivity(intent);
         });
-*/
+        */
+
         // 设置图片按钮点击监听器
         imageButton.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, LoginActivity.class);
             startActivity(intent);
+        });
+
+        // 初始化 RecyclerView
+        recyclerViewHistory = findViewById(R.id.recycler_view_history);
+        recyclerViewLocal = findViewById(R.id.recycler_view_local);
+
+        // 准备数据
+        List<String> historyList = new ArrayList<>();
+        historyList.add("历史记录1");
+        historyList.add("历史记录2");
+        historyList.add("历史记录3");
+
+        List<String> localList = new ArrayList<>();
+        localList.add("本地资源1");
+        localList.add("本地资源2");
+        localList.add("本地资源3");
+
+        // 设置适配器
+        historyAdapter = new HistoryAdapter(historyList);
+        localAdapter = new LocalAdapter(localList);
+
+        recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewHistory.setAdapter(historyAdapter);
+
+        recyclerViewLocal.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewLocal.setAdapter(localAdapter);
+
+        // 设置默认选中项
+        RadioButton radioButtonHistory = findViewById(R.id.radio_history);
+        radioButtonHistory.setChecked(true);
+
+        // 监听 RadioGroup 的选择变化
+        RadioGroup radioGroup = findViewById(R.id.radio_group);
+
+        ViewSharer viewSharer=(ViewSharer)getApplication();
+        User user=viewSharer.getUser();
+        if (user.getPermissionId().equals("1")){
+            imageButton.setVisibility(View.VISIBLE);
+            recyclerViewLocal.setVisibility(View.GONE);
+            recyclerViewHistory.setVisibility(View.GONE);
+            radioGroup.setVisibility(View.GONE);
+        }
+
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radio_history) {
+                // 显示历史记录内容
+                recyclerViewHistory.setVisibility(View.VISIBLE);
+                recyclerViewLocal.setVisibility(View.GONE);
+            } else if (checkedId == R.id.radio_local) {
+                // 显示本地资源内容
+                recyclerViewHistory.setVisibility(View.GONE);
+                recyclerViewLocal.setVisibility(View.VISIBLE);
+            }
         });
     }
 }

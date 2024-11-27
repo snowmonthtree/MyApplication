@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.data.User.User;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.core.view.ViewCompat;
@@ -73,9 +75,17 @@ public class ShoppingActivity extends AppCompatActivity {
                 // 当前已经是购物页
                 return true;
             } else if (itemId == R.id.nav_profile) {
+                ViewSharer viewSharer=(ViewSharer)getApplication();
+                User user=viewSharer.getUser();
+                if (user.getPermissionId().equals("0")){
+                    startActivity(new Intent(ShoppingActivity.this, UserProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                }
                 // 跳转到个人中心
-                startActivity(new Intent(ShoppingActivity.this, ProfileActivity.class));
-                overridePendingTransition(0, 0);
+                else {
+                    startActivity(new Intent(ShoppingActivity.this, ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                }
                 return true;
             }
             return false;

@@ -160,22 +160,68 @@
         android:layout_marginBottom="0dp"
         android:background="?android:attr/selectableItemBackground"
         android:scaleType="fitCenter"
+        app:layout_constraintTop_toBottomOf="@id/button_image"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_creation_center_passsenger_login" />
 
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_image"
+        android:layout_marginTop="20dp">
+
+        <RadioButton
+            android:id="@+id/radio_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/history"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radio_local"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/local" />
+    </RadioGroup>
+
+    <!-- RecyclerView 用于显示历史记录内容 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_history"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group"
+        app:layout_constraintBottom_toTopOf="@id/recycler_view_local"
+        android:visibility="visible" />
+
+    <!-- RecyclerView 用于显示本地资源内容 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_local"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view_history"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        android:visibility="gone" />
 
 
+    <!-- 添加 BottomNavigationView -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
-        app:labelVisibilityMode="labeled"
-        app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black"
-        app:itemRippleColor="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
