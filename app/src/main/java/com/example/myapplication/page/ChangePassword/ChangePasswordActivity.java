@@ -35,7 +35,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private EditText newCode;
     private Button getCode;
     private Button reset;
-    private UserViewModel userViewModel;
     private User user;
 
     Retrofit retrofit;
@@ -56,7 +55,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         newCode = findViewById(R.id.newCode);
         getCode = findViewById(R.id.getCode);
         reset = findViewById(R.id.reset);
-        userViewModel= new ViewModelProvider(this).get(UserViewModel.class);
         reset.setOnClickListener(v->reset());
         getCode.setOnClickListener(view -> getCode());
         try {
@@ -92,7 +90,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     //如果成功,更新ViewModel
                     if (data.equals("success")) {
                         user.setPassword(userPassword1.getText().toString());
-                        userViewModel.setUser(user);
                     }
                 }
 

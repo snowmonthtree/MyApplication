@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -114,46 +115,9 @@ public class HomeActivity extends AppCompatActivity {
         // 使用 Lambda 表达式设置图片按钮的点击监听器
         imageButton.setOnClickListener(v -> {
             // 检查蓝牙权限
-            if (isBluetoothPermissionGranted()) {
-                // 唤起系统蓝牙设置
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                enableBtLauncher.launch(enableBtIntent);
-            } else {
-                // 请求蓝牙权限
-                requestBluetoothPermissions();
-            }
+            Intent intent=new Intent(HomeActivity.this, BluetoothActivity.class);
+            startActivity(intent);
         });
     }
 
-    private boolean isBluetoothPermissionGranted() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            return ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
-        } else {
-            return ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) == PackageManager.PERMISSION_GRANTED;
-        }
-    }
-
-    private void requestBluetoothPermissions() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 1);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN}, 1);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 用户授予了蓝牙权限
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                enableBtLauncher.launch(enableBtIntent);
-            } else {
-                // 用户拒绝了蓝牙权限
-                Toast.makeText(this, "请授予蓝牙权限以使用此功能", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

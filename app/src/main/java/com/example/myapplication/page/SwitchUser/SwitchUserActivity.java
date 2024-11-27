@@ -10,8 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.R;
+import com.example.myapplication.data.User.User;
+import com.example.myapplication.data.User.UserViewModel;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
@@ -40,7 +44,9 @@ public class SwitchUserActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(SwitchUserActivity.this, BluetoothActivity.class);
+
+                // 获取 Application 实例并通过它获取 UserViewModel 实例
+                Intent intent=new Intent(SwitchUserActivity.this, ParkActivity.class);
                 startActivity(intent);
             }
         });

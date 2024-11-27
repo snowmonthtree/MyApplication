@@ -2,16 +2,24 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.myapplication.data.User.User;
+import com.example.myapplication.data.User.UserViewModel;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
+import com.example.myapplication.page.SwitchUser.SwitchUserActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class CreationCenterActivity extends AppCompatActivity {
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +34,9 @@ public class CreationCenterActivity extends AppCompatActivity {
         Button buttonPhoto = findViewById(R.id.button_photo);
         Button buttonText = findViewById(R.id.button_text);
         ImageButton imageButton = findViewById(R.id.image_button); // 新添加的图片按钮
+        ViewSharer app = (ViewSharer) getApplication();
 
+        user=app.getUser();
         // 获取 BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -62,11 +72,19 @@ public class CreationCenterActivity extends AppCompatActivity {
             }
             return false;
         });
+        if (!user.getPermissionId().equals("1")){
+            imageButton.setVisibility(View.GONE);
+        }
 
         // 设置按钮点击监听器（可选）
         buttonDoodle.setOnClickListener(v -> {
-            Intent intent = new Intent(CreationCenterActivity.this, DoodleActivity.class);
-            startActivity(intent);
+            if (user.getPermissionId().equals("1")){
+                Toast.makeText(this, "请登录", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Intent intent = new Intent(CreationCenterActivity.this, DoodleActivity.class);
+                startActivity(intent);
+            }
         });
 
        /* buttonAnimation.setOnClickListener(v -> {

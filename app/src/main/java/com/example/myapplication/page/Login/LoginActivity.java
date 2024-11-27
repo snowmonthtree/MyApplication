@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.User.UserViewModel;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.ChangePassword.ChangePasswordActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.R;
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button button ;
     private CheckBox checkBox ;
     private Retrofit retrofit;
-    private UserViewModel userViewModel;
+    UserController userController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,19 +59,18 @@ public class LoginActivity extends AppCompatActivity {
         passWord = findViewById(R.id.Password);
         button = findViewById(R.id.login);
         checkBox = findViewById(R.id.checkBox1);
-        userViewModel= new ViewModelProvider(this).get(UserViewModel.class);
-        //跳转修改密码
-        change_password.setOnClickListener(view -> toChangePassword());
-        //跳转注册
-        register_now.setOnClickListener(v ->toRegister());
-        UserViewModel userViewModel=new ViewModelProvider(this).get(UserViewModel.class);
-
         try {
             retrofit = RetrofitClient.getClient(LoginActivity.this);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        userController = retrofit.create(UserController.class);
         button.setOnClickListener(view -> login());
+        //跳转修改密码
+        change_password.setOnClickListener(view -> toChangePassword());
+        //跳转注册
+        register_now.setOnClickListener(v ->toRegister());
     }
     private void toRegister(){
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -91,8 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                     .show();
         }
         else {
-            UserController userController1 = retrofit.create(UserController.class);
-            Call<User> call = userController1.getUser(userEmail.getText().toString(), passWord.getText().toString());
+            Call<User> call = userController.getUser(userEmail.getText().toString(), passWord.getText().toString());
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
@@ -119,7 +118,8 @@ public class LoginActivity extends AppCompatActivity {
                                         .show();
                             });
                         } else {
-                            userViewModel.setUser(data);
+                            ViewSharer viewSharer=(ViewSharer)getApplication();
+                            viewSharer.setUser(data);
                             Intent intent = new Intent(LoginActivity.this, ParkActivity.class);
                             startActivity(intent);
                         }

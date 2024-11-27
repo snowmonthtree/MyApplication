@@ -7,20 +7,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.bumptech.glide.Glide;
+import com.example.myapplication.Controller.LedResourceController;
+import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.CreationCenterActivity;
 import com.example.myapplication.HomeActivity;
 import com.example.myapplication.PlayVideoActivity;
 import com.example.myapplication.ProfileActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.SearchResultActivity;
 import com.example.myapplication.ShoppingActivity;
+import com.example.myapplication.data.LedResource.LedResource;
+import com.example.myapplication.page.Register.RegisterActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 import androidx.appcompat.widget.SearchView;
 import android.widget.ImageButton;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ParkActivity extends AppCompatActivity {
 
@@ -128,7 +143,68 @@ public class ParkActivity extends AppCompatActivity {
         ImageButton imageButton6 = findViewById(R.id.imageButton6);
         ImageButton imageButton7 = findViewById(R.id.imageButton7);
         ImageButton imageButton8 = findViewById(R.id.imageButton8);
+        Retrofit retrofit;
+        try {
+            retrofit = RetrofitClient.getClient(ParkActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        LedResourceController ledResourceController = retrofit.create(LedResourceController.class);
 
+        Call< List <LedResource>> call=ledResourceController.getLatestLedResources();
+        call.enqueue(new Callback<List<LedResource>>() {
+            @Override
+            public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
+                List<LedResource> ledResources=response.body();
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(0).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton1);  // 将图片显示到 ImageView
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(1).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton2);  // 将图片显示到 ImageView
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(2).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton3);  // 将图片显示到 ImageView
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(3).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton4);  // 将图片显示到 ImageView
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(4).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton5);  // 将图片显示到 ImageView
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(5).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton6);  // 将图片显示到 ImageView
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(6).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton7);  // 将图片显示到 ImageView
+                Glide.with(ParkActivity.this)
+                        .load(ledResources.get(7).getViewWebUrl())  // 加载图片 URL
+                        .placeholder(R.drawable.login1)  // 加载中的占位图
+                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
+                        .into(imageButton8);  // 将图片显示到 ImageView
+
+            }
+
+            @Override
+            public void onFailure(Call<List<LedResource>> call, Throwable t) {
+                Log.e("park test", "onFailure: "+t.getMessage() );
+
+            }
+        });
         // 设置点击监听器
         setImageButtonClickListener(imageButton1);
         setImageButtonClickListener(imageButton2);
