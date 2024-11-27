@@ -11,6 +11,8 @@ import com.example.myapplication.data.User.UserViewModel;
 public class ViewSharer extends Application {
     private User user;
 
+    private final String path="https://1.95.83.162:8081/api/";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -22,5 +24,8 @@ public class ViewSharer extends Application {
     }
     public void setUser(User user) {
         this.user = user;
+    }
+    public String getPath() {
+        return path;
     }
 }

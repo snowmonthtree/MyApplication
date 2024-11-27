@@ -4,7 +4,9 @@ import com.example.myapplication.data.LedResource.LedResource;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -22,5 +24,5 @@ public interface LedResourceController {
             @Query("name") String name
     );
     @GET("api/led-resources/{imageName}")
-    Call<Void> getImage(@Path("imageName") String imageName);
+    Call<ResponseBody> getImage(@Path("imageName") String imageName);
 }

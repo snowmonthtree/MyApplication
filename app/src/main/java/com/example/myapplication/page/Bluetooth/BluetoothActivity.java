@@ -13,11 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.graphics.drawable.BitmapDrawable;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import android.graphics.BitmapFactory;
 
 import com.example.myapplication.R;
 
@@ -35,7 +38,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private BluetoothSocket bluetoothSocket;
     private OutputStream outputStream;
 
-    private final String DEVICE_NAME = "HC-05"; // 目标蓝牙模块名称
+    private final String DEVICE_NAME = "Redmi Buds 5"; // 目标蓝牙模块名称
     private final UUID DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // 通用串口 UUID
 
     private Button btnConnect, btnSend;
@@ -50,19 +53,16 @@ public class BluetoothActivity extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSend);
         imageView = findViewById(R.id.imageView);
 
+
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // 设置按钮点击事件
         btnConnect.setOnClickListener(v -> checkAndRequestPermissions());
         btnSend.setOnClickListener(v -> sendImageData());
 
-        // 获取传递过来的图片资源 ID
-        int imageResId = getIntent().getIntExtra("image_res_id", -1);
-        // 获取 ImageView 控件并设置图片
-        ImageView imageView = findViewById(R.id.imageView);
-        if (imageResId != -1) {
-            imageView.setImageResource(imageResId);
-        }
+
+
     }
 
     /**
@@ -153,24 +153,36 @@ public class BluetoothActivity extends AppCompatActivity {
      * 发送图片数据
      */
     private void sendImageData() {
+
         if (outputStream == null) {
             showToast("蓝牙未连接");
             return;
         }
 
+
         // 将 ImageView 的图片转换为 Bitmap
-        imageView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = imageView.getDrawingCache();
+       // imageView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
+      // Bitmap bitmap = imageView.getDrawingCache();
 
         if (bitmap == null) {
             showToast("图片为空");
             return;
         }
 
-        String compressedData = compressImage(bitmap);
+        byte[] imageData = convertImageToBytes(bitmap);
+
+        // 在发送前将所有 0xFF 替换为 0xFE，避免冲突
+        imageData = replaceByteValue(imageData, (byte) 0xFF, (byte) 0xFE);
+
+
+
+        //调试，将图片的发送数据打印到logcat
+        logByteArray(imageData);
 
         try {
-            outputStream.write((compressedData + "\n").getBytes());
+            outputStream.write(imageData);
             showToast("图片数据已发送");
         } catch (IOException e) {
             Log.e(TAG, "发送失败", e);
@@ -180,30 +192,77 @@ public class BluetoothActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 压缩图片为数据格式
-     */
-    private String compressImage(Bitmap bitmap) {
-        StringBuilder data = new StringBuilder();
+    // 输出字节数组到 Logcat
+    private void logByteArray(byte[] byteArray) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int lineLength = 32 * 3; // 每行32个像素，每个像素3个字节
 
-        for (int y = 0; y < bitmap.getHeight(); y++) {
-            for (int x = 0; x < bitmap.getWidth(); x++) {
+       for (int i = 0; i < byteArray.length; i++) {
+            stringBuilder.append(String.format("%02X ", byteArray[i])); // 打印每个字节的16进制表示
+
+
+            // 每输出32个像素，换行
+            if ((i + 1) % lineLength == 0) {
+                Log.d(TAG, "发送的数据: " + stringBuilder.toString());
+                stringBuilder.setLength(0); // 清空 StringBuilder，准备下一行
+            }
+
+
+
+        }
+        if (stringBuilder.length() > 0) {
+            Log.d(TAG, "发送的数据: " + stringBuilder.toString());
+        }
+
+
+
+    }
+
+    /**
+     * 将图片转换为字节数组（每个像素3个字节，RGB）
+     */
+    private byte[] convertImageToBytes(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        Log.d(TAG, "图像的宽度为：" + width);
+        Log.d(TAG, "图像的高度为：" + height);
+
+        // 计算字节数组的大小，每个像素使用3个字节（RGB）
+        byte[] byteArray = new byte[width * height * 3 + 1]; // 多一个字节用于结束标志
+
+        int index = 0;
+
+        // 填充RGB值
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 int pixel = bitmap.getPixel(x, y);
 
-                // 获取 RGB 颜色值
                 int red = Color.red(pixel);
                 int green = Color.green(pixel);
                 int blue = Color.blue(pixel);
 
-                // 将颜色压缩为 16 进制格式
-                String color = String.format("%02X%02X%02X", red, green, blue);
-
-                // 每个像素点存储为 "颜色|数量;"
-                data.append(color).append("|1;");
+                byteArray[index++] = (byte) red;
+                byteArray[index++] = (byte) green;
+                byteArray[index++] = (byte) blue;
             }
         }
 
-        return data.toString();
+        // 添加结束标志字节（0xFF）
+        byteArray[byteArray.length - 1] = (byte) 0xFF;
+
+        return byteArray;
+    }
+
+    /**
+     * 替换字节数组中的某个字节值
+     */
+    private byte[] replaceByteValue(byte[] byteArray, byte oldValue, byte newValue) {
+        for (int i = 0; i < byteArray.length-1; i++) {
+            if (byteArray[i] == oldValue) {
+                byteArray[i] = newValue;
+            }
+        }
+        return byteArray;
     }
 
     /**

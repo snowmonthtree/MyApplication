@@ -1,8 +1,12 @@
 package com.example.myapplication.page.Park;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,6 +17,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.CreationCenterActivity;
@@ -33,14 +41,20 @@ import android.content.Intent;
 import androidx.appcompat.widget.SearchView;
 import android.widget.ImageButton;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ParkActivity extends AppCompatActivity {
+    LedResourceController ledResourceController;
+    Retrofit retrofit;
+    private ImageButton[] imageButtons = new ImageButton[8];
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -147,68 +161,37 @@ public class ParkActivity extends AppCompatActivity {
         });
 
         // 获取并设置 ImageButtons 的点击监听器
-        ImageButton imageButton1 = findViewById(R.id.imageButton1);
-        ImageButton imageButton2 = findViewById(R.id.imageButton2);
-        ImageButton imageButton3 = findViewById(R.id.imageButton3);
-        ImageButton imageButton4 = findViewById(R.id.imageButton4);
-        ImageButton imageButton5 = findViewById(R.id.imageButton5);
-        ImageButton imageButton6 = findViewById(R.id.imageButton6);
-        ImageButton imageButton7 = findViewById(R.id.imageButton7);
-        ImageButton imageButton8 = findViewById(R.id.imageButton8);
-        Retrofit retrofit;
+         imageButtons[0] = findViewById(R.id.imageButton1);
+         imageButtons[1] = findViewById(R.id.imageButton2);
+         imageButtons[2] = findViewById(R.id.imageButton3);
+       imageButtons[3] = findViewById(R.id.imageButton4);
+         imageButtons[4] = findViewById(R.id.imageButton5);
+         imageButtons[5]= findViewById(R.id.imageButton6);
+        imageButtons[6] = findViewById(R.id.imageButton7);
+         imageButtons[7] = findViewById(R.id.imageButton8);
+
         try {
             retrofit = RetrofitClient.getClient(ParkActivity.this);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        LedResourceController ledResourceController = retrofit.create(LedResourceController.class);
-
+        ledResourceController = retrofit.create(LedResourceController.class);
         Call< List <LedResource>> call=ledResourceController.getLatestLedResources();
         call.enqueue(new Callback<List<LedResource>>() {
             @Override
             public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
                 List<LedResource> ledResources=response.body();
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(0).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton1);  // 将图片显示到 ImageView
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(1).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton2);  // 将图片显示到 ImageView
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(2).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton3);  // 将图片显示到 ImageView
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(3).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton4);  // 将图片显示到 ImageView
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(4).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton5);  // 将图片显示到 ImageView
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(5).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton6);  // 将图片显示到 ImageView
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(6).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton7);  // 将图片显示到 ImageView
-                Glide.with(ParkActivity.this)
-                        .load(ledResources.get(7).getViewWebUrl())  // 加载图片 URL
-                        .placeholder(R.drawable.login1)  // 加载中的占位图
-                        .error(R.drawable.ic_doodle_back)  // 加载失败时显示的错误图
-                        .into(imageButton8);  // 将图片显示到 ImageView
-
+                if (response.isSuccessful() && response.body() != null) {
+                    int i=0;
+                    List<LedResource> resources = response.body();
+                    for (LedResource resource : resources) {
+                        String imageName = resource.getViewWebUrl();
+                        fetchImage(imageName,i);  // 根据图片名称获取图片
+                        i++;
+                    }
+                } else {
+                    Log.e("parkTest", "fail" );
+                }
             }
 
             @Override
@@ -218,14 +201,14 @@ public class ParkActivity extends AppCompatActivity {
             }
         });
         // 设置点击监听器
-        setImageButtonClickListener(imageButton1);
-        setImageButtonClickListener(imageButton2);
-        setImageButtonClickListener(imageButton3);
-        setImageButtonClickListener(imageButton4);
-        setImageButtonClickListener(imageButton5);
-        setImageButtonClickListener(imageButton6);
-        setImageButtonClickListener(imageButton7);
-        setImageButtonClickListener(imageButton8);
+        setImageButtonClickListener(imageButtons[1]);
+        setImageButtonClickListener(imageButtons[2]);
+        setImageButtonClickListener(imageButtons[3]);
+        setImageButtonClickListener(imageButtons[4]);
+        setImageButtonClickListener(imageButtons[5]);
+        setImageButtonClickListener(imageButtons[6]);
+        setImageButtonClickListener(imageButtons[7]);
+        setImageButtonClickListener(imageButtons[0]);
     }
 
     private void setImageButtonClickListener(ImageButton imageButton) {
@@ -234,5 +217,46 @@ public class ParkActivity extends AppCompatActivity {
             Intent intent = new Intent(ParkActivity.this, PlayVideoActivity.class);
             startActivity(intent);
         });
+    }
+    private void fetchImage(String imageName,int i) {
+        ledResourceController.getImage(imageName).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // 从ResponseBody获取图片数据并设置到ImageButton
+                    ResponseBody responseBody = response.body();
+                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+                    if (bitmap != null) {
+                        imageButtons[i].setImageBitmap(bitmap);  // 设置Bitmap到ImageButton
+                    }
+                } else {
+                    // 图片加载失败，处理错误
+                    Log.e("1", "onResponse: " );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // 网络请求失败
+                Log.e("2", "onFailure: ");
+            }
+        });
+    }
+    // 将ResponseBody转换为Bitmap
+    private Bitmap convertResponseBodyToBitmap(ResponseBody responseBody) {
+        Bitmap bitmap = null;
+        InputStream inputStream = responseBody.byteStream();
+        try {
+            bitmap = BitmapFactory.decodeStream(inputStream);  // 将输入流解码为Bitmap
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();  // 关闭输入流
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return bitmap;
     }
 }
