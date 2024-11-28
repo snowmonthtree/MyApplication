@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,7 +39,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private BluetoothSocket bluetoothSocket;
     private OutputStream outputStream;
 
-    private final String DEVICE_NAME = "Redmi Buds 5"; // 目标蓝牙模块名称
+    private final String DEVICE_NAME = "GT512"; // 目标蓝牙模块名称
     private final UUID DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // 通用串口 UUID
 
     private Button btnConnect, btnSend;
@@ -62,6 +63,13 @@ public class BluetoothActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> sendImageData());
 
 
+
+        Intent intent = getIntent();
+        byte[] byteArray = intent.getByteArrayExtra("image");
+        if (byteArray != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            imageView.setImageBitmap(bitmap);
+        }
 
     }
 

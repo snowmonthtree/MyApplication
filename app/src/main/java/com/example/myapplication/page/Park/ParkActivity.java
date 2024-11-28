@@ -3,6 +3,8 @@ package com.example.myapplication.page.Park;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import android.content.Intent;
 import androidx.appcompat.widget.SearchView;
 import android.widget.ImageButton;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -204,9 +207,20 @@ public class ParkActivity extends AppCompatActivity {
 
     private void setImageButtonClickListener(ImageButton imageButton) {
         imageButton.setOnClickListener(v -> {
-            // 当用户点击 ImageButton 时，跳转到 PlayVideoActivity
-            Intent intent = new Intent(ParkActivity.this, PlayVideoActivity.class);
-            startActivity(intent);
+            // 获取 ImageButton 上的 Bitmap
+            Drawable drawable = imageButton.getDrawable();
+            if (drawable instanceof BitmapDrawable) {
+                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+
+                // 将 Bitmap 转换为字节数组
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                // 当用户点击 ImageButton 时，跳转到 PlayVideoActivity
+                Intent intent = new Intent(ParkActivity.this, PlayVideoActivity.class);
+                intent.putExtra("image", byteArray);
+                startActivity(intent);
+            }
         });
     }
     private void fetchImage(String imageName,int i) {
