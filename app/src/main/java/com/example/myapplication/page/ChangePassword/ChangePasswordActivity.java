@@ -87,7 +87,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 public void onResponse(Call<String> call, Response<String> response) {
                     String data = response.body();
                     Toast.makeText(ChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();
-                    //如果成功,更新ViewModel
+
                     if (data.equals("success")) {
                         user.setPassword(userPassword1.getText().toString());
                     }

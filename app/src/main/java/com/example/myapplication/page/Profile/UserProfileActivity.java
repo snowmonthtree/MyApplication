@@ -25,6 +25,7 @@ import com.example.myapplication.page.Home.HomeActivity;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.page.Shopping.ShoppingActivity;
+import com.example.myapplication.page.SwitchUser.SwitchUserActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -129,10 +130,10 @@ public class UserProfileActivity extends AppCompatActivity {
             User user=new User();
             ViewSharer viewSharer=(ViewSharer)getApplication();
             viewSharer.setUser(user);
-            Intent logoutIntent = new Intent(UserProfileActivity.this, LoginActivity.class);
+            Intent logoutIntent = new Intent(UserProfileActivity.this, SwitchUserActivity.class);
             startActivity(logoutIntent);
             // 可以选择在这里清除用户的登录状态
-            finish(); // 关闭当前活动
+            finishAffinity(); // 关闭当前活动
         });
 
         // 设置退出按钮的点击监听器
