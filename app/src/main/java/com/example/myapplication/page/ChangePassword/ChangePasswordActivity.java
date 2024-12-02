@@ -19,6 +19,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.User.UserViewModel;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Register.RegisterActivity;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private Button getCode;
     private Button reset;
     private User user;
+    private ViewSharer viewSharer;
 
     Retrofit retrofit;
     UserController userController;
@@ -55,6 +57,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         newCode = findViewById(R.id.newCode);
         getCode = findViewById(R.id.getCode);
         reset = findViewById(R.id.reset);
+        viewSharer=(ViewSharer)getApplication();
         reset.setOnClickListener(v->reset());
         getCode.setOnClickListener(view -> getCode());
         try {
@@ -89,7 +92,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     Toast.makeText(ChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();
 
                     if (data.equals("success")) {
+                        user=viewSharer.getUser();
                         user.setPassword(userPassword1.getText().toString());
+                        viewSharer.setUser(user);
                     }
                 }
 

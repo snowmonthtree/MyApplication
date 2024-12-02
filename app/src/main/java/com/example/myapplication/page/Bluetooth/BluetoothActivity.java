@@ -39,7 +39,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private BluetoothSocket bluetoothSocket;
     private OutputStream outputStream;
 
-    private final String DEVICE_NAME = "GT512"; // 目标蓝牙模块名称
+    private final String DEVICE_NAME = "HC-05"; // 目标蓝牙模块名称
     private final UUID DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // 通用串口 UUID
 
     private Button btnConnect, btnSend;
@@ -170,8 +170,10 @@ public class BluetoothActivity extends AppCompatActivity {
 
         // 将 ImageView 的图片转换为 Bitmap
        // imageView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        bitmap = Bitmap.createScaledBitmap(bitmap, 8, 32, false);
+        imageView.setImageBitmap(bitmap);
       // Bitmap bitmap = imageView.getDrawingCache();
 
         if (bitmap == null) {

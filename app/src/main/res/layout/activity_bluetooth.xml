@@ -11,9 +11,9 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/login1" 
+        android:src="@drawable/test"
         android:scaleType="centerCrop"
-        android:contentDescription="显示的图片" />
+        android:contentDescription="" />
 
     <!-- 连接蓝牙设备按钮 -->
     <Button
