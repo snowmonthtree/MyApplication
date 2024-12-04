@@ -1,5 +1,6 @@
 package com.example.myapplication.ui;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
         Comment comment = comments.get(position);
-        holder.author.setText(comment.getAuthor());
-        holder.text.setText(comment.getText());
-        holder.date.setText(comment.getDate());
+        holder.author.setText(comment.getUserId());
+        Log.e("aaaaaaaaaaaaaaa", comment.getCommentContext()+"onBindViewHolder:" );
+        holder.text.setText(comment.getCommentContext());
+        holder.date.setText(comment.getCommentTime());
     }
 
     @Override

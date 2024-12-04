@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -20,19 +21,32 @@ import android.widget.VideoView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Controller.CommentsController;
 import com.example.myapplication.R;
+import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.Comment.Comment;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
+import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.ui.CommentAdapter;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class PlayVideoActivity extends AppCompatActivity {
     private VideoView videoView;
     private MediaController mediaController;
+    private Retrofit retrofit;
+    private CommentsController commentsController;
+    private List<Comment> comments;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -47,6 +61,13 @@ public class PlayVideoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        try {
+            retrofit = RetrofitClient.getClient(PlayVideoActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        commentsController=retrofit.create(CommentsController.class);
+        comments=new ArrayList<>();
 
         // 初始化 VideoView
         initVideoView();
@@ -98,18 +119,36 @@ public class PlayVideoActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         RecyclerView recyclerViewComments = findViewById(R.id.recyclerViewComments);
-
+        Intent intent=getIntent();
+        String resourceId=intent.getStringExtra("ledId");
         // 创建一些静态评论数据
-        List<Comment> comments = new ArrayList<>();
-        comments.add(new Comment("John Doe", "This is a sample comment.", "1 day ago"));
-        comments.add(new Comment("Jane Smith", "Another sample comment.", "2 days ago"));
+        Call<List<Comment>> call=commentsController.getCommentsByResourceId(resourceId);
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                        comments.addAll(response.body());
+                    // 设置适配器
+                    CommentAdapter adapter = new CommentAdapter(comments);
+                    recyclerViewComments.setAdapter(adapter);
 
-        // 设置适配器
-        CommentAdapter adapter = new CommentAdapter(comments);
-        recyclerViewComments.setAdapter(adapter);
+                    // 设置布局管理器
+                    recyclerViewComments.setLayoutManager(new LinearLayoutManager(PlayVideoActivity.this));
 
-        // 设置布局管理器
-        recyclerViewComments.setLayoutManager(new LinearLayoutManager(this));
+                } else {
+                    Log.e("1", "onResponse: " );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+                // 网络请求失败
+                Log.e("2", "onFailure: ");
+            }
+        });
+        comments.add(new Comment("1","1","John Doe", "This is a sample comment.", "2"));
+        comments.add(new Comment("1","1","Jane Smith", "Another sample comment.", "1"));
+
     }
     private void toDisplay(ImageView imageView){
         imageView.setOnClickListener(v -> {
@@ -129,4 +168,5 @@ public class PlayVideoActivity extends AppCompatActivity {
             }
         });
     }
+
 }

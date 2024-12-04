@@ -84,7 +84,7 @@ public class SearchResultActivity extends AppCompatActivity {
     private List<ResultItem> getSampleData(String query) {
         // 模拟数据，实际应用中应从服务器或其他数据源获取
         List<ResultItem> sampleData = new ArrayList<>();
-        sampleData.add(new ResultItem("结果1", "这是一个描述", R.drawable.ic_launcher_foreground));
+        sampleData.add(new ResultItem("结果1", "这是一个描述", R.drawable.test));
         sampleData.add(new ResultItem("结果2", "这是另一个描述", R.drawable.ic_launcher_foreground));
         sampleData.add(new ResultItem("结果3", "这是第三个描述", R.drawable.ic_launcher_foreground));
 

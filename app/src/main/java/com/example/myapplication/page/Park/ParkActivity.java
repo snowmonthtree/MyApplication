@@ -174,13 +174,12 @@ public class ParkActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<LedResource>>() {
             @Override
             public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
-                List<LedResource> ledResources=response.body();
+
                 if (response.isSuccessful() && response.body() != null) {
                     int i=0;
-                    List<LedResource> resources = response.body();
-                    for (LedResource resource : resources) {
-                        String imageName = resource.getViewWebUrl();
-                        fetchImage(imageName,i);  // 根据图片名称获取图片
+                    List<LedResource> ledResources = response.body();
+                    for (LedResource resource : ledResources) {
+                        fetchImage(resource,i);  // 根据图片名称获取图片
                         i++;
                     }
                 } else {
@@ -219,11 +218,14 @@ public class ParkActivity extends AppCompatActivity {
                 // 当用户点击 ImageButton 时，跳转到 PlayVideoActivity
                 Intent intent = new Intent(ParkActivity.this, PlayVideoActivity.class);
                 intent.putExtra("image", byteArray);
+                intent.putExtra("ledId",imageButton.getContentDescription());
                 startActivity(intent);
             }
         });
     }
-    private void fetchImage(String imageName,int i) {
+    private void fetchImage(LedResource resource,int i) {
+        String imageName=resource.getViewWebUrl();
+        String resourceId=resource.getResourceId();
         ledResourceController.getImage(imageName).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -233,6 +235,7 @@ public class ParkActivity extends AppCompatActivity {
                     Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
                     if (bitmap != null) {
                         imageButtons[i].setImageBitmap(bitmap);  // 设置Bitmap到ImageButton
+                        imageButtons[i].setContentDescription(resourceId);
                     }
                 } else {
                     // 图片加载失败，处理错误

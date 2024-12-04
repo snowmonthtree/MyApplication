@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,12 +22,17 @@ import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.ChangePassword.ChangePasswordActivity;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class EditInfoActivity extends AppCompatActivity {
 
     private EditText etNickname;
-    private Button btnSelectAvatar, btnChangePassword, btnSaveChanges;
+    private Button btnSelectAvatar;
+    private Button btnChangePassword;
+    private Button btnSaveChanges;
     private ImageView imageViewAvatar;
-
+    private Uri selectedImageUri;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private ActivityResultLauncher<Intent> changePasswordLauncher;
     private ViewSharer viewSharer;
@@ -49,8 +57,8 @@ public class EditInfoActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri selectedImageUri = result.getData().getData();
-                        imageViewAvatar.setImageURI(selectedImageUri);
+                        selectedImageUri = result.getData().getData();
+
                     }
                 }
         );
@@ -87,7 +95,17 @@ public class EditInfoActivity extends AppCompatActivity {
             Toast.makeText(this, "昵称不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        if (selectedImageUri!=null){
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                // 处理 bitmap，例如显示在 ImageView
+                ImageView imageView = findViewById(R.id.imageView);
+                imageView.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         user.setName(nickname);
         viewSharer.setUser(user);
         // 保存昵称和其他信息

@@ -1,6 +1,7 @@
 package com.example.myapplication.page.ChangePassword;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.User.UserViewModel;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Register.RegisterActivity;
 
 import java.io.IOException;
@@ -92,9 +94,19 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     Toast.makeText(ChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();
 
                     if (data.equals("success")) {
-                        user=viewSharer.getUser();
-                        user.setPassword(userPassword1.getText().toString());
-                        viewSharer.setUser(user);
+                        if(viewSharer.getUser().getUserId()!=null){
+                            new AlertDialog.Builder(ChangePasswordActivity.this)
+                                    .setTitle("成功")
+                                    .setMessage("修改密码后需要重新登录")
+                                    .setPositiveButton("确定", (dialog, which) -> {
+                                        Intent intent=new Intent(ChangePasswordActivity.this,LoginActivity.class);
+                                        startActivity(intent);
+                                        finishAffinity();
+                                    })
+                                    .show();
+                        }
+
+
                     }
                 }
 
