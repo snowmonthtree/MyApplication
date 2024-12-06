@@ -14,7 +14,7 @@ public interface CommentsController {
     @GET("/api/comments/find/resource/{resourceId}")
     Call<List<Comment>> getCommentsByResourceId(@Path("resourceId") String resourceId);
 
-    @POST("/add/resource/{resourceId}/{userId}")
+    @POST("/api/comments/add/resource/{resourceId}/{userId}")
     Call<String> addComment(
             @Path("resourceId") String resourceId,
             @Path("userId") String userId,

@@ -1,6 +1,7 @@
 package com.example.myapplication.page.Video;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,8 +16,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +29,7 @@ import com.example.myapplication.Controller.CommentsController;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.Comment.Comment;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
@@ -47,6 +52,10 @@ public class PlayVideoActivity extends AppCompatActivity {
     private Retrofit retrofit;
     private CommentsController commentsController;
     private List<Comment> comments;
+    private EditText editText;
+    private Button button;
+    private ViewSharer viewSharer;
+    private String resourceId;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -61,6 +70,9 @@ public class PlayVideoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        editText=findViewById(R.id.editTextComment);
+        button=findViewById(R.id.buttonSendComment);
+        viewSharer=(ViewSharer) getApplication();
         try {
             retrofit = RetrofitClient.getClient(PlayVideoActivity.this);
         } catch (Exception e) {
@@ -74,6 +86,9 @@ public class PlayVideoActivity extends AppCompatActivity {
 
         // 初始化 RecyclerView
         initRecyclerView();
+
+        button.setOnClickListener(view -> sendComment());
+
     }
 
     private void initVideoView() {
@@ -89,6 +104,7 @@ public class PlayVideoActivity extends AppCompatActivity {
         //显示图片
         Intent intent = getIntent();
         byte[] byteArray = intent.getByteArrayExtra("image");
+        resourceId=intent.getStringExtra("ledId");
         if (byteArray != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             imageView.setImageBitmap(bitmap);
@@ -119,8 +135,6 @@ public class PlayVideoActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         RecyclerView recyclerViewComments = findViewById(R.id.recyclerViewComments);
-        Intent intent=getIntent();
-        String resourceId=intent.getStringExtra("ledId");
         // 创建一些静态评论数据
         Call<List<Comment>> call=commentsController.getCommentsByResourceId(resourceId);
         call.enqueue(new Callback<List<Comment>>() {
@@ -128,6 +142,7 @@ public class PlayVideoActivity extends AppCompatActivity {
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                         comments.addAll(response.body());
+                    comments.add(new Comment("1","1","Jane Smith", "没有更多了", "012345678901234567890123456789"));
                     // 设置适配器
                     CommentAdapter adapter = new CommentAdapter(comments);
                     recyclerViewComments.setAdapter(adapter);
@@ -136,18 +151,33 @@ public class PlayVideoActivity extends AppCompatActivity {
                     recyclerViewComments.setLayoutManager(new LinearLayoutManager(PlayVideoActivity.this));
 
                 } else {
+                    comments.add(new Comment("1","1","Jane Smith", "暂无评论", "012345678901234567890123456789"));
                     Log.e("1", "onResponse: " );
+                    // 设置适配器
+                    CommentAdapter adapter = new CommentAdapter(comments);
+                    recyclerViewComments.setAdapter(adapter);
+
+                    // 设置布局管理器
+                    recyclerViewComments.setLayoutManager(new LinearLayoutManager(PlayVideoActivity.this));
+
                 }
             }
 
             @Override
             public void onFailure(Call<List<Comment>> call, Throwable t) {
+
+                comments.add(new Comment("1","1","Jane Smith", "出错咯", "012345678901234567890123456789"));
                 // 网络请求失败
                 Log.e("2", "onFailure: ");
+                // 设置适配器
+                CommentAdapter adapter = new CommentAdapter(comments);
+                recyclerViewComments.setAdapter(adapter);
+
+                // 设置布局管理器
+                recyclerViewComments.setLayoutManager(new LinearLayoutManager(PlayVideoActivity.this));
+
             }
         });
-        comments.add(new Comment("1","1","John Doe", "This is a sample comment.", "2"));
-        comments.add(new Comment("1","1","Jane Smith", "Another sample comment.", "1"));
 
     }
     private void toDisplay(ImageView imageView){
@@ -168,5 +198,36 @@ public class PlayVideoActivity extends AppCompatActivity {
             }
         });
     }
+    private void sendComment() {
+        if (!viewSharer.getUser().getPermissionId().equals("0")){
+            new AlertDialog.Builder(PlayVideoActivity.this)
+                    .setTitle("错误")
+                    .setMessage("先登录")
+                    .setPositiveButton("登录",(dialog,witch) ->{
+                    Intent intent=new Intent(PlayVideoActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                    finishAffinity();
+                    })
+                    .setNegativeButton("稍后", (dialog,witch) ->{
 
+                    })
+                    .show();
+        }
+        else {
+            Call<String> call = commentsController.addComment(resourceId, viewSharer.getUser().getUserId(), editText.getText().toString());
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    String temp=response.body();
+                    Toast.makeText(PlayVideoActivity.this, temp, Toast.LENGTH_SHORT).show();
+                    comments.clear();
+                    initRecyclerView();
+                }
+                @Override
+                public void onFailure(Call<String> call ,Throwable T){
+                    Log.e("1", "onFailure: I Don't Know" );
+                }
+            });
+        }
+    }
 }
