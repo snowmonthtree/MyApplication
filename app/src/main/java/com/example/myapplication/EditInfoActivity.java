@@ -115,7 +115,7 @@ public class EditInfoActivity extends AppCompatActivity {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                ImageView imageView = findViewById(R.id.imageView);
+                ImageView imageView = findViewById(R.id.imageView6);
                 imageView.setImageBitmap(bitmap);
                 Call<String> call=userController.uploadAvatarImage(user.getUserId(),bitmap);
                 call.enqueue(new Callback<String>() {

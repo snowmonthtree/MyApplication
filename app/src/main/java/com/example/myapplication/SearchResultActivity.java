@@ -89,19 +89,19 @@ public class SearchResultActivity extends AppCompatActivity {
         sampleData.add(new ResultItem("结果3", "这是第三个描述", R.drawable.ic_launcher_foreground));
 
         List<ResultItem> filteredList = new ArrayList<>();
-        if (query == null || query.trim().isEmpty()) {
-            Log.d("SearchResultActivity", "Query is empty or null, returning all data");
-            return sampleData;
-        }
 
-        for (ResultItem item : sampleData) {
+            Log.e("ararararar", "Query is empty or null, returning all data");
+            return sampleData;
+
+
+       /* for (ResultItem item : sampleData) {
             String title = item.getTitle();
             Log.d("SearchResultActivity", "Title: " + title);
             if (title != null && title.toLowerCase().contains(query.toLowerCase())) {
                 filteredList.add(item);
             }
         }
-        return filteredList;
+        return filteredList;*/
     }
 
     private void hideKeyboard() {
