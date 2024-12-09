@@ -319,7 +319,10 @@ public class ParkActivity extends AppCompatActivity {
                     // 从ResponseBody获取图片数据并设置到ImageButton
                     ResponseBody responseBody = response.body();
                     Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
-                    if (bitmap != null) {
+
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 900, 300, false);
+
+                    if (bitmap != null && i<8) {
                         imageButtons[i].setImageBitmap(bitmap);  // 设置Bitmap到ImageButton
                         imageButtons[i].setContentDescription(resourceId);
                     }
