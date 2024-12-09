@@ -33,6 +33,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 import androidx.appcompat.widget.SearchView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -49,6 +50,9 @@ public class ParkActivity extends AppCompatActivity {
     LedResourceController ledResourceController;
     Retrofit retrofit;
     private ImageButton[] imageButtons = new ImageButton[8];
+    private TextView textView;
+    private TextView textView3;
+    private TextView textView4;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -155,14 +159,17 @@ public class ParkActivity extends AppCompatActivity {
         });
 
         // 获取并设置 ImageButtons 的点击监听器
-         imageButtons[0] = findViewById(R.id.imageButton1);
-         imageButtons[1] = findViewById(R.id.imageButton2);
-         imageButtons[2] = findViewById(R.id.imageButton3);
-       imageButtons[3] = findViewById(R.id.imageButton4);
-         imageButtons[4] = findViewById(R.id.imageButton5);
-         imageButtons[5]= findViewById(R.id.imageButton6);
-        imageButtons[6] = findViewById(R.id.imageButton7);
-         imageButtons[7] = findViewById(R.id.imageButton8);
+         imageButtons[0] = findViewById(R.id.imageButton7);
+         imageButtons[1] = findViewById(R.id.imageButton8);
+         imageButtons[2] = findViewById(R.id.imageButton1);
+         imageButtons[3] = findViewById(R.id.imageButton2);
+         imageButtons[4] = findViewById(R.id.imageButton3);
+         imageButtons[5]= findViewById(R.id.imageButton4);
+         imageButtons[6] = findViewById(R.id.imageButton5);
+         imageButtons[7] = findViewById(R.id.imageButton6);
+         textView=findViewById(R.id.textView);
+         textView3=findViewById(R.id.textView3);
+         textView4=findViewById(R.id.textView4);
 
         try {
             retrofit = RetrofitClient.getClient(ParkActivity.this);
@@ -170,6 +177,7 @@ public class ParkActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         ledResourceController = retrofit.create(LedResourceController.class);
+
         Call< List <LedResource>> call=ledResourceController.getLatestLedResources();
         call.enqueue(new Callback<List<LedResource>>() {
             @Override
@@ -194,6 +202,9 @@ public class ParkActivity extends AppCompatActivity {
             }
         });
         // 设置点击监听器
+        textView.setOnClickListener(view ->byLast() );
+        textView3.setOnClickListener(view -> byPlayNum());
+        textView4.setOnClickListener(view -> byLike());
         setImageButtonClickListener(imageButtons[1]);
         setImageButtonClickListener(imageButtons[2]);
         setImageButtonClickListener(imageButtons[3]);
@@ -203,7 +214,82 @@ public class ParkActivity extends AppCompatActivity {
         setImageButtonClickListener(imageButtons[7]);
         setImageButtonClickListener(imageButtons[0]);
     }
+    private void byLike(){
+        Call< List <LedResource>> call=ledResourceController.orderByLikes();
+        call.enqueue(new Callback<List<LedResource>>() {
+            @Override
+            public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
 
+                if (response.isSuccessful() && response.body() != null) {
+                    int i=0;
+                    List<LedResource> ledResources = response.body();
+                    for (LedResource resource : ledResources) {
+                        fetchImage(resource,i);  // 根据图片名称获取图片
+                        i++;
+                    }
+                } else {
+                    Log.e("parkTest", "fail" );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LedResource>> call, Throwable t) {
+                Log.e("park test", "onFailure: "+t.getMessage() );
+
+            }
+        });
+    }
+
+    private void byPlayNum(){
+        Call< List <LedResource>> call=ledResourceController.orderByPlaybackVolume();
+        call.enqueue(new Callback<List<LedResource>>() {
+            @Override
+            public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    int i=0;
+                    List<LedResource> ledResources = response.body();
+                    for (LedResource resource : ledResources) {
+                        fetchImage(resource,i);  // 根据图片名称获取图片
+                        i++;
+                    }
+                } else {
+                    Log.e("parkTest", "fail" );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LedResource>> call, Throwable t) {
+                Log.e("park test", "onFailure: "+t.getMessage() );
+
+            }
+        });
+    }
+    private void byLast(){
+        Call< List <LedResource>> call=ledResourceController.getLatestLedResources();
+        call.enqueue(new Callback<List<LedResource>>() {
+            @Override
+            public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    int i=0;
+                    List<LedResource> ledResources = response.body();
+                    for (LedResource resource : ledResources) {
+                        fetchImage(resource,i);  // 根据图片名称获取图片
+                        i++;
+                    }
+                } else {
+                    Log.e("parkTest", "fail" );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LedResource>> call, Throwable t) {
+                Log.e("park test", "onFailure: "+t.getMessage() );
+
+            }
+        });
+    }
     private void setImageButtonClickListener(ImageButton imageButton) {
         imageButton.setOnClickListener(v -> {
             // 获取 ImageButton 上的 Bitmap

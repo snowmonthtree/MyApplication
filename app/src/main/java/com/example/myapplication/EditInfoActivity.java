@@ -1,12 +1,14 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,12 +20,19 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.ChangePassword.ChangePasswordActivity;
+import com.example.myapplication.page.Register.RegisterActivity;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class EditInfoActivity extends AppCompatActivity {
 
@@ -37,6 +46,8 @@ public class EditInfoActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> changePasswordLauncher;
     private ViewSharer viewSharer;
     private User user;
+    private Retrofit retrofit;
+    private UserController userController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +60,12 @@ public class EditInfoActivity extends AppCompatActivity {
         btnChangePassword = findViewById(R.id.btn_change_password);
         btnSaveChanges = findViewById(R.id.btn_save_changes);
         imageViewAvatar = findViewById(R.id.imageView6); // 假设头像显示在顶部的 ImageView 中
-
+        try {
+            retrofit = RetrofitClient.getClient(EditInfoActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        userController = retrofit.create(UserController.class);
         viewSharer=(ViewSharer)getApplication();
         user=viewSharer.getUser();
         // 注册图像选择器的结果回调
@@ -99,9 +115,28 @@ public class EditInfoActivity extends AppCompatActivity {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                // 处理 bitmap，例如显示在 ImageView
                 ImageView imageView = findViewById(R.id.imageView);
                 imageView.setImageBitmap(bitmap);
+                Call<String> call=userController.uploadAvatarImage(user.getUserId(),bitmap);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        new AlertDialog.Builder(EditInfoActivity.this)
+                                .setTitle("1")
+                                .setMessage(response.body())
+                                .setPositiveButton("确定",(dialog, which) -> {
+
+                                })
+                                .show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.e("1", "onFailure: "+t.getMessage() );
+                    }
+                });
+                // 处理 bitmap，例如显示在 ImageView
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

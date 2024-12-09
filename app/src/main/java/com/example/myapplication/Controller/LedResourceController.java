@@ -25,4 +25,9 @@ public interface LedResourceController {
     );
     @GET("api/led-resources/{imageName}")
     Call<ResponseBody> getImage(@Path("imageName") String imageName);
+    @GET("api/led-resources/order-by-playback-volume")
+    Call< List<LedResource>> orderByPlaybackVolume();
+    @GET("api/led-resources/order-by-likes")
+    Call<List<LedResource>> orderByLikes();
+
 }
