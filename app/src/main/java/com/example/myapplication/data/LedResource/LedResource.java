@@ -16,6 +16,7 @@ public class LedResource {
     private String viewWebUrl;        // View_Web_URL
     private int commentNum;           // Comment_Num
     private Timestamp upTime;         // Up_Time
+    private int playbackVolume;       //播放量
 
     // Getters and Setters
     public String getResourceId() {

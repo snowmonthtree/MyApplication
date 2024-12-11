@@ -2,21 +2,30 @@ package com.example.myapplication.page.Profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.widget.Button;
-import android.widget.ListView;
 
+import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.bumptech.glide.load.engine.Resource;
 import com.example.myapplication.AboutUsActivity;
 import com.example.myapplication.CheckUpdateActivity;
+import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.EditInfoActivity;
 import com.example.myapplication.FunctionAdapter;
 import com.example.myapplication.FunctionItem;
 import com.example.myapplication.R;
+import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.SettingsActivity;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
@@ -28,10 +37,24 @@ import com.example.myapplication.page.Shopping.ShoppingActivity;
 import com.example.myapplication.page.SwitchUser.SwitchUserActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class UserProfileActivity extends AppCompatActivity {
+    private ImageView imageView;
+    private TextView textView;
+    private Retrofit retrofit;
+    private UserController userController;
+    private ViewSharer viewSharer;
+    private User user;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -90,6 +113,43 @@ public class UserProfileActivity extends AppCompatActivity {
         functionItems.add(new FunctionItem("关于我们"));
         functionItems.add(new FunctionItem("检查更新"));
         // 可以继续添加更多的功能选项...
+        imageView=findViewById(R.id.userAvatar);
+        textView=findViewById(R.id.userName);
+        try {
+            retrofit = RetrofitClient.getClient(UserProfileActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        userController = retrofit.create(UserController.class);
+        viewSharer=(ViewSharer)getApplication();
+        user=viewSharer.getUser();
+        textView.setText(user.getName());
+        userController.getAvatar(user.getUserId()).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // 从ResponseBody获取图片数据并设置到ImageButton
+                    ResponseBody responseBody = response.body();
+                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+
+                    if (bitmap != null ) {
+                        imageView.setImageBitmap(bitmap);  // 设置Bitmap到ImageButton
+
+                    }
+                } else {
+                    // 图片加载失败，处理错误
+                    Log.e("1", "onResponse: " );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // 网络请求失败
+                Log.e("2", "onFailure: ");
+            }
+        });
+
 
         // 初始化 ListView 和 Adapter
         ListView mannersList = findViewById(R.id.mannersList);
@@ -142,5 +202,21 @@ public class UserProfileActivity extends AppCompatActivity {
             finishAffinity(); // 结束所有活动
             System.exit(0); // 退出应用
         });
+    }
+    private Bitmap convertResponseBodyToBitmap(ResponseBody responseBody) {
+        Bitmap bitmap = null;
+        InputStream inputStream = responseBody.byteStream();
+        try {
+            bitmap = BitmapFactory.decodeStream(inputStream);  // 将输入流解码为Bitmap
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();  // 关闭输入流
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return bitmap;
     }
 }

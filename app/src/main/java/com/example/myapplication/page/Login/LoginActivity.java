@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button button ;
     private CheckBox checkBox ;
     private Retrofit retrofit;
-    UserController userController;
+    private UserController userController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

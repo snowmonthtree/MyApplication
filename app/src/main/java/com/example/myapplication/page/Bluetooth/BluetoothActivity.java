@@ -172,7 +172,7 @@ public class BluetoothActivity extends AppCompatActivity {
        // imageView.setDrawingCacheEnabled(true);
 
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        bitmap = Bitmap.createScaledBitmap(bitmap, 8, 32, false);
+        //bitmap = Bitmap.createScaledBitmap(bitmap, 8, 32, false);
         imageView.setImageBitmap(bitmap);
       // Bitmap bitmap = imageView.getDrawingCache();
 
