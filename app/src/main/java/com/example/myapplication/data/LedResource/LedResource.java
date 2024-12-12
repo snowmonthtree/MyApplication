@@ -16,7 +16,37 @@ public class LedResource {
     private String viewWebUrl;        // View_Web_URL
     private int commentNum;           // Comment_Num
     private Timestamp upTime;         // Up_Time
-    private int playbackVolume;       //播放量
+    private int playbackVolume;
+
+    @Override
+    public String toString() {
+        return "LedResource{" +
+                "resourceId='" + resourceId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", pixelSize='" + pixelSize + '\'' +
+                ", downloadCount=" + downloadCount +
+                ", resourceWebUrl='" + resourceWebUrl + '\'' +
+                ", displayType='" + displayType + '\'' +
+                ", name='" + name + '\'' +
+                ", likes=" + likes +
+                ", detail='" + detail + '\'' +
+                ", viewWebUrl='" + viewWebUrl + '\'' +
+                ", commentNum=" + commentNum +
+                ", upTime=" + upTime +
+                ", playbackVolume=" + playbackVolume +
+                '}';
+    }
+
+
+    public int getPlaybackVolume() {
+        return playbackVolume;
+    }
+
+    public void setPlaybackVolume(int playbackVolume) {
+        this.playbackVolume = playbackVolume;
+    }
+
+          //播放量
 
     // Getters and Setters
     public String getResourceId() {
@@ -115,21 +145,4 @@ public class LedResource {
         this.upTime = upTime;
     }
 
-    @Override
-    public String toString() {
-        return "LedResource{" +
-                "resourceId='" + resourceId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", pixelSize='" + pixelSize + '\'' +
-                ", downloadCount=" + downloadCount +
-                ", resourceWebUrl='" + resourceWebUrl + '\'' +
-                ", displayType='" + displayType + '\'' +
-                ", name='" + name + '\'' +
-                ", likes=" + likes +
-                ", detail='" + detail + '\'' +
-                ", viewWebUrl='" + viewWebUrl + '\'' +
-                ", commentNum=" + commentNum +
-                ", upTime=" + upTime +
-                '}';
-    }
 }
