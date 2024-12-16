@@ -1,7 +1,9 @@
 package com.example.myapplication;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,9 +11,9 @@ import java.util.List;
 
 public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.LocalViewHolder> {
 
-    private List<String> localList;
+    private List<Uri> localList;
 
-    public LocalAdapter(List<String> localList) {
+    public LocalAdapter(List<Uri> localList) {
         this.localList = localList;
     }
 
@@ -24,8 +26,8 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.LocalViewHol
 
     @Override
     public void onBindViewHolder(@NonNull LocalViewHolder holder, int position) {
-        String item = localList.get(position);
-        holder.textView.setText(item);
+        Uri item = localList.get(position);
+        holder.imageView.setImageURI(item);
     }
 
     @Override
@@ -34,11 +36,11 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.LocalViewHol
     }
 
     static class LocalViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        ImageView imageView;
 
         LocalViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(android.R.id.text1);
+            imageView = itemView.findViewById(R.id.localImageView);
         }
     }
 }

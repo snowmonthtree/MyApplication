@@ -1,6 +1,7 @@
 package com.example.myapplication.page.CreationCenter;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -32,6 +33,8 @@ import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.ui.ResultAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.RadioButton;
@@ -174,10 +177,10 @@ public class CreationCenterActivity extends AppCompatActivity {
             radioGroup.setVisibility(View.GONE);
         }
         else {
-            List<String> localList = new ArrayList<>();
-            localList.add("本地资源1");
-            localList.add("本地资源2");
-            localList.add("本地资源3");
+            List<Uri> localList = new ArrayList<>();
+            File file = new File(getFilesDir(), "1.png");
+            localList.add(Uri.fromFile(file));
+
 
             // 设置适配器
             List<ResultItem> historyList = new ArrayList<>();
@@ -185,7 +188,7 @@ public class CreationCenterActivity extends AppCompatActivity {
             resultAdapter = new ResultAdapter(historyList, ledResourceController, this);
             recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
             recyclerViewHistory.setAdapter(resultAdapter);
-
+            localAdapter =new LocalAdapter(localList);
             recyclerViewLocal.setLayoutManager(new LinearLayoutManager(this));
             recyclerViewLocal.setAdapter(localAdapter);
 

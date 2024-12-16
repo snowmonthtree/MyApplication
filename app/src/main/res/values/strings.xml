@@ -101,4 +101,5 @@
         <item>中</item>
         <item>大</item>
     </string-array>
+    <string name="title_activity_up_load">upLoadActivity</string>
 </resources>

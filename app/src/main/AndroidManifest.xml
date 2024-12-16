@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,45 +14,42 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-    android:usesCleartextTraffic="true"
-
-
-    android:networkSecurityConfig="@xml/network_security_config"
         android:name=".data.ViewSharer"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="我是奶龙"
+
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".upLoadActivity"
+            android:exported="false"
+            android:label="@string/title_activity_up_load"
+            android:theme="@style/Theme.MyApplication" />
         <activity
             android:name=".page.Video.PlayVideoActivity"
             android:exported="false" />
         <activity
             android:name=".page.Profile.UserProfileActivity"
             android:exported="false" />
-
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
-
         <activity
             android:name=".AboutUsActivity"
             android:exported="false" />
-
         <activity
             android:name=".CheckUpdateActivity"
             android:exported="false" />
-
         <activity
             android:name=".EditInfoActivity"
             android:exported="false" />
-
         <activity
             android:name=".page.Search.SearchResultActivity"
             android:exported="false" />
@@ -65,15 +62,12 @@
         <activity
             android:name=".page.Home.HomeActivity"
             android:exported="false" />
-
         <activity
             android:name=".page.CreationCenter.CreationCenterActivity"
             android:exported="false" />
-
         <activity
             android:name=".page.Shopping.ShoppingActivity"
             android:exported="false" />
-
         <activity
             android:name=".page.Profile.ProfileActivity"
             android:exported="false" />
@@ -89,10 +83,12 @@
         <activity
             android:name=".page.Register.RegisterActivity"
             android:exported="false" />
-        <activity android:name=".page.SwitchUser.SwitchUserActivity"
-            android:exported="false"/>
-        <activity android:name=".page.Bluetooth.BluetoothActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".page.SwitchUser.SwitchUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".page.Bluetooth.BluetoothActivity"
+            android:exported="false" />
         <activity
             android:name=".page.Welcome.WelcomeActivity"
             android:exported="true">
