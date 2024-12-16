@@ -17,26 +17,34 @@ import androidx.core.view.WindowInsetsCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.Controller.CommentsController;
+import com.example.myapplication.Controller.LedResourceController;
+import com.example.myapplication.Controller.PlayRecordController;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.Comment.Comment;
+import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.Login.LoginActivity;
-import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.ui.CommentAdapter;
-import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,11 +59,15 @@ public class PlayVideoActivity extends AppCompatActivity {
     private MediaController mediaController;
     private Retrofit retrofit;
     private CommentsController commentsController;
+    private LedResourceController ledResourceController;
+    private PlayRecordController playRecordController;
     private List<Comment> comments;
     private EditText editText;
     private Button button;
     private ViewSharer viewSharer;
     private String resourceId;
+    private View detailSection;
+    private View commentSection;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -79,6 +91,30 @@ public class PlayVideoActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         commentsController=retrofit.create(CommentsController.class);
+        ledResourceController=retrofit.create(LedResourceController.class);
+        playRecordController=retrofit.create(PlayRecordController.class);
+        detailSection=findViewById(R.id.detailSection);
+        commentSection=findViewById(R.id.commentSection);
+        RadioButton radioButtondetail = findViewById(R.id.radio_detail);
+        radioButtondetail.setChecked(true);
+
+        // 监听 RadioGroup 的选择变化
+        RadioGroup radioGroup = findViewById(R.id.radio_groups);
+
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radio_detail) {
+                detailSection.setVisibility(View.VISIBLE);
+                commentSection.setVisibility(View.GONE);
+                detailSection.requestLayout();  // 强制重新布局
+                commentSection.requestLayout();
+            } else if (checkedId == R.id.radio_comment) {
+                commentSection.setVisibility(View.VISIBLE);
+                detailSection.setVisibility(View.GONE);
+                detailSection.requestLayout();  // 强制重新布局
+                commentSection.requestLayout();
+            }
+        });
+
         comments=new ArrayList<>();
 
         // 初始化 VideoView
@@ -103,14 +139,46 @@ public class PlayVideoActivity extends AppCompatActivity {
 
         //显示图片
         Intent intent = getIntent();
-        byte[] byteArray = intent.getByteArrayExtra("image");
         resourceId=intent.getStringExtra("ledId");
-        if (byteArray != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            imageView.setImageBitmap(bitmap);
-            imageView.setVisibility(View.VISIBLE);
-            videoView.setVisibility(View.INVISIBLE);
+        if (!viewSharer.getUser().getPermissionId().equals("1")) {
+            Call<Void> call1 = playRecordController.addPlayRecord(viewSharer.getUser().getUserId(), resourceId);
+            call1.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Log.e("test21321", "onResponse: 1");
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.e("test21321", "onFailure: ");
+                }
+            });
         }
+        Call<LedResource> call=ledResourceController.getResourceById(resourceId);
+        call.enqueue(new Callback<LedResource>() {
+            @Override
+            public void onResponse(Call<LedResource> call, Response<LedResource> response) {
+                if (response.body()!=null&&response.isSuccessful()){
+                    fetchImage(response.body().getViewWebUrl(),imageView);
+                    CheckBox like=findViewById(R.id.like);
+                    TextView textView=findViewById(R.id.downloadcount);
+                    TextView textView1=findViewById(R.id.watchedNum);
+                    TextView detail=findViewById(R.id.detail);
+                    detail.setText(response.body().getDetail());
+                    textView1.setText("播放量:"+response.body().getPlaybackVolume());
+                    textView.setText("下载量:"+response.body().getDownloadCount());
+                    RadioButton radioButton=findViewById(R.id.radio_comment);
+                    radioButton.setText("评论:"+response.body().getCommentNum());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LedResource> call, Throwable t) {
+
+            }
+        });
+        imageView.setVisibility(View.VISIBLE);
+        videoView.setVisibility(View.INVISIBLE);
         toDisplay(imageView);
 
         // 设置 MediaController（可选）
@@ -229,5 +297,54 @@ public class PlayVideoActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+    private void fetchImage(String viewWebUrl, ImageView imageView) {
+        // 假设 ledResourceController 是 Retrofit 接口，调用 getImage 方法来获取图片
+        ledResourceController.getImage(viewWebUrl).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ResponseBody responseBody = response.body();
+                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+
+                    if (bitmap != null) {
+                        // 使用 Glide 将 Bitmap 加载到 ImageView
+                        Glide.with(imageView.getContext())
+                                .load(bitmap)  // 直接加载 Bitmap
+                                .placeholder(R.drawable.test)  // 占位图
+                                .error(R.drawable.ic_doodle_back)  // 错误图
+                                .into(imageView);  // 将图片显示到 ImageView
+                    } else {
+                        Log.e("Image Fetch", "Bitmap is null");
+                    }
+                } else {
+                    Log.e("Image Fetch", "onResponse: Image fetch failed1");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // 网络请求失败
+                Log.e("Image Fetch", "onFailure: Image fetch failed", t);
+            }
+        });
+    }
+
+    // 将ResponseBody转换为Bitmap
+    private Bitmap convertResponseBodyToBitmap(ResponseBody responseBody) {
+        Bitmap bitmap = null;
+        InputStream inputStream = responseBody.byteStream();
+        try {
+            bitmap = BitmapFactory.decodeStream(inputStream);  // 将输入流解码为Bitmap
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();  // 关闭输入流
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return bitmap;
     }
 }

@@ -46,8 +46,6 @@ public class LedResource {
         this.playbackVolume = playbackVolume;
     }
 
-          //播放量
-
     // Getters and Setters
     public String getResourceId() {
         return resourceId;

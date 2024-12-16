@@ -23,7 +23,7 @@ import com.example.myapplication.page.Video.PlayVideoActivity;
 import com.example.myapplication.page.Profile.ProfileActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
-import com.example.myapplication.SearchResultActivity;
+import com.example.myapplication.page.Search.SearchResultActivity;
 import com.example.myapplication.page.Shopping.ShoppingActivity;
 import com.example.myapplication.page.Profile.UserProfileActivity;
 import com.example.myapplication.data.LedResource.LedResource;
@@ -35,7 +35,6 @@ import androidx.appcompat.widget.SearchView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -295,15 +294,10 @@ public class ParkActivity extends AppCompatActivity {
             // 获取 ImageButton 上的 Bitmap
             Drawable drawable = imageButton.getDrawable();
             if (drawable instanceof BitmapDrawable) {
-                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
 
-                // 将 Bitmap 转换为字节数组
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
                 // 当用户点击 ImageButton 时，跳转到 PlayVideoActivity
                 Intent intent = new Intent(ParkActivity.this, PlayVideoActivity.class);
-                intent.putExtra("image", byteArray);
+
                 intent.putExtra("ledId",imageButton.getContentDescription());
                 startActivity(intent);
             }

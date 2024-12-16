@@ -1,154 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".page.CreationCenter.Doodle.DoodleActivity"
-    tools:ignore="InvalidId">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <LinearLayout
-        android:id="@+id/layout1"
+    <!-- Doodle Canvas (画布) -->
+    <com.example.myapplication.DrawingView
+        android:id="@+id/doodle_canvas"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/title_background"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/center_view1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical|end"
-            android:text="@string/creation_center_text_1"
-            android:textAlignment="textEnd"
-            android:textColor="@color/white"
-            android:textSize="28sp" />
-
-        <ImageView
-            android:id="@+id/center_pic1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_create_top" />
-
-        <TextView
-            android:id="@+id/center_View2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical|start"
-            android:text="@string/center_text_2"
-            android:textAlignment="viewStart"
-            android:textColor="@color/white"
-            android:textSize="24sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout1"/>
-
-    <com.example.myapplication.DoodleView
-        android:id="@+id/doodle_view"
-        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout1"
-        app:layout_constraintBottom_toTopOf="@id/button_layout1" />
+        android:layout_weight="1"
+        android:background="#FFFFFF" />
 
-    <LinearLayout
-        android:id="@+id/button_layout1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/doodle_view"
-        app:layout_constraintBottom_toTopOf="@id/button_layout2">
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="0dp"
-            style="?android:attr/buttonBarStyle"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:drawableStart="@drawable/ic_doodle_clear"
-            android:text="@string/doodle_button_1" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="0dp"
-            style="?android:attr/buttonBarStyle"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:drawableStart="@drawable/ic_doodle_undo"
-            android:text="@string/doodle_button_2" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="0dp"
-            style="?android:attr/buttonBarStyle"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:drawableStart="@drawable/ic_doodle_redo"
-            android:text="@string/doodle_button_3" />
-    </LinearLayout>
-
-    <!-- 第二行按钮 -->
-    <LinearLayout
-        android:id="@+id/button_layout2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_layout1"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="0dp"
-            style="?android:attr/buttonBarStyle"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:drawableStart="@drawable/ic_doodle_save"
-            android:text="@string/doodle_button_4" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="0dp"
-            style="?android:attr/buttonBarStyle"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:drawableStart="@drawable/ic_doodle_back"
-            android:text="@string/doodle_button_5" />
-
-
-    </LinearLayout>
-
-    <!-- 添加 BottomNavigationView -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <!-- Color SeekBar (颜色调节条) -->
+    <SeekBar
+        android:id="@+id/color_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        android:max="360"
+        android:progressDrawable="@drawable/gradient_seekbar"
+        android:layout_marginBottom="8dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- 控制按钮区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btn_undo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="撤销" />
+
+    </LinearLayout>
+
+</LinearLayout>

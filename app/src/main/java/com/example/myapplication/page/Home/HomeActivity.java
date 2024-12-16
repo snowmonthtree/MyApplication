@@ -14,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.page.Profile.ProfileActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.SearchResultActivity;
+import com.example.myapplication.page.Search.SearchResultActivity;
 import com.example.myapplication.page.Shopping.ShoppingActivity;
 import com.example.myapplication.page.Profile.UserProfileActivity;
 import com.example.myapplication.data.User.User;
@@ -96,7 +96,7 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 // 当用户提交搜索时，执行跳转逻辑
                 Intent searchIntent = new Intent(HomeActivity.this, SearchResultActivity.class);
-                searchIntent.putExtra("query", query);
+                searchIntent.putExtra("search_query", query);
                 startActivity(searchIntent);
                 return true;
             }

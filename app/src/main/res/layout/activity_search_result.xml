@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchResultActivity">
+    tools:context=".page.Search.SearchResultActivity">
 
     <!-- 搜索栏 -->
     <androidx.appcompat.widget.SearchView
@@ -19,12 +19,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/searchView"
+        android:layout_height="wrap_content"
         android:layout_above="@id/noResultsTextView"
-        android:scrollbars="vertical"
+        android:layout_below="@id/searchView"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:scrollbars="vertical" />
 
     <!-- 没有结果时的提示 -->
     <TextView

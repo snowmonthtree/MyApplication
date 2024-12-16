@@ -1,10 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.page.Search;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.widget.SearchView;
@@ -14,8 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
+import com.example.myapplication.Controller.LedResourceController;
+import com.example.myapplication.R;
+import com.example.myapplication.RetrofitClient;
+import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.Result.ResultItem;
+import com.example.myapplication.ui.ResultAdapter;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class SearchResultActivity extends AppCompatActivity {
 
@@ -24,6 +32,8 @@ public class SearchResultActivity extends AppCompatActivity {
     private TextView noResultsTextView;
     private ResultAdapter resultsAdapter;
     private List<ResultItem> resultList;
+    private Retrofit retrofit;
+    private LedResourceController ledResourceController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +44,25 @@ public class SearchResultActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         recyclerView = findViewById(R.id.recyclerView);
         noResultsTextView = findViewById(R.id.noResultsTextView);
+        try {
+            retrofit = RetrofitClient.getClient(SearchResultActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        ledResourceController = retrofit.create(LedResourceController.class);
 
         // 获取传递过来的查询词
         Intent intent = getIntent();
-        String query = intent.getStringExtra("query");
+        String query = intent.getStringExtra("search_query");
 
         // 初始化结果列表
         resultList = new ArrayList<>();
         resultList.addAll(getSampleData(query));
-
         // 设置 RecyclerView
-        resultsAdapter = new ResultAdapter(resultList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        resultsAdapter = new ResultAdapter(resultList,ledResourceController,this);
         recyclerView.setAdapter(resultsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(SearchResultActivity.this));
+
 
         // 设置搜索栏的监听器
         searchView.setQuery(query, false);
@@ -84,14 +100,33 @@ public class SearchResultActivity extends AppCompatActivity {
     private List<ResultItem> getSampleData(String query) {
         // 模拟数据，实际应用中应从服务器或其他数据源获取
         List<ResultItem> sampleData = new ArrayList<>();
-        sampleData.add(new ResultItem("结果1", "这是一个描述", R.drawable.test));
-        sampleData.add(new ResultItem("结果2", "这是另一个描述", R.drawable.ic_launcher_foreground));
-        sampleData.add(new ResultItem("结果3", "这是第三个描述", R.drawable.ic_launcher_foreground));
+        Call<List<LedResource>> call=ledResourceController.searchLedResources(query,query);
+        call.enqueue(new Callback<List<LedResource>>() {
+            @Override
+            public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
+                if (response.isSuccessful()&&response.body()!=null) {
 
-        List<ResultItem> filteredList = new ArrayList<>();
+                    List<LedResource> list = response.body();
+                    System.out.println(list);
+                    for (LedResource ledResource : list) {
+                        sampleData.add(new ResultItem(ledResource.getName(), ledResource.getDetail(), ledResource.getViewWebUrl(),ledResource.getResourceId()));
+                    System.out.println(sampleData);
+                    }
+                }
+                else {
+                    sampleData.add(new ResultItem("错误","网络问题","image10.jpg","1"));
+                }
+                resultsAdapter.updateData(sampleData);
 
-            Log.e("ararararar", "Query is empty or null, returning all data");
-            return sampleData;
+
+            }
+
+            @Override
+            public void onFailure(Call<List<LedResource>> call, Throwable t) {
+                Toast.makeText(SearchResultActivity.this, "error", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return sampleData;
 
 
        /* for (ResultItem item : sampleData) {

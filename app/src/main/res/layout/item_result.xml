@@ -10,6 +10,7 @@
         android:id="@+id/iconImageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_weight="0"
         android:contentDescription="@string/search_result_icon" />
 
     <!-- 内容 -->
@@ -35,7 +36,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_result_describe"
-            android:textSize="14sp"
-            android:textColor="#777777" />
+            android:textColor="#777777"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/resourceId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="TextView" />
+
     </LinearLayout>
 </LinearLayout>

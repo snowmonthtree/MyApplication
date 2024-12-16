@@ -29,5 +29,6 @@ public interface LedResourceController {
     Call< List<LedResource>> orderByPlaybackVolume();
     @GET("api/led-resources/order-by-likes")
     Call<List<LedResource>> orderByLikes();
-
+    @GET("api/led-resources/getresource/{resourceId}")
+    Call<LedResource> getResourceById(@Path("resourceId") String resourceId);
 }
