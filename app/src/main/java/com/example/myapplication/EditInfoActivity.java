@@ -136,7 +136,6 @@ public class EditInfoActivity extends AppCompatActivity {
         String nickname = etNickname.getText().toString().trim();
         if (nickname.isEmpty()) {
             Toast.makeText(this, "昵称不能为空", Toast.LENGTH_SHORT).show();
-            return;
         } else {
             try {
                 File file = getFileFromUri(EditInfoActivity.this, selectedImageUri);

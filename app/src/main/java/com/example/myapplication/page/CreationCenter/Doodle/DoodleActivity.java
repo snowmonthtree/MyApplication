@@ -63,11 +63,11 @@ public class DoodleActivity extends AppCompatActivity {
         undoButton.setOnClickListener(v -> drawingView.undoLastAction());
     }
     public void save(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求权限
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission_group.STORAGE},
                     100);
         }
         LEDResource resource = drawingView.saveAsLEDResource();
@@ -76,8 +76,8 @@ public class DoodleActivity extends AppCompatActivity {
             /*MediaScannerConnection.scanFile(this,
                     new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
                     null,
-                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));*/
-
+                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));
+*/
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

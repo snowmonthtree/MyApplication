@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Controller.CommentsController;
 import com.example.myapplication.Controller.LedResourceController;
+import com.example.myapplication.Controller.LikesController;
 import com.example.myapplication.Controller.PlayRecordController;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
@@ -65,9 +66,11 @@ public class PlayVideoActivity extends AppCompatActivity {
     private EditText editText;
     private Button button;
     private ViewSharer viewSharer;
-    private String resourceId;
+    private LedResource ledResource;
     private View detailSection;
     private View commentSection;
+    private LikesController likesController;
+    private CheckBox like;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -93,10 +96,13 @@ public class PlayVideoActivity extends AppCompatActivity {
         commentsController=retrofit.create(CommentsController.class);
         ledResourceController=retrofit.create(LedResourceController.class);
         playRecordController=retrofit.create(PlayRecordController.class);
+        likesController=retrofit.create(LikesController.class);
         detailSection=findViewById(R.id.detailSection);
         commentSection=findViewById(R.id.commentSection);
-        RadioButton radioButtondetail = findViewById(R.id.radio_detail);
-        radioButtondetail.setChecked(true);
+        like=findViewById(R.id.like);
+        RadioButton radioButtonDetail = findViewById(R.id.radio_detail);
+
+        radioButtonDetail.setChecked(true);
 
         // 监听 RadioGroup 的选择变化
         RadioGroup radioGroup = findViewById(R.id.radio_groups);
@@ -139,13 +145,14 @@ public class PlayVideoActivity extends AppCompatActivity {
 
         //显示图片
         Intent intent = getIntent();
-        resourceId=intent.getStringExtra("ledId");
+        initResource(intent.getStringExtra("ledId"));
         if (!viewSharer.getUser().getPermissionId().equals("1")) {
-            Call<Void> call1 = playRecordController.addPlayRecord(viewSharer.getUser().getUserId(), resourceId);
+            Call<Void> call1 = playRecordController.addPlayRecord(viewSharer.getUser().getUserId(), ledResource.getResourceId());
             call1.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    Log.e("test21321", "onResponse: 1");
+                    ledResource.setPlaybackVolume(ledResource.getPlaybackVolume()+1);
+                    update();
                 }
 
                 @Override
@@ -154,13 +161,13 @@ public class PlayVideoActivity extends AppCompatActivity {
                 }
             });
         }
-        Call<LedResource> call=ledResourceController.getResourceById(resourceId);
+        like.setOnClickListener(view -> likeClick());
+        Call<LedResource> call=ledResourceController.getResourceById(ledResource.getResourceId());
         call.enqueue(new Callback<LedResource>() {
             @Override
             public void onResponse(Call<LedResource> call, Response<LedResource> response) {
                 if (response.body()!=null&&response.isSuccessful()){
                     fetchImage(response.body().getViewWebUrl(),imageView);
-                    CheckBox like=findViewById(R.id.like);
                     TextView textView=findViewById(R.id.downloadcount);
                     TextView textView1=findViewById(R.id.watchedNum);
                     TextView detail=findViewById(R.id.detail);
@@ -169,6 +176,7 @@ public class PlayVideoActivity extends AppCompatActivity {
                     textView.setText("下载量:"+response.body().getDownloadCount());
                     RadioButton radioButton=findViewById(R.id.radio_comment);
                     radioButton.setText("评论:"+response.body().getCommentNum());
+                    setLike();
                 }
             }
 
@@ -204,7 +212,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     private void initRecyclerView() {
         RecyclerView recyclerViewComments = findViewById(R.id.recyclerViewComments);
         // 创建一些静态评论数据
-        Call<List<Comment>> call=commentsController.getCommentsByResourceId(resourceId);
+        Call<List<Comment>> call=commentsController.getCommentsByResourceId(ledResource.getResourceId());
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -282,7 +290,7 @@ public class PlayVideoActivity extends AppCompatActivity {
                     .show();
         }
         else {
-            Call<String> call = commentsController.addComment(resourceId, viewSharer.getUser().getUserId(), editText.getText().toString());
+            Call<String> call = commentsController.addComment(ledResource.getResourceId(), viewSharer.getUser().getUserId(), editText.getText().toString());
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -296,6 +304,8 @@ public class PlayVideoActivity extends AppCompatActivity {
                     Log.e("1", "onFailure: I Don't Know" );
                 }
             });
+            ledResource.setCommentNum(ledResource.getCommentNum()+1);
+            update();
         }
     }
     private void fetchImage(String viewWebUrl, ImageView imageView) {
@@ -346,5 +356,86 @@ public class PlayVideoActivity extends AppCompatActivity {
             }
         }
         return bitmap;
+    }
+    private void setLike(){
+        Call<Integer> call1=likesController.getLikesNum(ledResource.getResourceId());
+        call1.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+            like.setText("点赞:"+response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+
+        Call<Boolean> call=likesController.userIfLike(viewSharer.getUser().getUserId(),ledResource.getResourceId());
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    like.setChecked(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+
+            }
+        });
+    }
+    private void likeClick(){
+        Call<String> call=likesController.likeResource(viewSharer.getUser().getUserId(),ledResource.getResourceId());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().equals("点赞成功")) {
+                        ledResource.setLikes(ledResource.getLikes()+1);
+                    }
+                    else {
+                        ledResource.setLikes(ledResource.getLikes()-1);
+                    }
+                    Toast.makeText(PlayVideoActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                    update();
+                }
+            }
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("1232", "likeClick: "+"4444444444444" );
+            }
+        });
+    }
+    private void initResource(String id){
+        Call<LedResource> call=ledResourceController.getResourceById(id);
+        call.enqueue(new Callback<LedResource>() {
+            @Override
+            public void onResponse(Call<LedResource> call, Response<LedResource> response) {
+                if (response.isSuccessful()&&response.body()!=null) {
+                    ledResource = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LedResource> call, Throwable t) {
+
+            }
+        });
+    }
+    private void update(){
+        Call<String> call=ledResourceController.updateResource(ledResource);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.body()!=null){
+                    Toast.makeText(PlayVideoActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(PlayVideoActivity.this, "ERROR"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

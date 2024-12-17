@@ -4,11 +4,16 @@ import com.example.myapplication.data.LedResource.LedResource;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -31,4 +36,12 @@ public interface LedResourceController {
     Call<List<LedResource>> orderByLikes();
     @GET("api/led-resources/getresource/{resourceId}")
     Call<LedResource> getResourceById(@Path("resourceId") String resourceId);
+    @POST("api/led-resources/update")
+    Call<String> updateResource(@Body LedResource ledResource);
+    @Multipart
+    @POST("api/led-resources/uploadresource")
+    Call<String> uploadLedResource(
+            @Part("ledresource") RequestBody ledResource,  // LED资源数据
+            @Part MultipartBody.Part fileUpload                  // 文件数据
+    );
 }

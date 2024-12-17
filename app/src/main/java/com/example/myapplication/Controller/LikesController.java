@@ -13,5 +13,6 @@ public interface LikesController {
     // 点赞/取消点赞
     @POST("/api/likes/userLike")
     Call<String> likeResource(@Query("userId") String userId, @Query("resourceId") String resourceId);
-
+    @GET("/api/likes/likesnum")
+    Call<Integer> getLikesNum(@Query("resourceId") String resourceId);
     }

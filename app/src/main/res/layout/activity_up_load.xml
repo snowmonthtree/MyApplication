@@ -16,14 +16,16 @@
         tools:layout_editor_absoluteY="1dp">
 
         <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="match_parent"
+            android:id="@+id/localImageView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="320dp"
+            android:minHeight="80dp"
             app:srcCompat="@drawable/login1" />
 
         <EditText
             android:id="@+id/editName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="20"
             android:inputType="text"

@@ -1,6 +1,8 @@
 package com.example.myapplication.page.CreationCenter;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,11 +11,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.PlayRecordController;
+import com.example.myapplication.LEDResource;
 import com.example.myapplication.PlayRecord;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.TextActivity;
@@ -35,6 +40,7 @@ import com.example.myapplication.ui.ResultAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.RadioButton;
@@ -177,18 +183,30 @@ public class CreationCenterActivity extends AppCompatActivity {
             radioGroup.setVisibility(View.GONE);
         }
         else {
+            save();
             List<Uri> localList = new ArrayList<>();
-            File file = new File(getFilesDir(), "1.png");
-            localList.add(Uri.fromFile(file));
-
-
+            File[] files=getFilesDir().listFiles();
+            if (files != null) {
+                // 遍历所有文件
+                for (File file : files) {
+                    if (file.isFile()) {
+                        // 处理文件
+                        localList.add(Uri.fromFile(file));
+                    } else if (file.isDirectory()) {
+                        // 处理子目录
+                        System.out.println("Directory: " + file.getName());
+                    }
+                }
+            } else {
+                System.out.println("No files found in the directory.");
+            }
             // 设置适配器
             List<ResultItem> historyList = new ArrayList<>();
 
             resultAdapter = new ResultAdapter(historyList, ledResourceController, this);
             recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
             recyclerViewHistory.setAdapter(resultAdapter);
-            localAdapter =new LocalAdapter(localList);
+            localAdapter =new LocalAdapter(localList,this);
             recyclerViewLocal.setLayoutManager(new LinearLayoutManager(this));
             recyclerViewLocal.setAdapter(localAdapter);
 
@@ -251,5 +269,30 @@ public class CreationCenterActivity extends AppCompatActivity {
         });
         return sampleData;
     }
+    public void save(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // 如果没有权限，请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission_group.STORAGE},
+                    100);
+        }
 
+        Toast.makeText(this, "LED Resource Saved:\n" , Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // 判断请求码是否匹配
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限被授予，执行文件操作
+                save();
+            } else {
+                // 权限被拒绝，提示用户
+                Toast.makeText(this, "Permission denied, cannot access the file", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
