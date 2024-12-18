@@ -45,7 +45,9 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.retrofit)  // 添加 Retrofit 库
-    implementation(libs.converter.gson)  // 添加 Gson 转换器
+    implementation(libs.converter.gson)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)  // 添加 Gson 转换器
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

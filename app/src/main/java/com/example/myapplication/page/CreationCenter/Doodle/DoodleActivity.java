@@ -1,5 +1,7 @@
 package com.example.myapplication.page.CreationCenter.Doodle;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -63,21 +65,21 @@ public class DoodleActivity extends AppCompatActivity {
         undoButton.setOnClickListener(v -> drawingView.undoLastAction());
     }
     public void save(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             // 如果没有权限，请求权限
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission_group.STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     100);
         }
         LEDResource resource = drawingView.saveAsLEDResource();
         try {
-            resource.saveBitmapToFile(resource.toBitmap(),"1",getFilesDir());
-            /*MediaScannerConnection.scanFile(this,
-                    new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
+            resource.saveBitmapToFile(resource.toBitmap(),"1",getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+            MediaScannerConnection.scanFile(this,
+                    new String[]{getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
                     null,
                     (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));
-*/
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

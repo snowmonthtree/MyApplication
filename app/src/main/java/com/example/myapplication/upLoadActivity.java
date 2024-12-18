@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -75,6 +76,7 @@ public class upLoadActivity extends AppCompatActivity {
         ledResource.setCommentNum(0);
         ledResource.setPlaybackVolume(0);
         upload.setOnClickListener(view -> upLoad());
+        clear.setOnClickListener(view -> clear());
     }
     private void upLoad(){
         ledResource.setName(name.getText().toString());
@@ -93,7 +95,7 @@ public class upLoadActivity extends AppCompatActivity {
             Gson gson = new Gson();
             String ledJson = gson.toJson(ledResource);
             RequestBody ledRequestBody = RequestBody.create(ledJson, MediaType.parse("application/json"));
-            Call<String> call = ledResourceController.uploadLedResource(ledRequestBody,body);
+            Call<String> call = ledResourceController.uploadLedResource(ledRequestBody,viewSharer.getUser().getUserId(),body);
 
             call.enqueue(new retrofit2.Callback<String>() {
                 @Override
@@ -119,5 +121,37 @@ public class upLoadActivity extends AppCompatActivity {
     } catch (Exception e) {
         throw new RuntimeException(e);
     }
+
+    }
+    private void clear(){
+        new AlertDialog.Builder(upLoadActivity.this)
+                .setTitle("警告")
+                .setMessage("该操作不可逆")
+                .setPositiveButton("确定",(dialog,which)->{
+                    File file = new File(uri.getPath());
+
+                    // 检查文件是否存在
+                    if (file.exists()) {
+                        // 删除文件
+                        boolean isDeleted = file.delete();
+                        if (isDeleted) {
+                            // 文件删除成功
+                            Log.d("FileDelete", "File deleted successfully");
+                            finish();
+                        } else {
+                            // 文件删除失败
+                            Log.d("FileDelete", "File deletion failed");
+                            finish();
+                        }
+                    } else {
+                        // 文件不存在
+                        Log.d("FileDelete", "File does not exist");
+                        finish();
+                    }
+                })
+                .setNegativeButton("取消",(dialog,which)->{
+                    return;
+                })
+                .show();
     }
 }

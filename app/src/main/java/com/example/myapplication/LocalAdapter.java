@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.myapplication.page.Bluetooth.BluetoothActivity;
+import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
+
 import java.util.List;
 
 public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.LocalViewHolder> {
@@ -37,7 +40,13 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.LocalViewHol
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context, upLoadActivity.class);
+                Intent intent;
+                if (context instanceof CreationCenterActivity) {
+                    intent = new Intent(context, upLoadActivity.class);
+                }
+                else {
+                    intent=new Intent(context, BluetoothActivity.class);
+                }
                 intent.putExtra("uri",item);
                 context.startActivity(intent);
             }

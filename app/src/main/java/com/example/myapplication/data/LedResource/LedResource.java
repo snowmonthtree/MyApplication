@@ -31,8 +31,8 @@ public class LedResource {
                 ", likes=" + likes +
                 ", detail='" + detail + '\'' +
                 ", viewWebUrl='" + viewWebUrl + '\'' +
-                ", commentNum=" + commentNum +
-                ", upTime=" + upTime +
+                ", commentNum=" + commentNum +'\''+
+                ", upTime=" + upTime +'\''+
                 ", playbackVolume=" + playbackVolume +
                 '}';
     }

@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.PlayRecordController;
+import com.example.myapplication.ImageActivity;
 import com.example.myapplication.LEDResource;
+import com.example.myapplication.PhotoActivity;
 import com.example.myapplication.PlayRecord;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.TextActivity;
@@ -151,7 +153,7 @@ public class CreationCenterActivity extends AppCompatActivity {
         buttonMusic.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, MusicActivity.class);
             startActivity(intent);
-        });
+        });*/
 
         buttonImage.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, ImageActivity.class);
@@ -161,7 +163,7 @@ public class CreationCenterActivity extends AppCompatActivity {
         buttonPhoto.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, PhotoActivity.class);
             startActivity(intent);
-        });*/
+        });
 
         buttonText.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, TextActivity.class);
@@ -191,7 +193,9 @@ public class CreationCenterActivity extends AppCompatActivity {
                 for (File file : files) {
                     if (file.isFile()) {
                         // 处理文件
-                        localList.add(Uri.fromFile(file));
+                        if (isImageFile(file)) {
+                            localList.add(Uri.fromFile(file));
+                        }
                     } else if (file.isDirectory()) {
                         // 处理子目录
                         System.out.println("Directory: " + file.getName());
@@ -294,5 +298,16 @@ public class CreationCenterActivity extends AppCompatActivity {
                 Toast.makeText(this, "Permission denied, cannot access the file", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private boolean isImageFile(File file) {
+        String[] imageExtensions = {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"};
+
+        for (String extension : imageExtensions) {
+            if (file.getName().toLowerCase().endsWith(extension)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

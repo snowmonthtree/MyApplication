@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import androidx.appcompat.widget.SearchView;
+
+import android.widget.ListView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -12,6 +14,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.FunctionAdapter;
+import com.example.myapplication.FunctionItem;
+import com.example.myapplication.SettingsActivity;
+import com.example.myapplication.downLoadActivity;
 import com.example.myapplication.page.Profile.ProfileActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.page.Search.SearchResultActivity;
@@ -23,6 +29,9 @@ import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -128,6 +137,29 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent=new Intent(HomeActivity.this, BluetoothActivity.class);
             startActivity(intent);
         });
+        List<FunctionItem> functionItems = new ArrayList<>();
+        functionItems.add(new FunctionItem("查看已下载文件"));
+        functionItems.add(new FunctionItem("查看当前播放序列"));
+        functionItems.add(new FunctionItem("管理已上传的资源"));
+        functionItems.add(new FunctionItem("管理评论"));
+        // 初始化 ListView 和 Adapter
+        ListView mannersList = findViewById(R.id.mannalist);
+        FunctionAdapter adapter = new FunctionAdapter(this, functionItems);
+        mannersList.setAdapter(adapter);
+
+        // 设置点击监听器，使用 Lambda 表达式
+        mannersList.setOnItemClickListener((parent, view, position, id) -> {
+            FunctionItem selectedItem = (FunctionItem) parent.getItemAtPosition(position);
+            switch (selectedItem.getTitle()) {
+                case "查看已下载文件":
+                    Intent settingsIntent = new Intent(HomeActivity.this, downLoadActivity.class);
+                    startActivity(settingsIntent);
+                    break;
+            }
+        });
     }
+
+
+
 
 }

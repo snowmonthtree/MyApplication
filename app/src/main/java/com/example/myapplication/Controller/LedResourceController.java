@@ -10,6 +10,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -36,12 +38,19 @@ public interface LedResourceController {
     Call<List<LedResource>> orderByLikes();
     @GET("api/led-resources/getresource/{resourceId}")
     Call<LedResource> getResourceById(@Path("resourceId") String resourceId);
+    @FormUrlEncoded
     @POST("api/led-resources/update")
-    Call<String> updateResource(@Body LedResource ledResource);
+    Call<String> updateResource(@Field("resourceId") String resourceId,
+                                @Field("userId") String userId,
+                                @Field("likesNum") Integer likesNum,
+                                @Field("downloadNum") Integer downloadNum,
+                                @Field("commentNum") Integer commentNum);
+
     @Multipart
     @POST("api/led-resources/uploadresource")
     Call<String> uploadLedResource(
             @Part("ledresource") RequestBody ledResource,  // LED资源数据
+            @Query("userId") String userId,
             @Part MultipartBody.Part fileUpload                  // 文件数据
     );
 }

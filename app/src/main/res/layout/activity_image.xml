@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/layout1"
@@ -48,53 +46,39 @@
 
     </LinearLayout>
 
-    <!-- Doodle Canvas (画布) -->
-    <com.example.myapplication.DrawingView
-        android:id="@+id/doodle_canvas"
+    <!-- 显示选择的图片 -->
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#FFFFFF" />
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="50dp"
+        android:scaleType="centerCrop" />
 
-    <!-- Color SeekBar (颜色调节条) -->
-    <SeekBar
-        android:id="@+id/color_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="360"
-        android:progressDrawable="@drawable/gradient_seekbar"
-        android:layout_marginBottom="8dp" />
-
-    <!-- 控制按钮区域 -->
+    <!-- 按钮布局：选择图片和保存资源按钮水平排列 -->
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
         android:gravity="center">
 
+        <!-- 选择图片按钮 -->
         <Button
-            android:id="@+id/btn_save"
+            android:id="@+id/selectImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="保存"
-            android:layout_marginEnd="8dp" />
+            android:text="选择图片"
+            android:layout_marginEnd="20dp"/>
 
+        <!-- 保存资源按钮 -->
         <Button
-            android:id="@+id/btn_clear"
+            android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="清空"
-            android:layout_marginEnd="8dp" />
-
-        <Button
-            android:id="@+id/btn_undo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="撤销" />
-
+            android:text="保存资源" />
     </LinearLayout>
 
-</LinearLayout>
-
-
-
+</RelativeLayout>

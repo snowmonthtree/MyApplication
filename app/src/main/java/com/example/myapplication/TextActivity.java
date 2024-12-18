@@ -1,16 +1,26 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class TextActivity extends AppCompatActivity {
 
@@ -45,10 +55,7 @@ public class TextActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (generatedBitmap != null) {
-                    LEDResource resource = saveAsLEDResource(generatedBitmap);
-                    // 显示保存成功的消息
-                    Toast.makeText(TextActivity.this, "图像已保存为LED资源", Toast.LENGTH_SHORT).show();
-                    // 可以进一步显示LED资源的内容，或者进行其他操作
+                    save();
                 } else {
                     Toast.makeText(TextActivity.this, "请先生成图像", Toast.LENGTH_SHORT).show();
                 }
@@ -82,19 +89,49 @@ public class TextActivity extends AppCompatActivity {
         return bitmap;
     }
 
-    // 将生成的图像保存为LED资源
-    private LEDResource saveAsLEDResource(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        LEDResource resource = new LEDResource(width, height);
 
-        // 将图像的每个像素转为LED资源的颜色
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int color = bitmap.getPixel(x, y);
-                resource.setColor(x, y, color);
+    public void save(){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // 如果没有权限，请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    100);
+        }
+        //将图片保存为LED资源
+        LEDResource resource = new LEDResource(32, 8);
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 32; x++) {
+                int pixelColor = generatedBitmap.getPixel(x, y);
+                resource.setColor(x, y, pixelColor);
             }
         }
-        return resource;
+
+        try {
+            resource.saveBitmapToFile(resource.toBitmap(),"1",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+            MediaScannerConnection.scanFile(this,
+                    new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
+                    null,
+                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Toast.makeText(this, "LED Resource Saved:\n" + resource.toString(), Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // 判断请求码是否匹配
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限被授予，执行文件操作
+                save();
+            } else {
+                // 权限被拒绝，提示用户
+                Toast.makeText(this, "Permission denied, cannot access the file", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -76,19 +76,6 @@
         app:layout_constraintHorizontal_bias="0.5" />
 
     <!-- 添加广告位招租文本框 -->
-    <TextView
-        android:id="@+id/advertisement_text"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/light_gray"
-        android:gravity="center"
-        android:text="@string/welcome_money"
-        android:textColor="@color/black"
-        android:textSize="28sp"
-        app:layout_constraintTop_toBottomOf="@id/imageButton"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- 添加 BottomNavigationView -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -98,5 +85,14 @@
         android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <ListView
+        android:id="@+id/mannalist"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

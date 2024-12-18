@@ -1,8 +1,10 @@
 package com.example.myapplication.page.Video;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +12,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,6 +38,7 @@ import com.example.myapplication.Controller.CommentsController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.LikesController;
 import com.example.myapplication.Controller.PlayRecordController;
+import com.example.myapplication.LEDResource;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.Comment.Comment;
@@ -44,10 +49,13 @@ import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.ui.CommentAdapter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -71,6 +79,8 @@ public class PlayVideoActivity extends AppCompatActivity {
     private View commentSection;
     private LikesController likesController;
     private CheckBox like;
+    private String resourceId;
+    private ImageView imageView;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -136,7 +146,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     private void initVideoView() {
         // 找到 VideoView 实例
         videoView = findViewById(R.id.videoView);
-        ImageView imageView=findViewById(R.id.preImageView);
+        imageView=findViewById(R.id.preImageView);
 
         /*设置视频路径
         String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.your_video_file;
@@ -145,14 +155,14 @@ public class PlayVideoActivity extends AppCompatActivity {
 
         //显示图片
         Intent intent = getIntent();
+        resourceId=intent.getStringExtra("ledId");
         initResource(intent.getStringExtra("ledId"));
         if (!viewSharer.getUser().getPermissionId().equals("1")) {
-            Call<Void> call1 = playRecordController.addPlayRecord(viewSharer.getUser().getUserId(), ledResource.getResourceId());
+            Call<Void> call1 = playRecordController.addPlayRecord(viewSharer.getUser().getUserId(), resourceId);
             call1.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    ledResource.setPlaybackVolume(ledResource.getPlaybackVolume()+1);
-                    update();
+
                 }
 
                 @Override
@@ -162,20 +172,12 @@ public class PlayVideoActivity extends AppCompatActivity {
             });
         }
         like.setOnClickListener(view -> likeClick());
-        Call<LedResource> call=ledResourceController.getResourceById(ledResource.getResourceId());
+        Call<LedResource> call=ledResourceController.getResourceById(resourceId);
         call.enqueue(new Callback<LedResource>() {
             @Override
             public void onResponse(Call<LedResource> call, Response<LedResource> response) {
                 if (response.body()!=null&&response.isSuccessful()){
                     fetchImage(response.body().getViewWebUrl(),imageView);
-                    TextView textView=findViewById(R.id.downloadcount);
-                    TextView textView1=findViewById(R.id.watchedNum);
-                    TextView detail=findViewById(R.id.detail);
-                    detail.setText(response.body().getDetail());
-                    textView1.setText("播放量:"+response.body().getPlaybackVolume());
-                    textView.setText("下载量:"+response.body().getDownloadCount());
-                    RadioButton radioButton=findViewById(R.id.radio_comment);
-                    radioButton.setText("评论:"+response.body().getCommentNum());
                     setLike();
                 }
             }
@@ -212,7 +214,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     private void initRecyclerView() {
         RecyclerView recyclerViewComments = findViewById(R.id.recyclerViewComments);
         // 创建一些静态评论数据
-        Call<List<Comment>> call=commentsController.getCommentsByResourceId(ledResource.getResourceId());
+        Call<List<Comment>> call=commentsController.getCommentsByResourceId(resourceId);
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -267,7 +269,9 @@ public class PlayVideoActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
-
+                ledResource.setPlaybackVolume(ledResource.getPlaybackVolume()+1);
+                Log.e("nmdwsm", "toDisplay: "+ledResource.getPlaybackVolume() );
+                update();
                 Intent intent = new Intent(PlayVideoActivity.this, BluetoothActivity.class);
                 intent.putExtra("image", byteArray);
                 startActivity(intent);
@@ -358,7 +362,7 @@ public class PlayVideoActivity extends AppCompatActivity {
         return bitmap;
     }
     private void setLike(){
-        Call<Integer> call1=likesController.getLikesNum(ledResource.getResourceId());
+        Call<Integer> call1=likesController.getLikesNum(resourceId);
         call1.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -371,7 +375,7 @@ public class PlayVideoActivity extends AppCompatActivity {
             }
         });
 
-        Call<Boolean> call=likesController.userIfLike(viewSharer.getUser().getUserId(),ledResource.getResourceId());
+        Call<Boolean> call=likesController.userIfLike(viewSharer.getUser().getUserId(),resourceId);
         call.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
@@ -413,6 +417,16 @@ public class PlayVideoActivity extends AppCompatActivity {
             public void onResponse(Call<LedResource> call, Response<LedResource> response) {
                 if (response.isSuccessful()&&response.body()!=null) {
                     ledResource = response.body();
+                    TextView textView=findViewById(R.id.downloadcount);
+                    TextView textView1=findViewById(R.id.watchedNum);
+                    TextView detail=findViewById(R.id.detail);
+                    detail.setText(response.body().getDetail());
+                    textView1.setText("播放量:"+response.body().getPlaybackVolume());
+                    textView.setText("下载量:"+response.body().getDownloadCount());
+                    RadioButton radioButton=findViewById(R.id.radio_comment);
+                    radioButton.setText("评论:"+response.body().getCommentNum());
+                    textView.setOnClickListener(view -> save());
+
                 }
             }
 
@@ -423,12 +437,14 @@ public class PlayVideoActivity extends AppCompatActivity {
         });
     }
     private void update(){
-        Call<String> call=ledResourceController.updateResource(ledResource);
+        System.out.println(ledResource.toString());
+        Call<String> call=ledResourceController.updateResource(resourceId,viewSharer.getUser().getUserId(),ledResource.getLikes(),ledResource.getDownloadCount(),ledResource.getCommentNum());
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.body()!=null){
                     Toast.makeText(PlayVideoActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -437,5 +453,60 @@ public class PlayVideoActivity extends AppCompatActivity {
                 Toast.makeText(PlayVideoActivity.this, "ERROR"+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    public void save(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // 如果没有权限，请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission_group.STORAGE},
+                    100);
+        }
+        try {
+            File directory=new File(getFilesDir(),"download");
+            // 获取存储路径，这里使用外部存储目录
+            if (!directory.exists()) {
+                directory.mkdirs(); // 创建目录
+            }
+
+            // 创建文件
+            File file = new File(directory, ledResource.getViewWebUrl());
+            FileOutputStream outStream = new FileOutputStream(file);
+
+            // 将 Bitmap 保存为 PNG 格式
+            Drawable drawable=imageView.getDrawable();
+            BitmapDrawable bitmapDrawable=(BitmapDrawable) drawable;
+            bitmapDrawable.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, outStream);
+
+            // 关闭文件输出流
+            outStream.flush();
+            outStream.close();
+            ledResource.setDownloadCount(ledResource.getDownloadCount()+1);
+            update();
+            /*MediaScannerConnection.scanFile(this,
+                    new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
+                    null,
+                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));
+*/
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Toast.makeText(this, "LED Resource Saved:\n" +"下载成功", Toast.LENGTH_SHORT).show();
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // 判断请求码是否匹配
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限被授予，执行文件操作
+                save();
+            } else {
+                // 权限被拒绝，提示用户
+                Toast.makeText(this, "Permission denied, cannot access the file", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
