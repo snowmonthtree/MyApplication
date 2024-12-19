@@ -282,7 +282,7 @@ public class CreationCenterActivity extends AppCompatActivity {
                     100);
         }
 
-        Toast.makeText(this, "LED Resource Saved:\n" , Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "权限获取成功\n" , Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

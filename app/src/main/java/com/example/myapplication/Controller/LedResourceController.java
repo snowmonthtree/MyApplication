@@ -42,7 +42,7 @@ public interface LedResourceController {
     @POST("api/led-resources/update")
     Call<String> updateResource(@Field("resourceId") String resourceId,
                                 @Field("userId") String userId,
-                                @Field("likesNum") Integer likesNum,
+                                @Field("playRecordNum") Integer playRecordNum,
                                 @Field("downloadNum") Integer downloadNum,
                                 @Field("commentNum") Integer commentNum);
 

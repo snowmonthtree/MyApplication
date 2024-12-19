@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)  // 添加 Gson 转换器
     testImplementation(libs.junit)
+    implementation (libs.cardview)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation (libs.okhttp)

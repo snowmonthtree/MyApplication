@@ -438,7 +438,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     }
     private void update(){
         System.out.println(ledResource.toString());
-        Call<String> call=ledResourceController.updateResource(resourceId,viewSharer.getUser().getUserId(),ledResource.getLikes(),ledResource.getDownloadCount(),ledResource.getCommentNum());
+        Call<String> call=ledResourceController.updateResource(resourceId,viewSharer.getUser().getUserId(),ledResource.getPlaybackVolume(),ledResource.getDownloadCount(),ledResource.getCommentNum());
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

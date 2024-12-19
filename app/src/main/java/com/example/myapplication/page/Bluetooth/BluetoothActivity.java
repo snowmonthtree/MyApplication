@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -69,6 +70,10 @@ public class BluetoothActivity extends AppCompatActivity {
         if (byteArray != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             imageView.setImageBitmap(bitmap);
+        }
+        else {
+            Uri uri=intent.getParcelableExtra("uri");
+            imageView.setImageURI(uri);
         }
 
     }

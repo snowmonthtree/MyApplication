@@ -108,11 +108,11 @@ public class TextActivity extends AppCompatActivity {
         }
 
         try {
-            resource.saveBitmapToFile(resource.toBitmap(),"1",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
-            MediaScannerConnection.scanFile(this,
+            resource.saveBitmapToFile(resource.toBitmap(),"1",getFilesDir());
+            /*MediaScannerConnection.scanFile(this,
                     new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
                     null,
-                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));
+                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));*/
 
         } catch (IOException e) {
             throw new RuntimeException(e);
