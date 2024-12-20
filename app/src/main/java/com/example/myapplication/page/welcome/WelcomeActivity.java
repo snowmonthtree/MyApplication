@@ -1,5 +1,6 @@
 package com.example.myapplication.page.Welcome;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -35,5 +36,12 @@ public class WelcomeActivity extends AppCompatActivity {
                 finish();
             }
         });
+        new AlertDialog.Builder(this)
+                .setTitle("公告")
+                .setMessage("由于后端服务器网络问题,请确保当前页面完全加载后再执行操作,同时不要操作的过于频繁")
+                .setPositiveButton("确定", (dialog, which) -> {
+                    // 确定按钮的点击事件
+                })
+                .show();
     }
 }

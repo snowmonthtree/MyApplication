@@ -14,10 +14,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.myapplication.FunctionAdapter;
-import com.example.myapplication.FunctionItem;
-import com.example.myapplication.SettingsActivity;
-import com.example.myapplication.downLoadActivity;
+import com.example.myapplication.PlayListActivity;
+import com.example.myapplication.ui.FunctionAdapter;
+import com.example.myapplication.data.Function.FunctionItem;
+import com.example.myapplication.page.Home.DownLoad.downLoadActivity;
 import com.example.myapplication.page.Profile.ProfileActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.page.Search.SearchResultActivity;
@@ -152,8 +152,12 @@ public class HomeActivity extends AppCompatActivity {
             FunctionItem selectedItem = (FunctionItem) parent.getItemAtPosition(position);
             switch (selectedItem.getTitle()) {
                 case "查看已下载文件":
-                    Intent settingsIntent = new Intent(HomeActivity.this, downLoadActivity.class);
-                    startActivity(settingsIntent);
+                    Intent downLoadIntent = new Intent(HomeActivity.this, downLoadActivity.class);
+                    startActivity(downLoadIntent);
+                    break;
+                case "查看当前播放序列":
+                    Intent playListIntent=new Intent(HomeActivity.this, PlayListActivity.class);
+                    startActivity(playListIntent);
                     break;
             }
         });

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.PlayRecord;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

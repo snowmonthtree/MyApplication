@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.page.Home.DownLoad;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,8 +9,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.ui.LocalAdapter;
+import com.example.myapplication.R;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.page.Profile.CheckUpdata;
 
 import androidx.appcompat.app.AppCompatActivity;
 

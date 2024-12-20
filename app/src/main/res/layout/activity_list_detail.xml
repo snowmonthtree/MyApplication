@@ -5,17 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayListActivity">
+    tools:context=".ListDetailActivity">
 
-    <!-- 上部的 RecyclerView 占用剩余空间 -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_list"
+        android:id="@+id/recycler_list_detail"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottomLinearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 底部的 LinearLayout，固定在父布局底部 -->
     <LinearLayout
@@ -25,22 +24,26 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <EditText
-            android:id="@+id/newListName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:ems="20"
-            android:inputType="text"
-            android:minHeight="40dp"
-            android:text="Name" /> <!-- 给 EditText 和 Button 之间添加间距 -->
+        <!-- 给 EditText 和 Button 之间添加间距 -->
 
         <Button
-            android:id="@+id/createNewList"
+            android:id="@+id/setAsNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="新建播放列表" />
-    </LinearLayout>
+            android:text="设为当前播放列表" />
 
+        <Button
+            android:id="@+id/deleteList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="删除该列表" />
+
+        <Button
+            android:id="@+id/rename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="重命名列表" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,5 @@
 package com.example.myapplication.Controller;
-import com.example.myapplication.PlayRecord;
+import com.example.myapplication.data.PlayRecord.PlayRecord;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface PlayRecordController {
 

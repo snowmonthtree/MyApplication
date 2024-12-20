@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.PlayRecord;
 
 import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.User.User;

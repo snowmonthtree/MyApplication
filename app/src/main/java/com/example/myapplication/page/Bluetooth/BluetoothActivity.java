@@ -24,12 +24,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.graphics.BitmapFactory;
 
+import com.example.myapplication.Controller.LedListController;
 import com.example.myapplication.R;
+import com.example.myapplication.RetrofitClient;
+import com.example.myapplication.data.ViewSharer;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class BluetoothActivity extends AppCompatActivity {
     private static final String TAG = "BluetoothActivity";
@@ -45,6 +53,10 @@ public class BluetoothActivity extends AppCompatActivity {
 
     private Button btnConnect, btnSend;
     private ImageView imageView;
+    private Button btnTest;
+    private ViewSharer viewSharer;
+    private LedListController ledListController;
+    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +66,16 @@ public class BluetoothActivity extends AppCompatActivity {
         btnConnect = findViewById(R.id.btnConnect);
         btnSend = findViewById(R.id.btnSend);
         imageView = findViewById(R.id.imageView);
-
+        btnTest = findViewById(R.id.btntest);
+        viewSharer=(ViewSharer)getApplication();
+        try {
+            retrofit= RetrofitClient.getClient(this);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        ledListController=retrofit.create(LedListController.class);
+        btnTest.setOnClickListener(view -> test());
 
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -285,5 +306,24 @@ public class BluetoothActivity extends AppCompatActivity {
      */
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+    private void test(){
+        if (viewSharer.getListId()!=null){
+            Call<String> call=ledListController.addResourceToPlaylist(viewSharer.getUser().getUserId(),viewSharer.getListId(),"1");
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Toast.makeText(BluetoothActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Toast.makeText(BluetoothActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else {
+            Toast.makeText(viewSharer, "未设置播放序列", Toast.LENGTH_SHORT).show();
+        }
     }
 }

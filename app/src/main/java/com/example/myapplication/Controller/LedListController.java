@@ -1,9 +1,8 @@
 package com.example.myapplication.Controller;
-import com.example.myapplication.PlayList;
+import com.example.myapplication.data.PlayList.PlayList;
 import com.example.myapplication.data.LedResource.LedResource;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;

@@ -36,4 +36,11 @@
         android:text="发送图片数据"
         android:backgroundTint="#000000"
         android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/btntest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSend"
+        android:text="Button" />
 </RelativeLayout>

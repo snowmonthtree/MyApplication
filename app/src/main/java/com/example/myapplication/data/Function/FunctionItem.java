@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.Function;
 
 public class FunctionItem {
     private String title;

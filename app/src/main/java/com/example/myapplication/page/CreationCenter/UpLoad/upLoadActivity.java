@@ -1,6 +1,4 @@
-package com.example.myapplication;
-
-import static com.example.myapplication.EditInfoActivity.getFileFromUri;
+package com.example.myapplication.page.CreationCenter.UpLoad;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +17,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.Controller.LedResourceController;
+import com.example.myapplication.R;
+import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.ViewSharer;
 import com.google.gson.Gson;
@@ -53,7 +53,7 @@ public class upLoadActivity extends AppCompatActivity {
             return insets;
         });
         try {
-            retrofit=RetrofitClient.getClient(this);
+            retrofit= RetrofitClient.getClient(this);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

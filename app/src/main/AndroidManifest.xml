@@ -11,7 +11,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
@@ -30,21 +34,24 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ListDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".PlayListActivity"
             android:exported="false" />
         <activity
-            android:name=".downLoadActivity"
+            android:name=".page.Home.DownLoad.downLoadActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
         <activity
-            android:name=".upLoadActivity"
+            android:name=".page.CreationCenter.UpLoad.upLoadActivity"
             android:exported="false"
             android:label="@string/title_activity_up_load"
             android:theme="@style/Theme.MyApplication" />
         <activity
             android:name=".page.Video.PlayVideoActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".page.Profile.UserProfileActivity"
             android:exported="false" />
@@ -55,16 +62,16 @@
             android:name=".ImageActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".page.Profile.Setting.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".AboutUsActivity"
+            android:name=".page.Profile.AboutUs.AboutUsActivity"
             android:exported="false" />
         <activity
-            android:name=".CheckUpdateActivity"
+            android:name=".page.Profile.CheckUpdata.CheckUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".EditInfoActivity"
+            android:name=".page.Profile.EditInfo.EditInfoActivity"
             android:exported="false" />
         <activity
             android:name=".page.Search.SearchResultActivity"

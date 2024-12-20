@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.PlayList;
 import com.example.myapplication.data.User.User;
 
 import java.io.Serializable;

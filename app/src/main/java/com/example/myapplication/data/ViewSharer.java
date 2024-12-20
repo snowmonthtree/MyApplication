@@ -19,6 +19,8 @@ public class ViewSharer extends Application {
 
     private final String path="https://1.95.83.162:8081/api/";
 
+    private String listId;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -32,6 +34,8 @@ public class ViewSharer extends Application {
                     .setMessage("由于后端服务器网络问题,请确保当前页面完全加载后再执行操作,同时不要操作的过于频繁")
                     .setPositiveButton("确定", (dialog, which) -> {
                         // 确定按钮的点击事件
+
+                        System.exit(0);
                     })
                     .show();
 
@@ -39,7 +43,6 @@ public class ViewSharer extends Application {
 
 
             // 终止应用程序
-            System.exit(0);
         });
    }
 
@@ -58,6 +61,13 @@ public class ViewSharer extends Application {
 
     public void setLedResource(LedResource ledResource) {
         this.ledResource = ledResource;
+    }
+    public String getListId() {
+        return listId;
+    }
+
+    public void setListId(String listId) {
+        this.listId = listId;
     }
 
 }
