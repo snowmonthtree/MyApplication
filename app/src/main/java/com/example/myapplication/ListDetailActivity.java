@@ -64,7 +64,7 @@ public class ListDetailActivity extends AppCompatActivity {
         setList=findViewById(R.id.setAsNow);
         recyclerView=findViewById(R.id.recycler_list_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ledListAdapter = new LedListAdapter(new ArrayList<ResultItem>(),ledResourceController,this); // 先传入一个空列表
+        ledListAdapter = new LedListAdapter(new ArrayList<ResultItem>(),ledResourceController,ledListController,viewSharer,this); // 先传入一个空列表
         recyclerView.setAdapter(ledListAdapter);
         initList();
         setList.setOnClickListener(view -> setList());
@@ -80,7 +80,7 @@ public class ListDetailActivity extends AppCompatActivity {
                     list.add(new ResultItem(ledResource.getName(),ledResource.getDetail(),ledResource.getViewWebUrl(),ledResource.getResourceId()));
 
                 }
-                ledListAdapter.updateData(list);
+                ledListAdapter.updateData(list,listId);
             }
 
             @Override

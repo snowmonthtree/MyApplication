@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/title_background"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/center_view1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:text="@string/creation_center_text_1"
+            android:textAlignment="textEnd"
+            android:textColor="@color/white"
+            android:textSize="28sp" />
+
+        <ImageView
+            android:id="@+id/center_pic1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_create_top" />
+
+        <TextView
+            android:id="@+id/center_View2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|start"
+            android:text="@string/center_text_2"
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <!-- 显示生成的图片 -->
+    <ImageView
+        android:id="@+id/generatedImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"/>
+
+    <!-- 显示输入框 -->
+    <EditText
+        android:id="@+id/inputText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="输入音乐符号"
+        android:layout_below="@id/generatedImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:focusable="false" />
+
+    <!-- 音乐符号按钮布局，放置在输入框下方，确保按钮对称 -->
+
+    <!-- 生成图片、保存图片和删除符号按钮放在同一行，居中对称，位于底部 -->
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inputText"
+        android:layout_marginTop="90dp"
+        android:columnCount="4"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <!-- 音乐符号按钮，添加layout_gravity属性，使按钮在列中居中对齐 -->
+        <Button
+            android:id="@+id/musicSymbol1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="♪"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/musicSymbol2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="♫"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/musicSymbol3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="♬"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/musicSymbol4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="♩"
+            android:layout_gravity="center" />
+
+        <!-- 增加更多符号按钮 -->
+        <Button
+            android:id="@+id/musicSymbol5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="𝄞"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/musicSymbol6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="𝅘𝅥𝅮"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/musicSymbol7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="𝅘"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/musicSymbol8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="𝅘𝅥𝅱"
+            android:layout_gravity="center" />
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:gravity="center">
+
+        <!-- 生成图片按钮 -->
+        <Button
+            android:id="@+id/generateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生成图片"
+            android:layout_marginEnd="20dp" />
+
+        <!-- 保存图片按钮 -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存图片"
+            android:layout_marginEnd="20dp" />
+
+        <!-- 删除符号按钮 -->
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除符号" />
+    </LinearLayout>
+
+</RelativeLayout>

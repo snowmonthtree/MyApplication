@@ -46,6 +46,7 @@ import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.Login.LoginActivity;
+import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.ui.CommentAdapter;
 
 import java.io.ByteArrayOutputStream;
@@ -318,18 +319,34 @@ public class PlayVideoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    // 从ResponseBody获取图片数据并设置到ImageButton
                     ResponseBody responseBody = response.body();
-                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+                    // 检查响应头中的 MIME 类型来判断图片类型
+                    String contentType = response.headers().get("Content-Type");
 
-                    if (bitmap != null) {
-                        // 使用 Glide 将 Bitmap 加载到 ImageView
-                        Glide.with(imageView.getContext())
-                                .load(bitmap)  // 直接加载 Bitmap
-                                .placeholder(R.drawable.test)  // 占位图
-                                .error(R.drawable.ic_doodle_back)  // 错误图
-                                .into(imageView);  // 将图片显示到 ImageView
+                    if (contentType != null && contentType.contains("image/gif")) {
+                        // 如果是 GIF 动态图片
+                        // 使用 Glide 加载 GIF 图片
+                        Glide.with(PlayVideoActivity.this)  // 使用 Activity 或 Application 上下文
+                                .asGif()
+                                .load(responseBody.byteStream())  // 获取字节流
+                                .into(imageView);  // 加载到对应的 ImageButton
+
                     } else {
-                        Log.e("Image Fetch", "Bitmap is null");
+                        // 如果是静态图片（PNG, JPEG 等）
+                        Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+
+                        if (bitmap != null) {
+                            // 缩放图片到指定尺寸
+                            bitmap = Bitmap.createScaledBitmap(bitmap, 900, 300, false);
+
+                            // 设置 Bitmap 到 ImageButton
+                            imageView.setImageBitmap(bitmap);
+                        }
+                        else {
+                            Log.e("Image Fetch", "Bitmap is null");
+
+                    }
                     }
                 } else {
                     Log.e("Image Fetch", "onResponse: Image fetch failed1");

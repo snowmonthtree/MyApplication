@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
 import com.example.myapplication.page.Home.HomeActivity;
@@ -309,16 +310,33 @@ public class ParkActivity extends AppCompatActivity {
         ledResourceController.getImage(imageName).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null&&i<8) {
                     // 从ResponseBody获取图片数据并设置到ImageButton
                     ResponseBody responseBody = response.body();
-                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+                    // 检查响应头中的 MIME 类型来判断图片类型
+                    String contentType = response.headers().get("Content-Type");
 
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 900, 300, false);
+                    if (contentType != null && contentType.contains("image/gif")) {
+                        // 如果是 GIF 动态图片
+                        // 使用 Glide 加载 GIF 图片
+                        Glide.with(ParkActivity.this)  // 使用 Activity 或 Application 上下文
+                                .asGif()
+                                .load(responseBody.byteStream())  // 获取字节流
+                                .into(imageButtons[i]);  // 加载到对应的 ImageButton
 
-                    if (bitmap != null && i<8) {
-                        imageButtons[i].setImageBitmap(bitmap);  // 设置Bitmap到ImageButton
-                        imageButtons[i].setContentDescription(resourceId);
+                        imageButtons[i].setContentDescription(resourceId);  // 设置内容描述
+                    } else {
+                        // 如果是静态图片（PNG, JPEG 等）
+                        Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+
+                        if (bitmap != null) {
+                            // 缩放图片到指定尺寸
+                            bitmap = Bitmap.createScaledBitmap(bitmap, 900, 300, false);
+
+                            // 设置 Bitmap 到 ImageButton
+                            imageButtons[i].setImageBitmap(bitmap);
+                            imageButtons[i].setContentDescription(resourceId);  // 设置内容描述
+                        }
                     }
                 } else {
                     // 图片加载失败，处理错误

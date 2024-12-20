@@ -13,14 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Controller.LedListController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.R;
 import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.Result.ResultItem;
+import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Video.PlayVideoActivity;
 
 import java.io.IOException;
@@ -38,12 +43,18 @@ public class LedListAdapter extends RecyclerView.Adapter<LedListAdapter.LedListV
     private List<ResultItem> resultList;
     private LedResourceController ledResourceController;
     private Context context;
+    private LedListController ledListController;
+    private ViewSharer viewSharer;
+    private String listId;
 
 
-    public LedListAdapter(List<ResultItem> resultList,LedResourceController ledResourceController,Context context) {
+    public LedListAdapter(List<ResultItem> resultList,LedResourceController ledResourceController,LedListController ledListController,ViewSharer viewSharer,Context context) {
         this.resultList = resultList;
         this.ledResourceController=ledResourceController;
         this.context=context;
+        this.ledListController=ledListController;
+        this.viewSharer=viewSharer;
+
     }
 
     @NonNull
@@ -71,6 +82,37 @@ public class LedListAdapter extends RecyclerView.Adapter<LedListAdapter.LedListV
                 context.startActivity(intent);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                new AlertDialog.Builder(context)
+                        .setTitle("删除资源?")
+                        .setMessage("该操作无法撤销")
+                        .setPositiveButton("确定",(dialog,which)->{
+                            Call<String> call=ledListController.removeResourceFromPlaylist(viewSharer.getUser().getUserId(),listId,item.getResourceId());
+                            call.enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+                                    Toast.makeText(context, response.body(), Toast.LENGTH_SHORT).show();
+                                    resultList.remove(position);
+                                    updateData(resultList,listId);
+                                }
+
+
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        })
+                        .setNegativeButton("取消",(dialog,which)->{
+
+                        })
+                        .show();
+                return true;
+            }
+        });
     }
 
 
@@ -79,9 +121,10 @@ public class LedListAdapter extends RecyclerView.Adapter<LedListAdapter.LedListV
         return resultList.size();
     }
 
-    public void updateData(List<ResultItem> newData) {
+    public void updateData(List<ResultItem> newData,String listId) {
         resultList.clear();
         resultList.addAll(newData);
+        this.listId=listId;
         notifyDataSetChanged();
     }
 

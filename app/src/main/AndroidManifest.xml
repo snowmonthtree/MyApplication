@@ -37,6 +37,9 @@
             android:name=".ListDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".AnimationActivity"
+            android:exported="false" />
+        <activity
             android:name=".PlayListActivity"
             android:exported="false" />
         <activity

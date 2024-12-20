@@ -15,9 +15,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.AnimationActivity;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.PlayRecordController;
 import com.example.myapplication.ImageActivity;
+import com.example.myapplication.MusicActivity;
 import com.example.myapplication.PhotoActivity;
 import com.example.myapplication.data.PlayRecord.PlayRecord;
 import com.example.myapplication.RetrofitClient;
@@ -139,7 +141,7 @@ public class CreationCenterActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        /*
+
         buttonAnimation.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, AnimationActivity.class);
             startActivity(intent);
@@ -148,7 +150,7 @@ public class CreationCenterActivity extends AppCompatActivity {
         buttonMusic.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, MusicActivity.class);
             startActivity(intent);
-        });*/
+        });
 
         buttonImage.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, ImageActivity.class);

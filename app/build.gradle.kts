@@ -47,7 +47,8 @@ dependencies {
     implementation(libs.retrofit)  // 添加 Retrofit 库
     implementation(libs.converter.gson)
     implementation(libs.navigation.fragment)
-    implementation(libs.navigation.ui)  // 添加 Gson 转换器
+    implementation(libs.navigation.ui)
+    implementation(libs.android.gif.drawable)  // 添加 Gson 转换器
     testImplementation(libs.junit)
     implementation (libs.cardview)
     androidTestImplementation(libs.ext.junit)

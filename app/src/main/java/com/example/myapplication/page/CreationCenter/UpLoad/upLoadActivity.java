@@ -86,8 +86,18 @@ public class upLoadActivity extends AppCompatActivity {
         File file=new File(uri.getPath());
 
         if (file.exists()) {
+            // 获取文件的扩展名
+            String fileExtension = getFileExtension(file);
+
+            // 根据文件类型设置 MIME 类型
+            String mimeType = "image/jpeg"; // 默认类型
+            if (fileExtension.equalsIgnoreCase("png")) {
+                mimeType = "image/png";
+            } else if (fileExtension.equalsIgnoreCase("gif")) {
+                mimeType = "image/gif";
+            }
             // 创建 RequestBody，用于文件上传
-            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
+            RequestBody requestBody = RequestBody.create(MediaType.parse(mimeType), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestBody);  // 设置表单的键值
 
             // 创建 Retrofit 实例并进行文件上传
@@ -154,4 +164,13 @@ public class upLoadActivity extends AppCompatActivity {
                 })
                 .show();
     }
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex > 0) {
+            return fileName.substring(dotIndex + 1).toLowerCase();
+        }
+        return "";
+    }
+
 }

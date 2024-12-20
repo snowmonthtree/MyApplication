@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         User data = response.body();
                         if (data!=null){
-                            Toast.makeText(LoginActivity.this, data.getEmail(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(LoginActivity.this, data.getEmail(), Toast.LENGTH_SHORT).show();
                         }
                         Log.e("NetworkRequest", "Response Code: " + response.code());
                         if (response.body() == null) {
