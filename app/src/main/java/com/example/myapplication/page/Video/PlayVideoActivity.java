@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myapplication.Controller.CommentsController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.LikesController;
@@ -49,12 +51,16 @@ import com.example.myapplication.page.Login.LoginActivity;
 import com.example.myapplication.page.Park.ParkActivity;
 import com.example.myapplication.ui.CommentAdapter;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -313,71 +319,7 @@ public class PlayVideoActivity extends AppCompatActivity {
             update();
         }
     }
-    private void fetchImage(String viewWebUrl, ImageView imageView) {
-        // 假设 ledResourceController 是 Retrofit 接口，调用 getImage 方法来获取图片
-        ledResourceController.getImage(viewWebUrl).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // 从ResponseBody获取图片数据并设置到ImageButton
-                    ResponseBody responseBody = response.body();
-                    // 检查响应头中的 MIME 类型来判断图片类型
-                    String contentType = response.headers().get("Content-Type");
 
-                    if (contentType != null && contentType.contains("image/gif")) {
-                        // 如果是 GIF 动态图片
-                        // 使用 Glide 加载 GIF 图片
-                        Glide.with(PlayVideoActivity.this)  // 使用 Activity 或 Application 上下文
-                                .asGif()
-                                .load(responseBody.byteStream())  // 获取字节流
-                                .into(imageView);  // 加载到对应的 ImageButton
-
-                    } else {
-                        // 如果是静态图片（PNG, JPEG 等）
-                        Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
-
-                        if (bitmap != null) {
-                            // 缩放图片到指定尺寸
-                            bitmap = Bitmap.createScaledBitmap(bitmap, 900, 300, false);
-
-                            // 设置 Bitmap 到 ImageButton
-                            imageView.setImageBitmap(bitmap);
-                        }
-                        else {
-                            Log.e("Image Fetch", "Bitmap is null");
-
-                    }
-                    }
-                } else {
-                    Log.e("Image Fetch", "onResponse: Image fetch failed1");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // 网络请求失败
-                Log.e("Image Fetch", "onFailure: Image fetch failed", t);
-            }
-        });
-    }
-
-    // 将ResponseBody转换为Bitmap
-    private Bitmap convertResponseBodyToBitmap(ResponseBody responseBody) {
-        Bitmap bitmap = null;
-        InputStream inputStream = responseBody.byteStream();
-        try {
-            bitmap = BitmapFactory.decodeStream(inputStream);  // 将输入流解码为Bitmap
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                inputStream.close();  // 关闭输入流
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return bitmap;
-    }
     private void setLike(){
         Call<Integer> call1=likesController.getLikesNum(resourceId);
         call1.enqueue(new Callback<Integer>() {
@@ -525,5 +467,80 @@ public class PlayVideoActivity extends AppCompatActivity {
                 Toast.makeText(this, "Permission denied, cannot access the file", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private byte[] readBytesFromStream(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        return byteArrayOutputStream.toByteArray();  // 返回字节数组
+    }
+    // 判断是否是 GIF 格式
+    private boolean isGif(byte[] imageData) {
+        if (imageData.length >= 4) {
+            return imageData[0] == 'G' && imageData[1] == 'I' && imageData[2] == 'F';
+        }
+        return false;
+    }
+    // 将ResponseBody转换为字节数组
+    private byte[] convertResponseBodyToBytes(ResponseBody responseBody) {
+        byte[] data = null;
+        InputStream inputStream = responseBody.byteStream();
+        try {
+            data = readBytesFromStream(inputStream);  // 读取字节流到字节数组
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();  // 关闭输入流
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
+    }
+    private void fetchImage(String viewWebUrl, ImageView imageView) {
+        // 假设 ledResourceController 是 Retrofit 接口，调用 getImage 方法来获取图片
+        ledResourceController.getImage(viewWebUrl).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        ResponseBody responseBody = response.body();
+                        byte[] imageData = convertResponseBodyToBytes(responseBody);  // 获取字节数组
+
+                        // 读取字节流并判断是否为 GIF 格式
+                        if (isGif(imageData)) {
+                            // 如果是 GIF 动图
+                            Glide.with(PlayVideoActivity.this)
+                                    .asGif()
+                                    .load(imageData)  // 加载字节数组
+                                    .into(imageView);  // 显示 GIF 动图
+                        } else {
+                            // 如果是静态图片（如 PNG, JPEG）
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                            if (bitmap != null) {
+                                imageView.setImageBitmap(bitmap);  // 显示静态图片
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Image Fetch", "Failed to process response", e);
+                    }
+                } else {
+                    Log.e("Image Fetch", "onResponse: Image fetch failed");
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // 网络请求失败
+                Log.e("Image Fetch", "onFailure: Image fetch failed", t);
+            }
+        });
     }
 }

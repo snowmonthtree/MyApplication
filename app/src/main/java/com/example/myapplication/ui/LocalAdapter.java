@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
-import com.example.myapplication.page.CreationCenter.UpLoad.upLoadActivity;
+import com.example.myapplication.page.CreationCenter.UpLoad.UpLoadActivity;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.LocalViewHol
             public void onClick(View view) {
                 Intent intent;
                 if (context instanceof CreationCenterActivity) {
-                    intent = new Intent(context, upLoadActivity.class);
+                    intent = new Intent(context, UpLoadActivity.class);
                 }
                 else {
                     intent=new Intent(context, BluetoothActivity.class);

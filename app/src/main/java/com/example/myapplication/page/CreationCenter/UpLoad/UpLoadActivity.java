@@ -31,7 +31,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
-public class upLoadActivity extends AppCompatActivity {
+public class UpLoadActivity extends AppCompatActivity {
     private ImageView imageView;
     private EditText detail;
     private EditText name;
@@ -112,7 +112,7 @@ public class upLoadActivity extends AppCompatActivity {
                 public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                     if (response.isSuccessful()) {
                         // 成功处理
-                        Toast.makeText(upLoadActivity.this, "信息已保存", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpLoadActivity.this, "信息已保存", Toast.LENGTH_SHORT).show();
                     } else {
                         // 错误处理
                         System.out.println("上传失败: " + response.code()+response.errorBody().toString());
@@ -134,7 +134,7 @@ public class upLoadActivity extends AppCompatActivity {
 
     }
     private void clear(){
-        new AlertDialog.Builder(upLoadActivity.this)
+        new AlertDialog.Builder(UpLoadActivity.this)
                 .setTitle("警告")
                 .setMessage("该操作不可逆")
                 .setPositiveButton("确定",(dialog,which)->{

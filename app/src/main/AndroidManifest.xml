@@ -47,7 +47,7 @@
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />
         <activity
-            android:name=".page.CreationCenter.UpLoad.upLoadActivity"
+            android:name=".page.CreationCenter.UpLoad.UpLoadActivity"
             android:exported="false"
             android:label="@string/title_activity_up_load"
             android:theme="@style/Theme.MyApplication" />
