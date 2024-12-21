@@ -64,8 +64,8 @@ public class ManageAuditAdapter extends RecyclerView.Adapter<ManageAuditAdapter.
         Audit audit = list.get(position);
 
         // 显示审核信息
-        holder.auditNameTextView.setText(audit.getAuditName()+" 举报人Id:"+audit.getUser().getUserId());
-        holder.auditTimeTextView.setText(audit.getResource().getName()+ " 举报原因:"+ audit.getAuditName());
+        holder.auditNameTextView.setText("举报人Id:"+audit.getUser().getUserId());
+        holder.auditTimeTextView.setText("资源名:"+audit.getResource().getName()+ "\n 举报原因:"+ audit.getAuditName());
         fetchImage(audit.getAuditUrl(),holder.imageView);
 
 
@@ -145,7 +145,7 @@ public class ManageAuditAdapter extends RecyclerView.Adapter<ManageAuditAdapter.
             auditTimeTextView = itemView.findViewById(R.id.resource_name);
             deleteButton = itemView.findViewById(R.id.deleteAudit);
             deleteButton1 = itemView.findViewById(R.id.deleteLed);
-            imageView=itemView.findViewById(R.id.imageView);
+            imageView=itemView.findViewById(R.id.iv_img);
         }
     }
 
