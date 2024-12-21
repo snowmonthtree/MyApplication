@@ -9,8 +9,9 @@
 
     <ImageView
         android:id="@+id/iv_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher_background" />
 
@@ -23,7 +24,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/Author"
+            android:id="@+id/whoAudit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="作者"
@@ -49,11 +50,13 @@
         android:layout_marginTop="20dp">
 
         <ImageButton
+            android:id="@+id/deleteAudit"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/ic_caution_refresh" />
 
         <ImageButton
+            android:id="@+id/deleteLed"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/baseline_do_not_disturb_on_24" />

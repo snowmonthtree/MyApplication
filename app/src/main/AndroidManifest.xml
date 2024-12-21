@@ -37,6 +37,9 @@
             android:name=".FeedBackActivity"
             android:exported="false" />
         <activity
+            android:name=".ManageAuditActivity"
+            android:exported="false" />
+        <activity
             android:name=".ListDetailActivity"
             android:exported="false" />
         <activity

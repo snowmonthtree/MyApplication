@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.ManageAuditActivity;
 import com.example.myapplication.ManageCommentActivity;
 import com.example.myapplication.ManageResourceActivity;
 import com.example.myapplication.ManageUserActivity;
@@ -146,6 +147,7 @@ public class HomeActivity extends AppCompatActivity {
         functionItems.add(new FunctionItem("管理已上传的资源"));
         functionItems.add(new FunctionItem("管理评论"));
         functionItems.add(new FunctionItem("管理用户"));
+        functionItems.add(new FunctionItem("查看举报"));
         // 初始化 ListView 和 Adapter
         ListView mannersList = findViewById(R.id.mannalist);
         FunctionAdapter adapter = new FunctionAdapter(this, functionItems);
@@ -174,6 +176,10 @@ public class HomeActivity extends AppCompatActivity {
                 case "管理评论":
                     Intent manageCommentIntent=new Intent(HomeActivity.this, ManageCommentActivity.class);
                     startActivity(manageCommentIntent);
+                    break;
+                case "查看举报":
+                    Intent manageAuditIntent=new Intent(HomeActivity.this, ManageAuditActivity.class);
+                    startActivity(manageAuditIntent);
                     break;
             }
         });
