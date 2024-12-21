@@ -77,7 +77,7 @@ public class ManageAuditAdapter extends RecyclerView.Adapter<ManageAuditAdapter.
                     .setNegativeButton("取消", null)
                     .setPositiveButton("确定", (dialog, which) -> {
                         // 调用删除接口
-                        Call<String> call = auditController.deleteAudit(audit.getAuditId());
+                        Call<String> call = auditController.deleteAudit(audit.getResource().getResourceId());
                         call.enqueue(new Callback<String>() {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {

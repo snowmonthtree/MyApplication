@@ -57,6 +57,7 @@ public class ManageAuditActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         manageAuditAdapter=new ManageAuditAdapter(new ArrayList<>(),auditController,this,ledResourceController,viewSharer.getUser().getUserId());
         recyclerView.setAdapter(manageAuditAdapter);
+        initAudit();
     }
     private void initAudit(){
         Call<List<Audit>> call=auditController.getAllAudits();
