@@ -95,11 +95,11 @@ public class PhotoActivity extends AppCompatActivity {
                     100);
         }
         try {
-            resource.saveBitmapToFile(resource.toBitmap(),"1",getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
-            MediaScannerConnection.scanFile(this,
+            resource.saveBitmapToFile(resource.toBitmap(),System.currentTimeMillis()+"",getFilesDir());
+            /*MediaScannerConnection.scanFile(this,
                     new String[]{getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
                     null,
-                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));
+                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));*/
 
         } catch (IOException e) {
             throw new RuntimeException(e);

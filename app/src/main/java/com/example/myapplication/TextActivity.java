@@ -108,7 +108,7 @@ public class TextActivity extends AppCompatActivity {
         }
 
         try {
-            resource.saveBitmapToFile(resource.toBitmap(),"1",getFilesDir());
+            resource.saveBitmapToFile(resource.toBitmap(),System.currentTimeMillis()+"",getFilesDir());
             /*MediaScannerConnection.scanFile(this,
                     new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
                     null,
