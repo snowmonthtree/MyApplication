@@ -1,10 +1,13 @@
 package com.example.myapplication.data.LedResource;
 
+import com.example.myapplication.data.User.User;
+
 import java.sql.Timestamp;
 
 public class LedResource {
 
-    private String resourceId;        // Resource_ID
+    private String resourceId;// Resource_ID
+    private User user;
     private String userId;            // User_ID
     private String pixelSize;         // Pixel_Size
     private int downloadCount;        // Download_Count
@@ -36,7 +39,13 @@ public class LedResource {
                 ", playbackVolume=" + playbackVolume +
                 '}';
     }
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public int getPlaybackVolume() {
         return playbackVolume;
@@ -56,7 +65,7 @@ public class LedResource {
     }
 
     public String getUserId() {
-        return userId;
+        return user.getUserId();
     }
 
     public void setUserId(String userId) {

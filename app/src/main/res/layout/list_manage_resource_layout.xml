@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/comment_item_background"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="80dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background" />
+
+
+    <LinearLayout
+        android:layout_width="204dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/Author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="作者"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/resource_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="资源名称"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/deleteLed"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:background="@drawable/baseline_do_not_disturb_on_24" />
+
+</LinearLayout>

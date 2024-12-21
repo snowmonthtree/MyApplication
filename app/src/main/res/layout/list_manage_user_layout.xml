@@ -25,7 +25,7 @@
         android:layout_marginTop="4dp">
 
         <TextView
-            android:id="@+id/comment"
+            android:id="@+id/Userid"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -34,19 +34,10 @@
             tools:ignore="HardcodedText" />
 
         <ImageButton
-            android:id="@+id/deleteComment"
+            android:id="@+id/deleteUser"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/baseline_do_not_disturb_on_24" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/comment_from"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="评论"
-        android:textColor="@color/colorSecondaryText"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp"
-        tools:ignore="HardcodedText" />
 </LinearLayout>

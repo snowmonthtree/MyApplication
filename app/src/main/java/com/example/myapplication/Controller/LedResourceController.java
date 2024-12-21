@@ -53,4 +53,6 @@ public interface LedResourceController {
             @Query("userId") String userId,
             @Part MultipartBody.Part fileUpload                  // 文件数据
     );
+    @POST("api/led-resources/delete")
+    Call<String> deleteResource(@Query("userId") String userId,@Query("resourceId") String resourceId);
 }

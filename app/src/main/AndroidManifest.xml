@@ -34,7 +34,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".FeedBackActivity"
+            android:exported="false" />
+        <activity
             android:name=".ListDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageCommentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageResourceActivity"
             android:exported="false" />
         <activity
             android:name=".AnimationActivity"

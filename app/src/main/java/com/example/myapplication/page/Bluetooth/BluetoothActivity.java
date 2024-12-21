@@ -24,16 +24,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.graphics.BitmapFactory;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myapplication.Controller.LedListController;
+import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
+import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.page.Video.PlayVideoActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +64,9 @@ public class BluetoothActivity extends AppCompatActivity {
     private Button btnTest;
     private ViewSharer viewSharer;
     private LedListController ledListController;
+    private LedResourceController ledResourceController;
     private Retrofit retrofit;
+    private String resourceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +85,7 @@ public class BluetoothActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         ledListController=retrofit.create(LedListController.class);
+        ledResourceController=retrofit.create(LedResourceController.class);
         btnTest.setOnClickListener(view -> test());
 
 
@@ -87,10 +98,22 @@ public class BluetoothActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        byte[] byteArray = intent.getByteArrayExtra("image");
-        if (byteArray != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            imageView.setImageBitmap(bitmap);
+        resourceId= intent.getStringExtra("image");
+        if (resourceId!= null) {
+            Call<LedResource> call=ledResourceController.getResourceById(resourceId);
+            call.enqueue(new Callback<LedResource>() {
+                @Override
+                public void onResponse(Call<LedResource> call, Response<LedResource> response) {
+                    if (response.body()!=null&&response.isSuccessful()){
+                        fetchImage(response.body().getViewWebUrl(),imageView);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LedResource> call, Throwable t) {
+
+                }
+            });
         }
         else {
             Uri uri=intent.getParcelableExtra("uri");
@@ -309,7 +332,7 @@ public class BluetoothActivity extends AppCompatActivity {
     }
     private void test(){
         if (viewSharer.getListId()!=null){
-            Call<String> call=ledListController.addResourceToPlaylist(viewSharer.getUser().getUserId(),viewSharer.getListId(),"1");
+            Call<String> call=ledListController.addResourceToPlaylist(viewSharer.getUser().getUserId(),viewSharer.getListId(),resourceId);
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -325,5 +348,88 @@ public class BluetoothActivity extends AppCompatActivity {
         else {
             Toast.makeText(viewSharer, "未设置播放序列", Toast.LENGTH_SHORT).show();
         }
+    }
+    private byte[] readBytesFromStream(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        return byteArrayOutputStream.toByteArray();  // 返回字节数组
+    }
+    // 判断是否是 GIF 格式
+    private boolean isGif(byte[] imageData) {
+        if (imageData.length >= 4) {
+            return imageData[0] == 'G' && imageData[1] == 'I' && imageData[2] == 'F';
+        }
+        return false;
+    }
+    // 将ResponseBody转换为字节数组
+    private byte[] convertResponseBodyToBytes(ResponseBody responseBody) {
+        byte[] data = null;
+        InputStream inputStream = responseBody.byteStream();
+        try {
+            data = readBytesFromStream(inputStream);  // 读取字节流到字节数组
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();  // 关闭输入流
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
+    }
+    private void fetchImage(String viewWebUrl, ImageView imageView) {
+        // 假设 ledResourceController 是 Retrofit 接口，调用 getImage 方法来获取图片
+        ledResourceController.getImage(viewWebUrl).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        ResponseBody responseBody = response.body();
+                        byte[] imageData = convertResponseBodyToBytes(responseBody);  // 获取字节数组
+
+                        // 读取字节流并判断是否为 GIF 格式
+                        if (isGif(imageData)) {
+                            // 如果是 GIF 动图
+                            Glide.with(BluetoothActivity.this)
+                                    .asGif()
+                                    .load(imageData)  // 加载字节数组
+                                    .placeholder(R.drawable.ic_caution_refresh)
+                                    .error(R.drawable.ic_doodle_back)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .into(imageView);  // 显示 GIF 动图
+                        } else {
+                            // 如果是静态图片（如 PNG, JPEG）
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                            if (bitmap != null) {
+                                Glide.with(BluetoothActivity.this)
+                                        .load(imageData)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .placeholder(R.drawable.ic_caution_refresh)
+                                        .error(R.drawable.ic_doodle_back)
+                                        .into(imageView);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Image Fetch", "Failed to process response", e);
+                    }
+                } else {
+                    Log.e("Image Fetch", "onResponse: Image fetch failed");
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // 网络请求失败
+                Log.e("Image Fetch", "onFailure: Image fetch failed", t);
+            }
+        });
     }
 }

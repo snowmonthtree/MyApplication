@@ -6,6 +6,7 @@ import com.bumptech.glide.load.engine.Resource;
 import com.example.myapplication.data.User.User;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -38,5 +39,10 @@ public interface UserController {
     Call<String> imageUpload(@Part("user") RequestBody user, @Part MultipartBody.Part fileUpload);
     @GET("/api/user/avatar/{userId}")
     Call<ResponseBody> getAvatar(@Path("userId") String userId);
+    @GET("api/user/get-all-user")
+    Call<List<User>> getAllUser();
+    @POST("api/user/delete")
+    Call<String> deleteUser(@Query("userId") String userId);
 
-    }
+
+}

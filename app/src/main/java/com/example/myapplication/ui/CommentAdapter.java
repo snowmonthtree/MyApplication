@@ -1,6 +1,5 @@
 package com.example.myapplication.ui;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
-            author = itemView.findViewById(R.id.commentAuthor);
+            author = itemView.findViewById(R.id.Username);
             text = itemView.findViewById(R.id.commentText);
             date = itemView.findViewById(R.id.commentDate);
         }

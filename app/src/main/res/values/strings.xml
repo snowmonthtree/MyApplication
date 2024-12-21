@@ -107,6 +107,24 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="item_manager">设备管理</string>
+    <string name="creation_check">资源管理</string>
+    <string name="user_manage">用户管理</string>
+    <string name="items">设备</string>
+    <string name="manage">管理</string>
+    <string name="machine_name">设备名称</string>
+    <string name="comment_check">评论管理</string>
+    <string name="comment">评论</string>
+    <string name="comment_check_list">评论列表</string>
+    <string name="nick_name">昵称</string>
+    <string name="user_numbers">账号</string>
+    <string name="comment_inside">评论具体内容</string>
+    <string name="delete">删除</string>
+    <string name="manage_user">用户</string>
+    <string name="userlist">用户列表</string>
+    <string name="resouces">资源</string>
+    <string name="resource_list">资源列表</string>
+    <string name="caution_resouce_list">被举报资源列表</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

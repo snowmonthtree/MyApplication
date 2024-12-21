@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.myapplication.Controller.AuditController;
 import com.example.myapplication.Controller.CommentsController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.LikesController;
@@ -77,6 +78,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     private CommentsController commentsController;
     private LedResourceController ledResourceController;
     private PlayRecordController playRecordController;
+    private AuditController auditController;
     private List<Comment> comments;
     private EditText editText;
     private Button button;
@@ -88,6 +90,7 @@ public class PlayVideoActivity extends AppCompatActivity {
     private CheckBox like;
     private String resourceId;
     private ImageView imageView;
+    private EditText input ;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -114,8 +117,10 @@ public class PlayVideoActivity extends AppCompatActivity {
         ledResourceController=retrofit.create(LedResourceController.class);
         playRecordController=retrofit.create(PlayRecordController.class);
         likesController=retrofit.create(LikesController.class);
+        auditController=retrofit.create(AuditController.class);
         detailSection=findViewById(R.id.detailSection);
         commentSection=findViewById(R.id.commentSection);
+        input= new EditText(PlayVideoActivity.this);
         like=findViewById(R.id.like);
         RadioButton radioButtonDetail = findViewById(R.id.radio_detail);
 
@@ -268,21 +273,39 @@ public class PlayVideoActivity extends AppCompatActivity {
     private void toDisplay(ImageView imageView){
         imageView.setOnClickListener(v -> {
             // 获取 ImageButton 上的 Bitmap
-            Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof BitmapDrawable) {
-                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
 
-                // 将 Bitmap 转换为字节数组
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
                 ledResource.setPlaybackVolume(ledResource.getPlaybackVolume()+1);
                 Log.e("nmdwsm", "toDisplay: "+ledResource.getPlaybackVolume() );
                 update();
                 Intent intent = new Intent(PlayVideoActivity.this, BluetoothActivity.class);
-                intent.putExtra("image", byteArray);
+                intent.putExtra("image",resourceId );
                 startActivity(intent);
-            }
+
+        });
+        input.setHint("请输入举报内容");
+        imageView.setOnLongClickListener(view -> {
+            new androidx.appcompat.app.AlertDialog.Builder(PlayVideoActivity.this)
+                    .setTitle("举报?")
+                    .setMessage("输入举报理由")
+                    .setView(input)
+                    .setNegativeButton("取消",null)
+                    .setPositiveButton("确定",(dialog,which)->{
+                        String inputContent = input.getText().toString();
+                        Call<String> call=auditController.uploadAudit(viewSharer.getUser().getUserId(),resourceId,inputContent);
+                        call.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                Toast.makeText(PlayVideoActivity.this, "1"+response.body(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Toast.makeText(PlayVideoActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    })
+                    .show();
+            return true;
         });
     }
     private void sendComment() {
@@ -442,11 +465,6 @@ public class PlayVideoActivity extends AppCompatActivity {
             outStream.close();
             ledResource.setDownloadCount(ledResource.getDownloadCount()+1);
             update();
-            /*MediaScannerConnection.scanFile(this,
-                    new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()},
-                    null,
-                    (path, uri) -> Log.d("MediaScanner", "File scanned: " + path));
-*/
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -517,12 +535,20 @@ public class PlayVideoActivity extends AppCompatActivity {
                             Glide.with(PlayVideoActivity.this)
                                     .asGif()
                                     .load(imageData)  // 加载字节数组
+                                    .placeholder(R.drawable.ic_caution_refresh)
+                                    .error(R.drawable.ic_doodle_back)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(imageView);  // 显示 GIF 动图
                         } else {
                             // 如果是静态图片（如 PNG, JPEG）
                             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                             if (bitmap != null) {
-                                imageView.setImageBitmap(bitmap);  // 显示静态图片
+                                Glide.with(PlayVideoActivity.this)
+                                        .load(imageData)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .placeholder(R.drawable.ic_caution_refresh)
+                                        .error(R.drawable.ic_doodle_back)
+                                        .into(imageView);
                             }
                         }
 

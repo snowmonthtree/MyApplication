@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.myapplication.FeedBackActivity;
 import com.example.myapplication.page.Profile.AboutUs.AboutUsActivity;
 import com.example.myapplication.page.Profile.CheckUpdata.CheckUpdateActivity;
 import com.example.myapplication.Controller.UserController;
@@ -110,6 +111,7 @@ public class UserProfileActivity extends AppCompatActivity {
         functionItems.add(new FunctionItem("修改信息"));
         functionItems.add(new FunctionItem("关于我们"));
         functionItems.add(new FunctionItem("检查更新"));
+        functionItems.add(new FunctionItem("提交反馈"));
         // 可以继续添加更多的功能选项...
         imageView=findViewById(R.id.userAvatar);
         textView=findViewById(R.id.userName);
@@ -173,6 +175,10 @@ public class UserProfileActivity extends AppCompatActivity {
                 case "检查更新":
                     Intent checkUpdateIntent = new Intent(UserProfileActivity.this, CheckUpdateActivity.class);
                     startActivity(checkUpdateIntent);
+                    break;
+                case "提交反馈":
+                    Intent feedBackIntent = new Intent(UserProfileActivity.this, FeedBackActivity.class);
+                    startActivity(feedBackIntent);
                     break;
                 // 处理其他功能选项...
             }

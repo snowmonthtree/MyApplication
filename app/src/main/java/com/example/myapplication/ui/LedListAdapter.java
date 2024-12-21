@@ -1,7 +1,5 @@
-package com.example.myapplication;
+package com.example.myapplication.ui;
 
-
-import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +21,6 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.Controller.LedListController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.R;
-import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.Result.ResultItem;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Video.PlayVideoActivity;
@@ -36,7 +33,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class LedListAdapter extends RecyclerView.Adapter<LedListAdapter.LedListViewHolder> {
 

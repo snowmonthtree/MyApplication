@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.Controller.LedListController;
 import com.example.myapplication.data.PlayList.PlayList;
 import com.example.myapplication.data.ViewSharer;
-import com.example.myapplication.page.Login.LoginActivity;
+import com.example.myapplication.ui.PlayListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

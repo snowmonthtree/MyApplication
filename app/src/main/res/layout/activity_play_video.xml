@@ -120,6 +120,37 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/AuthorAva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:minWidth="50dp"
+                android:minHeight="50dp"
+                app:srcCompat="@drawable/ic_caution_refresh" />
+
+            <TextView
+                android:id="@+id/AuthorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/Follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="关注" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <CheckBox
                 android:id="@+id/like"
                 android:layout_width="wrap_content"

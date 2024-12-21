@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.ListDetailActivity;
+import com.example.myapplication.R;
 import com.example.myapplication.data.PlayList.PlayList;
 
 import java.util.List;

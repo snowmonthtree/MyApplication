@@ -14,6 +14,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.ManageCommentActivity;
+import com.example.myapplication.ManageResourceActivity;
+import com.example.myapplication.ManageUserActivity;
 import com.example.myapplication.PlayListActivity;
 import com.example.myapplication.ui.FunctionAdapter;
 import com.example.myapplication.data.Function.FunctionItem;
@@ -142,6 +145,7 @@ public class HomeActivity extends AppCompatActivity {
         functionItems.add(new FunctionItem("查看当前播放序列"));
         functionItems.add(new FunctionItem("管理已上传的资源"));
         functionItems.add(new FunctionItem("管理评论"));
+        functionItems.add(new FunctionItem("管理用户"));
         // 初始化 ListView 和 Adapter
         ListView mannersList = findViewById(R.id.mannalist);
         FunctionAdapter adapter = new FunctionAdapter(this, functionItems);
@@ -158,6 +162,18 @@ public class HomeActivity extends AppCompatActivity {
                 case "查看当前播放序列":
                     Intent playListIntent=new Intent(HomeActivity.this, PlayListActivity.class);
                     startActivity(playListIntent);
+                    break;
+                case "管理用户":
+                    Intent manageUserIntent=new Intent(HomeActivity.this, ManageUserActivity.class);
+                    startActivity(manageUserIntent);
+                    break;
+                case "管理已上传的资源" :
+                    Intent manageResourceIntent=new Intent(HomeActivity.this, ManageResourceActivity.class);
+                    startActivity(manageResourceIntent);
+                    break;
+                case "管理评论":
+                    Intent manageCommentIntent=new Intent(HomeActivity.this, ManageCommentActivity.class);
+                    startActivity(manageCommentIntent);
                     break;
             }
         });

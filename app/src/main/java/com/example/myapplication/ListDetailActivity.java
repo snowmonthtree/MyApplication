@@ -16,10 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.Controller.LedListController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.data.LedResource.LedResource;
-import com.example.myapplication.data.PlayList.PlayList;
 import com.example.myapplication.data.Result.ResultItem;
 import com.example.myapplication.data.ViewSharer;
-import com.example.myapplication.ui.ResultAdapter;
+import com.example.myapplication.ui.LedListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
