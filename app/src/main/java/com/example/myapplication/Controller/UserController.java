@@ -29,10 +29,10 @@ public interface UserController {
     Call<String> insertUser(@Body User user, @Query("Code") String Code);
 
     @POST("api/user/changePassword")
-    Call<String> changePassword(@Query("Email") String Email, @Query("newPassword") String newPassword, @Query("Code") String Code);
+    Call<String> changePassword(@Query("email") String Email, @Query("newPassword") String newPassword, @Query("Code") String Code);
 
     @GET("/api/user/getCode")
-    Call<String> getCode(@Query("Email") String Email);
+    Call<String> getCode(@Query("email") String Email);
 
     @Multipart
     @PATCH("/api/user/uploadFile")
