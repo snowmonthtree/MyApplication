@@ -118,6 +118,7 @@ public class BluetoothActivity extends AppCompatActivity {
         else {
             Uri uri=intent.getParcelableExtra("uri");
             imageView.setImageURI(uri);
+            btnTest.setVisibility(View.GONE);
         }
 
     }

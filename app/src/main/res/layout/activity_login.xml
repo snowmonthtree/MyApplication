@@ -34,11 +34,11 @@
             android:layout_height="48dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="0"
+            android:autofillHints="name"
             android:background="#EEFfFA"
             android:ems="10"
             android:hint="@string/please_in_1"
-            android:inputType="text"
-            android:autofillHints="name"/>
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/Password"

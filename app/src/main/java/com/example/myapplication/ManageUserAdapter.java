@@ -76,7 +76,8 @@ public class ManageUserAdapter extends RecyclerView.Adapter<ManageUserAdapter.Us
                                 call.enqueue(new Callback<String>() {
                                     @Override
                                     public void onResponse(Call<String> call, Response<String> response) {
-                                        Toast.makeText(context, response.body(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, response.body()+" ", Toast.LENGTH_SHORT).show();
+                                        list.remove(holder.getAdapterPosition());
                                         notifyDataSetChanged();
                                     }
 

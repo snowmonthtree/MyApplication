@@ -90,8 +90,8 @@ public class LedListAdapter extends RecyclerView.Adapter<LedListAdapter.LedListV
                                 @Override
                                 public void onResponse(Call<String> call, Response<String> response) {
                                     Toast.makeText(context, response.body(), Toast.LENGTH_SHORT).show();
-                                    resultList.remove(position);
-                                    updateData(resultList,listId);
+                                    resultList.remove(holder.getAdapterPosition());
+                                    notifyDataSetChanged();
                                 }
 
 

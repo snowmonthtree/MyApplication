@@ -83,6 +83,8 @@ public class ManageAuditAdapter extends RecyclerView.Adapter<ManageAuditAdapter.
                             public void onResponse(Call<String> call, Response<String> response) {
                                 if (response.isSuccessful()) {
                                     Toast.makeText(context, "删除成功"+response.body(), Toast.LENGTH_SHORT).show();
+                                    list.remove(holder.getAdapterPosition());
+                                    notifyDataSetChanged();
                                 } else {
                                     Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
                                 }
@@ -109,6 +111,8 @@ public class ManageAuditAdapter extends RecyclerView.Adapter<ManageAuditAdapter.
                             public void onResponse(Call<String> call, Response<String> response) {
                                 if (response.isSuccessful()) {
                                     Toast.makeText(context, "删除成功"+response.body(), Toast.LENGTH_SHORT).show();
+                                    list.remove(holder.getAdapterPosition());
+                                    notifyDataSetChanged();
                                 } else {
                                     Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
                                 }

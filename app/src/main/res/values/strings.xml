@@ -6,7 +6,7 @@
     <string name="no_user">游客模式</string>
 
     <string name="welcome">欢迎使用HFLED</string>
-    <string name="please_in_1">请输入用户名</string>
+    <string name="please_in_1">请输入注册用的邮箱</string>
     <string name="please_in_2">请输入密码</string>
     <string name="register">立即注册</string>
     <string name="change_password_1">忘记密码</string>

@@ -87,9 +87,16 @@ public class RegisterActivity extends AppCompatActivity {
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.isSuccessful()&&response.body().equals("User inserted successfully")) {
+                    if (response.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
                         Log.e("test", "onResponse: "+response.body() );
+                        new AlertDialog.Builder(RegisterActivity.this)
+                                .setTitle(response.body())
+                                .setMessage("即将返回上一级")
+                                .setPositiveButton("确定",(dialog,which)->{
+                                    finish();
+                                })
+                                .show();
 
                     } else {
                         Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
@@ -120,9 +127,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
                     Log.e("test", "onResponse: "+response.body() );
-
+                    Toast.makeText(RegisterActivity.this, response.body()+" ", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e("NetworkRequest", "Response not successful. Status Code: " + response.code());
                     // 进一步打印错误信息

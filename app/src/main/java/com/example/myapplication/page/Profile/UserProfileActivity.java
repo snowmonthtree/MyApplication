@@ -125,30 +125,6 @@ public class UserProfileActivity extends AppCompatActivity {
         viewSharer=(ViewSharer)getApplication();
         user=viewSharer.getUser();
         textView.setText(user.getName());
-        userController.getAvatar(user.getUserId()).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // 从ResponseBody获取图片数据并设置到ImageButton
-                    ResponseBody responseBody = response.body();
-                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
-
-                    if (bitmap != null ) {
-                        imageView.setImageBitmap(bitmap);  // 设置Bitmap到ImageButton
-
-                    }
-                } else {
-                    // 图片加载失败，处理错误
-                    Log.e("1", "onResponse: " );
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // 网络请求失败
-                Log.e("2", "onFailure: ");
-            }
-        });
 
 
         // 初始化 ListView 和 Adapter
@@ -223,4 +199,35 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         return bitmap;
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 在这里重新加载数据
+        userController.getAvatar(user.getUserId()).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // 从ResponseBody获取图片数据并设置到ImageButton
+                    ResponseBody responseBody = response.body();
+                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
+
+                    if (bitmap != null ) {
+                        imageView.setImageBitmap(bitmap);  // 设置Bitmap到ImageButton
+
+                    }
+                } else {
+                    // 图片加载失败，处理错误
+                    Log.e("1", "onResponse: " );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // 网络请求失败
+                Log.e("2", "onFailure: ");
+            }
+        });
+
+    }
+
 }

@@ -147,6 +147,7 @@ public class EditInfoActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 // 成功处理
                                 Toast.makeText(EditInfoActivity.this, "信息已保存", Toast.LENGTH_SHORT).show();
+                                finish();
                             } else {
                                 // 错误处理
                                 System.out.println("上传失败: " + response.code()+response.errorBody().toString());

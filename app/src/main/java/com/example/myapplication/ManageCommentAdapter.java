@@ -73,6 +73,8 @@ public class ManageCommentAdapter extends RecyclerView.Adapter<ManageCommentAdap
                                         if (response.isSuccessful()) {
 
                                             Toast.makeText(context, "资源删除成功", Toast.LENGTH_SHORT).show();
+                                            list.remove(holder.getAdapterPosition());
+                                            notifyDataSetChanged();
                                         } else {
                                             Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
                                         }
