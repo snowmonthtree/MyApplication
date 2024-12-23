@@ -121,7 +121,7 @@ public class CreationCenterActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 ViewSharer viewSharer=(ViewSharer)getApplication();
                 User user=viewSharer.getUser();
-                if (user.getPermissionId().equals("-1")){
+                if (!user.getPermissionId().equals("-1")){
                     startActivity(new Intent(CreationCenterActivity.this, UserProfileActivity.class));
                     overridePendingTransition(0, 0);
                 }
@@ -334,4 +334,28 @@ public class CreationCenterActivity extends AppCompatActivity {
 
         return false;
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<Uri> localList = new ArrayList<>();
+        File[] files=getFilesDir().listFiles();
+        if (files != null) {
+            // 遍历所有文件
+            for (File file : files) {
+                if (file.isFile()) {
+                    // 处理文件
+                    if (isImageFile(file)) {
+                        localList.add(Uri.fromFile(file));
+                    }
+                } else if (file.isDirectory()) {
+                    // 处理子目录
+                    System.out.println("Directory: " + file.getName());
+                }
+            }
+        } else {
+            System.out.println("No files found in the directory.");
+        }
+        localAdapter.updateData(localList);
+    }
+
 }

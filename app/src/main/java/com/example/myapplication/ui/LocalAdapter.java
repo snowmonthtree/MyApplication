@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myapplication.R;
+import com.example.myapplication.data.Result.ResultItem;
 import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
 import com.example.myapplication.page.CreationCenter.UpLoad.UpLoadActivity;
@@ -67,7 +68,11 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.LocalViewHol
             }
         });
     }
-
+    public void updateData(List<Uri> newData) {
+        localList.clear();
+        localList.addAll(newData);
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return localList.size();

@@ -98,7 +98,7 @@ public class ParkActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 ViewSharer viewSharer=(ViewSharer)getApplication();
                 User user=viewSharer.getUser();
-                if (user.getPermissionId().equals("0")){
+                if (!user.getPermissionId().equals("-1")){
                     startActivity(new Intent(ParkActivity.this, UserProfileActivity.class));
                     overridePendingTransition(0, 0);
                 }
