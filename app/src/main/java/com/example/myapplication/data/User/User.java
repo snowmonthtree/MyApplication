@@ -7,7 +7,7 @@ public class User {
 
     private String name;
 
-    private String permissionId="1";
+    private String permissionId="-1";
 
     private String password;
 

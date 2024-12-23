@@ -56,7 +56,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private BluetoothSocket bluetoothSocket;
     private OutputStream outputStream;
 
-    private final String DEVICE_NAME = "HC-05"; // 目标蓝牙模块名称
+    private final String DEVICE_NAME = "zhetu"; // 目标蓝牙模块名称
     private final UUID DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // 通用串口 UUID
 
     private Button btnConnect, btnSend;

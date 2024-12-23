@@ -3,6 +3,9 @@ package com.example.myapplication.data;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModel;
@@ -28,23 +31,28 @@ public class ViewSharer extends Application {
 
         // 设置全局的 UncaughtExceptionHandler
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
-            // 记录日志（你也可以在这里上传日志信息到服务器等）
-            new AlertDialog.Builder(this)
-                    .setTitle("公告")
-                    .setMessage("由于后端服务器网络问题,请确保当前页面完全加载后再执行操作,同时不要操作的过于频繁")
-                    .setPositiveButton("确定", (dialog, which) -> {
-                        // 确定按钮的点击事件
+            // 在 UI 线程中执行操作
+            new Handler(Looper.getMainLooper()).post(() -> {
+                // 使用 getApplicationContext() 获取应用上下文，防止 this 引用错误
+                new AlertDialog.Builder(getApplicationContext()) // 使用合适的 context
+                        .setTitle("公告")
+                        .setMessage("由于后端服务器网络问题, 请确保当前页面完全加载后再执行操作, 同时不要操作的过于频繁")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            // 可以选择调用其他方法而不是直接退出
+                            // System.exit(0);  // 强制退出应用
+                            android.os.Process.killProcess(android.os.Process.myPid()); // 更优雅的退出应用
+                        })
+                        .show();
+            });
 
-                        System.exit(0);
-                    })
-                    .show();
-
-            // 这里你可以处理异常，比如跳转到一个错误页面或直接终止应用
-
+            // 记录日志
+            Log.e("UncaughtException", "Thread: " + thread.getName(), throwable);
 
             // 终止应用程序
+            android.os.Process.killProcess(android.os.Process.myPid()); // 更优雅的退出应用
         });
-   }
+
+    }
 
     public User getUser() {
         return user;

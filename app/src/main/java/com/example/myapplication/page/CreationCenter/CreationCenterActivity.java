@@ -121,7 +121,7 @@ public class CreationCenterActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 ViewSharer viewSharer=(ViewSharer)getApplication();
                 User user=viewSharer.getUser();
-                if (user.getPermissionId().equals("0")){
+                if (user.getPermissionId().equals("-1")){
                     startActivity(new Intent(CreationCenterActivity.this, UserProfileActivity.class));
                     overridePendingTransition(0, 0);
                 }
@@ -135,47 +135,74 @@ public class CreationCenterActivity extends AppCompatActivity {
             return false;
         });
 
-        // 设置按钮点击监听器（可选）
-        buttonDoodle.setOnClickListener(v -> {
-            Intent intent = new Intent(CreationCenterActivity.this, DoodleActivity.class);
-            startActivity(intent);
-        });
+        ViewSharer viewSharer=(ViewSharer)getApplication();
+        if (!viewSharer.getUser().getPermissionId().equals("-1")) {
+            // 设置按钮点击监听器（可选）
+            buttonDoodle.setOnClickListener(v -> {
+                Intent intent = new Intent(CreationCenterActivity.this, DoodleActivity.class);
+                startActivity(intent);
+            });
 
 
-        buttonAnimation.setOnClickListener(v -> {
-            Intent intent = new Intent(CreationCenterActivity.this, AnimationActivity.class);
-            startActivity(intent);
-        });
+            buttonAnimation.setOnClickListener(v -> {
+                Intent intent = new Intent(CreationCenterActivity.this, AnimationActivity.class);
+                startActivity(intent);
+            });
 
-        buttonMusic.setOnClickListener(v -> {
-            Intent intent = new Intent(CreationCenterActivity.this, MusicActivity.class);
-            startActivity(intent);
-        });
+            buttonMusic.setOnClickListener(v -> {
+                Intent intent = new Intent(CreationCenterActivity.this, MusicActivity.class);
+                startActivity(intent);
+            });
 
-        buttonImage.setOnClickListener(v -> {
-            Intent intent = new Intent(CreationCenterActivity.this, ImageActivity.class);
-            startActivity(intent);
-        });
+            buttonImage.setOnClickListener(v -> {
+                Intent intent = new Intent(CreationCenterActivity.this, ImageActivity.class);
+                startActivity(intent);
+            });
 
-        buttonPhoto.setOnClickListener(v -> {
-            Intent intent = new Intent(CreationCenterActivity.this, PhotoActivity.class);
-            startActivity(intent);
-        });
+            buttonPhoto.setOnClickListener(v -> {
+                Intent intent = new Intent(CreationCenterActivity.this, PhotoActivity.class);
+                startActivity(intent);
+            });
 
-        buttonText.setOnClickListener(v -> {
-            Intent intent = new Intent(CreationCenterActivity.this, TextActivity.class);
-            startActivity(intent);
-        });
+            buttonText.setOnClickListener(v -> {
+                Intent intent = new Intent(CreationCenterActivity.this, TextActivity.class);
+                startActivity(intent);
+            });
+        }
+        else {
+            String text="请登录";
+            buttonDoodle.setOnClickListener(v -> {
+                Toast.makeText(CreationCenterActivity.this, text, Toast.LENGTH_SHORT).show();
+            });
 
+            buttonAnimation.setOnClickListener(v -> {
+                Toast.makeText(CreationCenterActivity.this, text, Toast.LENGTH_SHORT).show();
+            });
 
+            buttonMusic.setOnClickListener(v -> {
+                Toast.makeText(CreationCenterActivity.this, text, Toast.LENGTH_SHORT).show();
+            });
+
+            buttonImage.setOnClickListener(v -> {
+                Toast.makeText(CreationCenterActivity.this, text, Toast.LENGTH_SHORT).show();
+            });
+
+            buttonPhoto.setOnClickListener(v -> {
+                Toast.makeText(CreationCenterActivity.this, text, Toast.LENGTH_SHORT).show();
+            });
+
+            buttonText.setOnClickListener(v -> {
+                Toast.makeText(CreationCenterActivity.this, text, Toast.LENGTH_SHORT).show();
+            });
+
+        }
         // 设置图片按钮点击监听器
         imageButton.setOnClickListener(v -> {
             Intent intent = new Intent(CreationCenterActivity.this, LoginActivity.class);
             startActivity(intent);
         });
-        ViewSharer viewSharer=(ViewSharer)getApplication();
         User user=viewSharer.getUser();
-        if (user.getPermissionId().equals("1")){
+        if (user.getPermissionId().equals("-1")){
             imageButton.setVisibility(View.VISIBLE);
             recyclerViewLocal.setVisibility(View.GONE);
             recyclerViewHistory.setVisibility(View.GONE);

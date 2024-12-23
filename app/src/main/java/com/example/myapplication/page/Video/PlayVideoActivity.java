@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.myapplication.AnimatedGifEncoder;
 import com.example.myapplication.Controller.AuditController;
 import com.example.myapplication.Controller.CommentsController;
 import com.example.myapplication.Controller.LedResourceController;
@@ -60,11 +61,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-
+import pl.droidsonroids.gif.GifDrawable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -169,7 +171,7 @@ public class PlayVideoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         resourceId=intent.getStringExtra("ledId");
         initResource(intent.getStringExtra("ledId"));
-        if (!viewSharer.getUser().getPermissionId().equals("1")) {
+        if (!viewSharer.getUser().getPermissionId().equals("-1")) {
             Call<Void> call1 = playRecordController.addPlayRecord(viewSharer.getUser().getUserId(), resourceId);
             call1.enqueue(new Callback<Void>() {
                 @Override
@@ -283,33 +285,35 @@ public class PlayVideoActivity extends AppCompatActivity {
 
         });
         input.setHint("请输入举报内容");
-        imageView.setOnLongClickListener(view -> {
-            new androidx.appcompat.app.AlertDialog.Builder(PlayVideoActivity.this)
-                    .setTitle("举报?")
-                    .setMessage("输入举报理由")
-                    .setView(input)
-                    .setNegativeButton("取消",null)
-                    .setPositiveButton("确定",(dialog,which)->{
-                        String inputContent = input.getText().toString();
-                        Call<String> call=auditController.uploadAudit(viewSharer.getUser().getUserId(),resourceId,inputContent);
-                        call.enqueue(new Callback<String>() {
-                            @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                Toast.makeText(PlayVideoActivity.this, "1"+response.body(), Toast.LENGTH_SHORT).show();
-                            }
+        if (!viewSharer.getUser().getPermissionId().equals("-1")) {
+            imageView.setOnLongClickListener(view -> {
+                new androidx.appcompat.app.AlertDialog.Builder(PlayVideoActivity.this)
+                        .setTitle("举报?")
+                        .setMessage("输入举报理由")
+                        .setView(input)
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            String inputContent = input.getText().toString();
+                            Call<String> call = auditController.uploadAudit(viewSharer.getUser().getUserId(), resourceId, inputContent);
+                            call.enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+                                    Toast.makeText(PlayVideoActivity.this, "1" + response.body(), Toast.LENGTH_SHORT).show();
+                                }
 
-                            @Override
-                            public void onFailure(Call<String> call, Throwable t) {
-                                Toast.makeText(PlayVideoActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    })
-                    .show();
-            return true;
-        });
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+                                    Toast.makeText(PlayVideoActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        })
+                        .show();
+                return true;
+            });
+        }
     }
     private void sendComment() {
-        if (!viewSharer.getUser().getPermissionId().equals("0")){
+        if (viewSharer.getUser().getPermissionId().equals("-1")){
             new AlertDialog.Builder(PlayVideoActivity.this)
                     .setTitle("错误")
                     .setMessage("先登录")
@@ -356,41 +360,47 @@ public class PlayVideoActivity extends AppCompatActivity {
 
             }
         });
-
-        Call<Boolean> call=likesController.userIfLike(viewSharer.getUser().getUserId(),resourceId);
-        call.enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+        if (!viewSharer.getUser().getPermissionId().equals("-1")) {
+            Call<Boolean> call = likesController.userIfLike(viewSharer.getUser().getUserId(), resourceId);
+            call.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                     like.setChecked(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-
-            }
-        });
-    }
-    private void likeClick(){
-        Call<String> call=likesController.likeResource(viewSharer.getUser().getUserId(),ledResource.getResourceId());
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()) {
-                    if (response.body().equals("点赞成功")) {
-                        ledResource.setLikes(ledResource.getLikes()+1);
-                    }
-                    else {
-                        ledResource.setLikes(ledResource.getLikes()-1);
-                    }
-                    Toast.makeText(PlayVideoActivity.this, response.body(), Toast.LENGTH_SHORT).show();
-                    update();
                 }
-            }
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e("1232", "likeClick: "+"4444444444444" );
-            }
-        });
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+    private void likeClick() {
+        if (!viewSharer.getUser().getPermissionId().equals("-1")) {
+            Call<String> call = likesController.likeResource(viewSharer.getUser().getUserId(), ledResource.getResourceId());
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body().equals("点赞成功")) {
+                            ledResource.setLikes(ledResource.getLikes() + 1);
+                        } else {
+                            ledResource.setLikes(ledResource.getLikes() - 1);
+                        }
+                        Toast.makeText(PlayVideoActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                        update();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("1232", "likeClick: " + "4444444444444");
+                }
+            });
+        }
+        else {
+            Toast.makeText(viewSharer, "登陆后才能进行该操作哦", Toast.LENGTH_SHORT).show();
+        }
     }
     private void initResource(String id){
         Call<LedResource> call=ledResourceController.getResourceById(id);
@@ -445,20 +455,62 @@ public class PlayVideoActivity extends AppCompatActivity {
                     100);
         }
         try {
-            File directory=new File(getFilesDir(),"download");
+            File directory = new File(getFilesDir(), "download");
             // 获取存储路径，这里使用外部存储目录
             if (!directory.exists()) {
                 directory.mkdirs(); // 创建目录
             }
+            Log.e("1111", "save: "+directory.getAbsolutePath() );
 
             // 创建文件
             File file = new File(directory, ledResource.getViewWebUrl());
             FileOutputStream outStream = new FileOutputStream(file);
 
             // 将 Bitmap 保存为 PNG 格式
-            Drawable drawable=imageView.getDrawable();
-            BitmapDrawable bitmapDrawable=(BitmapDrawable) drawable;
-            bitmapDrawable.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            Drawable drawable = imageView.getDrawable();
+
+            if (drawable instanceof BitmapDrawable) {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+                // 在这里处理 Bitmap
+            }
+            else  if ((drawable instanceof GifDrawable)){
+                GifDrawable gifDrawable=(GifDrawable) drawable;
+                int frameCount = gifDrawable.getNumberOfFrames();
+
+                Toast.makeText(viewSharer, "hub", Toast.LENGTH_SHORT).show();
+                // 创建一个 List 来保存缩放后的帧
+                List<Bitmap> resizedFrames = new ArrayList<>();
+
+                // 遍历所有帧
+                for (int i = 0; i < frameCount; i++) {
+                    // 获取第 i 帧
+                    Bitmap frame = gifDrawable.seekToFrameAndGet(i);
+                    // 将缩放后的帧添加到列表中
+                    resizedFrames.add(frame);
+                }
+                try (OutputStream outputStream = new FileOutputStream(file)) {
+                    AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();
+                    gifEncoder.start(outputStream);
+                    gifEncoder.setRepeat(0);
+                    gifEncoder.setDelay(100);
+                    for (Bitmap frame : resizedFrames) {
+                        if (frame.isRecycled()) {
+                            Log.e("GIF_SAVE_ERROR", "Bitmap 已被回收，跳过该帧");
+                            continue;
+                        }
+                        gifEncoder.addFrame(frame);
+                    }
+
+                    gifEncoder.finish();
+                    Toast.makeText(this, "GIF 已保存到相册: " + file, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "保存失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
 
             // 关闭文件输出流
             outStream.flush();
@@ -468,7 +520,7 @@ public class PlayVideoActivity extends AppCompatActivity {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Toast.makeText(this, "LED Resource Saved:\n" +"下载成功", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "LED Resource Saved:\n" +"下载成功", Toast.LENGTH_SHORT).show();
 
     }
     @Override
@@ -479,7 +531,7 @@ public class PlayVideoActivity extends AppCompatActivity {
         if (requestCode == 100) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // 权限被授予，执行文件操作
-                save();
+
             } else {
                 // 权限被拒绝，提示用户
                 Toast.makeText(this, "Permission denied, cannot access the file", Toast.LENGTH_SHORT).show();
@@ -532,13 +584,17 @@ public class PlayVideoActivity extends AppCompatActivity {
                         // 读取字节流并判断是否为 GIF 格式
                         if (isGif(imageData)) {
                             // 如果是 GIF 动图
-                            Glide.with(PlayVideoActivity.this)
-                                    .asGif()
-                                    .load(imageData)  // 加载字节数组
-                                    .placeholder(R.drawable.ic_caution_refresh)
-                                    .error(R.drawable.ic_doodle_back)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(imageView);  // 显示 GIF 动图
+                            try {
+                                // 加载 GIF
+                                GifDrawable gifDrawable = new GifDrawable(imageData);
+
+                                // 设置到 ImageView
+                                imageView.setImageDrawable(gifDrawable);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                // 错误处理
+                                imageView.setImageResource(R.drawable.ic_doodle_back);  // 设置错误图片
+                            }
                         } else {
                             // 如果是静态图片（如 PNG, JPEG）
                             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
@@ -569,4 +625,5 @@ public class PlayVideoActivity extends AppCompatActivity {
             }
         });
     }
+
 }

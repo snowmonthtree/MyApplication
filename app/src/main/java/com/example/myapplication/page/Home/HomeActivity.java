@@ -42,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     private SearchView homeSearchbox;
     private ImageButton imageButton;
     private ActivityResultLauncher<Intent> enableBtLauncher;
+    private ViewSharer viewSharer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         // 初始化视图
         homeSearchbox = findViewById(R.id.home_searchbox);
         imageButton = findViewById(R.id.imageButton);
+        viewSharer=(ViewSharer)getApplication();
 
         // 获取 BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -143,11 +145,18 @@ public class HomeActivity extends AppCompatActivity {
         });
         List<FunctionItem> functionItems = new ArrayList<>();
         functionItems.add(new FunctionItem("查看已下载文件"));
-        functionItems.add(new FunctionItem("查看当前播放序列"));
-        functionItems.add(new FunctionItem("管理已上传的资源"));
-        functionItems.add(new FunctionItem("管理评论"));
-        functionItems.add(new FunctionItem("管理用户"));
-        functionItems.add(new FunctionItem("查看举报"));
+        if (viewSharer.getUser().getPermissionId().equals("-1")){
+            functionItems.add(new FunctionItem("登录以使用更多功能..."));
+        }
+        if(!viewSharer.getUser().getPermissionId().equals("-1")) {
+            functionItems.add(new FunctionItem("查看当前播放序列"));
+            functionItems.add(new FunctionItem("管理已上传的资源"));
+            functionItems.add(new FunctionItem("管理评论"));
+        }
+        if (viewSharer.getUser().getPermissionId().equals("1")) {
+            functionItems.add(new FunctionItem("管理用户"));
+            functionItems.add(new FunctionItem("查看举报"));
+        }
         // 初始化 ListView 和 Adapter
         ListView mannersList = findViewById(R.id.mannalist);
         FunctionAdapter adapter = new FunctionAdapter(this, functionItems);
