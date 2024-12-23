@@ -234,7 +234,7 @@ public class PlayVideoActivity extends AppCompatActivity {
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                         comments.addAll(response.body());
-                    comments.add(new Comment("1","1","Jane Smith", "没有更多了", "012345678901234567890123456789"));
+                    comments.add(new Comment("1","1"," ", "没有更多了", "                 "));
                     // 设置适配器
                     CommentAdapter adapter = new CommentAdapter(comments);
                     recyclerViewComments.setAdapter(adapter);
@@ -243,7 +243,7 @@ public class PlayVideoActivity extends AppCompatActivity {
                     recyclerViewComments.setLayoutManager(new LinearLayoutManager(PlayVideoActivity.this));
 
                 } else {
-                    comments.add(new Comment("1","1","Jane Smith", "暂无评论", "012345678901234567890123456789"));
+                    comments.add(new Comment("1","1"," ", "暂无评论", "                 "));
                     Log.e("1", "onResponse: " );
                     // 设置适配器
                     CommentAdapter adapter = new CommentAdapter(comments);
@@ -258,7 +258,7 @@ public class PlayVideoActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Comment>> call, Throwable t) {
 
-                comments.add(new Comment("1","1","Jane Smith", "出错咯", "012345678901234567890123456789"));
+                comments.add(new Comment("1","1"," ", "出错咯", "                 "));
                 // 网络请求失败
                 Log.e("2", "onFailure: ");
                 // 设置适配器

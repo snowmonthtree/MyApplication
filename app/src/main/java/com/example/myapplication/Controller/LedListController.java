@@ -40,7 +40,7 @@ public interface LedListController {
             @Query("resourceId") String resourceId
     );
 
-    // 从播放列表中删除最后一个资源
+    // 从播放列表中删除一个资源
     @POST("/ledlist/remove-last-resource")
     Call<String> removeResourceFromPlaylist(
             @Query("userId") String userId,

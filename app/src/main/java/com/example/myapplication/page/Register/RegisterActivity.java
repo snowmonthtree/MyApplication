@@ -87,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful()&&response.body().equals("User inserted successfully")) {
                         Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
                         Log.e("test", "onResponse: "+response.body() );
 
