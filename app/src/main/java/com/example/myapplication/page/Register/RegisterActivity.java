@@ -18,6 +18,7 @@ import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.User.User;
+import com.example.myapplication.page.Login.LoginActivity;
 
 import java.io.IOException;
 
@@ -76,8 +77,23 @@ public class RegisterActivity extends AppCompatActivity {
                     })
                     .show();
         }
-
-        else {
+        else if (userPassword.getText().length()<8 || userPassword.getText().length()>16){
+            new AlertDialog.Builder(RegisterActivity.this)
+                    .setTitle("错误")
+                    .setMessage("密码长度不对")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        // 确定按钮的点击事件
+                    })
+                    .show();
+        } else if (userName.getText().length()>10 || userName.getText().length()<1) {
+            new AlertDialog.Builder(RegisterActivity.this)
+                    .setTitle("错误")
+                    .setMessage("用户名长度不能为空,也不能超过10")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        // 确定按钮的点击事件
+                    })
+                    .show();
+        } else {
             newUser=new User();
             newUser.setName(userName.getText().toString());
             newUser.setPassword(userPassword.getText().toString());
@@ -122,6 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
     private void getCode(){
+        Toast.makeText(this, "验证码已发送,若未收到验证码,请检查邮箱是否正确", Toast.LENGTH_SHORT).show();
         Call<String> call=userController.getCode(userEmail.getText().toString());
         call.enqueue(new Callback<String>() {
             @Override

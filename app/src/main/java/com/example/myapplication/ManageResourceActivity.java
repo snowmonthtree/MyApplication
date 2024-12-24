@@ -13,10 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Controller.LedResourceController;
-import com.example.myapplication.Controller.UserController;
 import com.example.myapplication.data.LedResource.LedResource;
-import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.ui.ManageResourceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

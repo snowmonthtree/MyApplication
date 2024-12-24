@@ -139,6 +139,7 @@ public class CreationCenterActivity extends AppCompatActivity {
         if (!viewSharer.getUser().getPermissionId().equals("-1")) {
             // 设置按钮点击监听器（可选）
             buttonDoodle.setOnClickListener(v -> {
+
                 Intent intent = new Intent(CreationCenterActivity.this, DoodleActivity.class);
                 startActivity(intent);
             });

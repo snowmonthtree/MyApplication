@@ -90,6 +90,7 @@ public class ListDetailActivity extends AppCompatActivity {
     }
     private void setList(){
         viewSharer.setListId(listId);
+        Toast.makeText(this, "列表已设置", Toast.LENGTH_SHORT).show();
     }
     private void deleteList(){
         Call<String> call=ledListController.deletePlaylist(viewSharer.getUser().getUserId(),listId);

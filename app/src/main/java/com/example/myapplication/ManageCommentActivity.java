@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Controller.CommentsController;
-import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.data.Comment.Comment;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.ui.ManageCommentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

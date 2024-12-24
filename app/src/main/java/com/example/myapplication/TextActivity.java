@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -19,6 +20,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.myapplication.page.Login.LoginActivity;
 
 import java.io.IOException;
 
@@ -55,6 +58,7 @@ public class TextActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (generatedBitmap != null) {
+
                     save();
                 } else {
                     Toast.makeText(TextActivity.this, "请先生成图像", Toast.LENGTH_SHORT).show();
@@ -118,6 +122,13 @@ public class TextActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         Toast.makeText(this, "LED Resource Saved:\n" + resource.toString(), Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this)
+                .setTitle("成功")
+                .setMessage("新生成的图像已保存,如果要上传,请到创作中心->本地资源->选择相应的图片上传")
+                .setPositiveButton("确定", (dialog, which) -> {
+                    // 确定按钮的点击事件
+                })
+                .show();
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

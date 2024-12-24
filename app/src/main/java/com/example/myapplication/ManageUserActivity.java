@@ -12,13 +12,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.Controller.UserController;
-import com.example.myapplication.data.PlayList.PlayList;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
-import com.example.myapplication.page.Search.SearchResultActivity;
-import com.example.myapplication.ui.PlayListAdapter;
+import com.example.myapplication.ui.ManageUserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Controller.CommentsController;
+import com.example.myapplication.R;
 import com.example.myapplication.data.Comment.Comment;
-import com.example.myapplication.data.LedResource.LedResource;
 
 import java.util.List;
 

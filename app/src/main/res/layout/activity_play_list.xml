@@ -32,9 +32,9 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:ems="20"
+            android:hint="在此输入新的列表名称"
             android:inputType="text"
-            android:minHeight="40dp"
-            android:text="Name" /> <!-- 给 EditText 和 Button 之间添加间距 -->
+            android:minHeight="40dp" /> <!-- 给 EditText 和 Button 之间添加间距 -->
 
         <Button
             android:id="@+id/createNewList"

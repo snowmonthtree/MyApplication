@@ -97,8 +97,8 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful()) {
                         User data = response.body();
-                        if (data!=null){
-                            //Toast.makeText(LoginActivity.this, data.getEmail(), Toast.LENGTH_SHORT).show();
+                        if (data==null){
+                            Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                         }
                         Log.e("NetworkRequest", "Response Code: " + response.code());
                         if (response.body() == null) {
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         // 处理数据
                         if (data == null) {
-                            runOnUiThread(() -> {
+
                                 new AlertDialog.Builder(LoginActivity.this)
                                         .setTitle("错误")
                                         .setMessage("邮箱或密码错误")
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                                             // 确定按钮的点击事件
                                         })
                                         .show();
-                            });
+
                         } else {
                             ViewSharer viewSharer=(ViewSharer)getApplication();
                             viewSharer.setUser(data);
@@ -140,7 +140,13 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
                     // 处理错误
-
+                        new AlertDialog.Builder(LoginActivity.this)
+                                .setTitle("错误")
+                                .setMessage("邮箱或密码错误(若无误,可以检查您的网络连接)")
+                                .setPositiveButton("确定", (dialog, which) -> {
+                                    // 确定按钮的点击事件
+                                })
+                                .show();
                     Log.e("NetworkRequest", "onFailure triggered");
                     Log.e("error", t.getClass().getName() + ", Message: " + t.getMessage());
                 }

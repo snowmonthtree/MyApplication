@@ -18,6 +18,8 @@ import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.Controller.LedResourceController;
+import com.example.myapplication.Controller.UserController;
+import com.example.myapplication.ParkAdapter;
 import com.example.myapplication.page.CreationCenter.CreationCenterActivity;
 import com.example.myapplication.page.Home.HomeActivity;
 import com.example.myapplication.page.Video.PlayVideoActivity;
@@ -30,14 +32,20 @@ import com.example.myapplication.page.Profile.UserProfileActivity;
 import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.User.User;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.ui.ManageResourceAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -47,12 +55,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ParkActivity extends AppCompatActivity {
-    LedResourceController ledResourceController;
-    Retrofit retrofit;
+    private LedResourceController ledResourceController;
+    private Retrofit retrofit;
+    private UserController userController;
     private ImageButton[] imageButtons = new ImageButton[8];
     private TextView textView;
     private TextView textView3;
     private TextView textView4;
+    private ParkAdapter parkAdapter;
+    private RecyclerView recyclerView;
+
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -157,7 +169,13 @@ public class ParkActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+        try {
+            retrofit = RetrofitClient.getClient(ParkActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        ledResourceController = retrofit.create(LedResourceController.class);
+        userController = retrofit.create(UserController.class);
         // 获取并设置 ImageButtons 的点击监听器
          imageButtons[0] = findViewById(R.id.imageButton7);
          imageButtons[1] = findViewById(R.id.imageButton8);
@@ -170,15 +188,15 @@ public class ParkActivity extends AppCompatActivity {
          textView=findViewById(R.id.textView);
          textView3=findViewById(R.id.textView3);
          textView4=findViewById(R.id.textView4);
+         recyclerView=findViewById(R.id.recycler_park);
+         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+         parkAdapter=new ParkAdapter(this,new ArrayList<>(),ledResourceController,userController);// 先传入一个空列表
+         recyclerView.setAdapter(parkAdapter);
+         byLast();
 
-        try {
-            retrofit = RetrofitClient.getClient(ParkActivity.this);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        ledResourceController = retrofit.create(LedResourceController.class);
 
-        Call< List <LedResource>> call=ledResourceController.getLatestLedResources();
+
+        /*Call< List <LedResource>> call=ledResourceController.getLatestLedResources();
         call.enqueue(new Callback<List<LedResource>>() {
             @Override
             public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
@@ -187,7 +205,7 @@ public class ParkActivity extends AppCompatActivity {
                     int i=0;
                     List<LedResource> ledResources = response.body();
                     for (LedResource resource : ledResources) {
-                        fetchImage(resource,i);  // 根据图片名称获取图片
+                        //fetchImage(resource,i);  // 根据图片名称获取图片
                         i++;
                     }
                 } else {
@@ -200,19 +218,19 @@ public class ParkActivity extends AppCompatActivity {
                 Log.e("park test", "onFailure: "+t.getMessage() );
 
             }
-        });
+        });*/
         // 设置点击监听器
         textView.setOnClickListener(view ->byLast() );
         textView3.setOnClickListener(view -> byPlayNum());
         textView4.setOnClickListener(view -> byLike());
-        setImageButtonClickListener(imageButtons[1]);
+        /*setImageButtonClickListener(imageButtons[1]);
         setImageButtonClickListener(imageButtons[2]);
         setImageButtonClickListener(imageButtons[3]);
         setImageButtonClickListener(imageButtons[4]);
         setImageButtonClickListener(imageButtons[5]);
         setImageButtonClickListener(imageButtons[6]);
         setImageButtonClickListener(imageButtons[7]);
-        setImageButtonClickListener(imageButtons[0]);
+        setImageButtonClickListener(imageButtons[0]);*/
     }
     private void byLike(){
         Call< List <LedResource>> call=ledResourceController.orderByLikes();
@@ -223,8 +241,9 @@ public class ParkActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     int i=0;
                     List<LedResource> ledResources = response.body();
+                    parkAdapter.updateData(response.body());
                     for (LedResource resource : ledResources) {
-                        fetchImage(resource,i);  // 根据图片名称获取图片
+                        //fetchImage(resource,i);  // 根据图片名称获取图片
                         i++;
                     }
                 } else {
@@ -249,8 +268,9 @@ public class ParkActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     int i=0;
                     List<LedResource> ledResources = response.body();
+                    parkAdapter.updateData(response.body());
                     for (LedResource resource : ledResources) {
-                        fetchImage(resource,i);  // 根据图片名称获取图片
+                        //fetchImage(resource,i);  // 根据图片名称获取图片
                         i++;
                     }
                 } else {
@@ -274,8 +294,9 @@ public class ParkActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     int i=0;
                     List<LedResource> ledResources = response.body();
+                    parkAdapter.updateData(response.body());
                     for (LedResource resource : ledResources) {
-                        fetchImage(resource,i);  // 根据图片名称获取图片
+                        //fetchImage(resource,i);  // 根据图片名称获取图片
                         i++;
                     }
                 } else {
@@ -290,7 +311,7 @@ public class ParkActivity extends AppCompatActivity {
             }
         });
     }
-    private void setImageButtonClickListener(ImageButton imageButton) {
+    /*private void setImageButtonClickListener(ImageButton imageButton) {
         imageButton.setOnClickListener(v -> {
             // 获取 ImageButton 上的 Bitmap
             Drawable drawable = imageButton.getDrawable();
@@ -367,5 +388,5 @@ public class ParkActivity extends AppCompatActivity {
             }
         }
         return bitmap;
-    }
+    }*/
 }

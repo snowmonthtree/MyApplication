@@ -79,6 +79,26 @@ public class UpLoadActivity extends AppCompatActivity {
         clear.setOnClickListener(view -> clear());
     }
     private void upLoad(){
+        if (name.getText().toString().length()>10||name.getText().toString().isEmpty()){
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("失败")
+                    .setMessage("名称过长(10以内)且不能为空")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        // 确定按钮的点击事件
+                    })
+                    .show();
+            return;
+        }
+        if (detail.getText().toString().isEmpty()||detail.getText().toString().length()>254){
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("失败")
+                    .setMessage("简介不能为空,不能超过200个字")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        // 确定按钮的点击事件
+                    })
+                    .show();
+            return;
+        }
         ledResource.setName(name.getText().toString());
         ledResource.setDetail(detail.getText().toString());
         Log.e("1231231231", "upLoad: "+uri );

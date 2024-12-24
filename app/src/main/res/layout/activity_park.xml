@@ -117,10 +117,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout3"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout3">
 
         <TableLayout
             android:id="@+id/layout4"
@@ -138,16 +139,16 @@
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button7" />
+                    android:contentDescription="@string/description_image_button7"
+                    app:srcCompat="@drawable/empty_preview" />
 
                 <ImageButton
                     android:id="@+id/imageButton8"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button8" />
+                    android:contentDescription="@string/description_image_button8"
+                    app:srcCompat="@drawable/empty_preview" />
             </TableRow>
 
             <TableRow
@@ -160,16 +161,16 @@
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button1" />
+                    android:contentDescription="@string/description_image_button1"
+                    app:srcCompat="@drawable/empty_preview" />
 
                 <ImageButton
                     android:id="@+id/imageButton2"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button2" />
+                    android:contentDescription="@string/description_image_button2"
+                    app:srcCompat="@drawable/empty_preview" />
             </TableRow>
 
             <TableRow
@@ -182,16 +183,16 @@
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button3" />
+                    android:contentDescription="@string/description_image_button3"
+                    app:srcCompat="@drawable/empty_preview" />
 
                 <ImageButton
                     android:id="@+id/imageButton4"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button4" />
+                    android:contentDescription="@string/description_image_button4"
+                    app:srcCompat="@drawable/empty_preview" />
             </TableRow>
 
             <TableRow
@@ -204,16 +205,16 @@
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button5" />
+                    android:contentDescription="@string/description_image_button5"
+                    app:srcCompat="@drawable/empty_preview" />
 
                 <ImageButton
                     android:id="@+id/imageButton6"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/empty_preview"
-                    android:contentDescription="@string/description_image_button6" />
+                    android:contentDescription="@string/description_image_button6"
+                    app:srcCompat="@drawable/empty_preview" />
             </TableRow>
 
         </TableLayout>
@@ -228,5 +229,16 @@
         android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_park"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout3"
+        android:padding="8dp"
+        tools:listitem="@layout/park_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

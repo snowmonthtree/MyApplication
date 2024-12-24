@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,19 +76,31 @@ public class PlayListActivity extends AppCompatActivity {
         });
     }
     private void CreateNewList(){
-        Call<String> call=ledListController.createPlaylist(viewSharer.getUser().getUserId(),editText.getText().toString());
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Toast.makeText(PlayListActivity.this, response.body(), Toast.LENGTH_SHORT).show();
-                InitList();
-            }
+        if (editText.getText().length()>49||editText.getText().toString().isEmpty())
+        {
+            new AlertDialog.Builder(this)
+                    .setTitle("失败")
+                    .setMessage("列表名不能为空,长度不能超过50")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        // 确定按钮的点击事件
+                    })
+                    .show();
 
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(PlayListActivity.this, "error"+t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
+        else {
+            Call<String> call = ledListController.createPlaylist(viewSharer.getUser().getUserId(), editText.getText().toString());
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Toast.makeText(PlayListActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                    InitList();
+                }
 
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Toast.makeText(PlayListActivity.this, "error" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

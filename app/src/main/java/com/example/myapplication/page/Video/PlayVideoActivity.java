@@ -343,6 +343,8 @@ public class PlayVideoActivity extends AppCompatActivity {
                 }
             });
             ledResource.setCommentNum(ledResource.getCommentNum()+1);
+            RadioButton radioButton=findViewById(R.id.radio_comment);
+            radioButton.setText("评论:"+ledResource.getCommentNum());
             update();
         }
     }
@@ -387,6 +389,7 @@ public class PlayVideoActivity extends AppCompatActivity {
                         } else {
                             ledResource.setLikes(ledResource.getLikes() - 1);
                         }
+                        like.setText("点赞:"+ledResource.getLikes());
                         Toast.makeText(PlayVideoActivity.this, response.body(), Toast.LENGTH_SHORT).show();
                         update();
                     }
@@ -515,7 +518,10 @@ public class PlayVideoActivity extends AppCompatActivity {
             // 关闭文件输出流
             outStream.flush();
             outStream.close();
+            TextView textView=findViewById(R.id.downloadcount);
+
             ledResource.setDownloadCount(ledResource.getDownloadCount()+1);
+            textView.setText("下载量:"+ledResource.getDownloadCount());
             update();
         } catch (IOException e) {
             throw new RuntimeException(e);

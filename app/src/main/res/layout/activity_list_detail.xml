@@ -30,20 +30,21 @@
             android:id="@+id/setAsNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="设为当前播放列表" />
 
         <Button
             android:id="@+id/deleteList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:text="删除该列表" />
+            android:text="删除该列表"
+            tools:layout_weight="1" />
 
         <Button
             android:id="@+id/rename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:text="重命名列表" />
+            android:text="播放列表"
+            tools:layout_weight="1" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

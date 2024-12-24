@@ -81,6 +81,15 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     })
                     .show();
         }
+        else if (userPassword.getText().length()<8 || userPassword.getText().length()>16){
+            new AlertDialog.Builder(ChangePasswordActivity.this)
+                    .setTitle("错误")
+                    .setMessage("密码长度不对")
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        // 确定按钮的点击事件
+                    })
+                    .show();
+        }
         else {
             user=new User();
             //检查邮箱

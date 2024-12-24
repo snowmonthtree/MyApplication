@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -163,6 +164,13 @@ public class AnimationActivity extends AppCompatActivity {
 
                 gifEncoder.finish();
                 Toast.makeText(this, "GIF 已保存到相册: " + fileName, Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(this)
+                        .setTitle("成功")
+                        .setMessage("新生成的图像已保存,如果要上传,请到创作中心->本地资源->选择相应的图片上传")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            // 确定按钮的点击事件
+                        })
+                        .show();
             }
 
         } catch (Exception e) {

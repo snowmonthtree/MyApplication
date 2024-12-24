@@ -1,7 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.ui;
 
 import com.example.myapplication.Controller.UserController;
-import com.example.myapplication.data.Result.ResultItem;
+import com.example.myapplication.R;
 import com.example.myapplication.data.User.User;
 
 import java.util.List;
@@ -17,11 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide; // 用于图片加载，若使用 Glide 加载头像
-import com.example.myapplication.data.ViewSharer;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
