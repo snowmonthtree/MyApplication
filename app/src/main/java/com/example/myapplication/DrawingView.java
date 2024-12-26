@@ -13,8 +13,8 @@ import java.util.Stack;
 public class DrawingView extends View {
 
     private Paint paint;
-    private int matrixWidth = 32;
-    private int matrixHeight = 8;
+    private int matrixWidth = 32;   // 画布宽度：32个方块
+    private int matrixHeight = 8;   // 画布高度：8个方块
     private float blockSize;  // 方块的大小
     private int[][] colorMatrix;
     private int currentColor = Color.RED;
@@ -78,15 +78,32 @@ public class DrawingView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // 计算画布中间的偏移量，确保画布居中显示
+        float offsetX = (getWidth() - matrixWidth * blockSize) / 2;
+        float offsetY = (getHeight() - matrixHeight * blockSize) / 2;
+
+        // 画紫色方框，框住8x32的小方格
+        paint.setColor(Color.parseColor("#800080"));  // 紫色
+        paint.setStyle(Paint.Style.STROKE);  // 只画边框
+        paint.setStrokeWidth(5);  // 设置边框宽度
+        canvas.drawRect(
+                offsetX,
+                offsetY,
+                offsetX + matrixWidth * blockSize,
+                offsetY + matrixHeight * blockSize,
+                paint
+        );
+
         // 画出每个小方格
+        paint.setStyle(Paint.Style.FILL);  // 重新设置为填充样式
         for (int y = 0; y < matrixHeight; y++) {
             for (int x = 0; x < matrixWidth; x++) {
                 paint.setColor(colorMatrix[y][x]);
                 canvas.drawRect(
-                        x * blockSize,
-                        y * blockSize,
-                        (x + 1) * blockSize,
-                        (y + 1) * blockSize,
+                        offsetX + x * blockSize,  // 计算方块的绘制位置
+                        offsetY + y * blockSize,  // 计算方块的绘制位置
+                        offsetX + (x + 1) * blockSize,
+                        offsetY + (y + 1) * blockSize,
                         paint
                 );
             }
@@ -99,8 +116,8 @@ public class DrawingView extends View {
         float y = event.getY();
 
         // 判断触摸点落在的方块坐标
-        int gridX = (int) (x / blockSize);
-        int gridY = (int) (y / blockSize);
+        int gridX = (int) ((x - (getWidth() - matrixWidth * blockSize) / 2) / blockSize);
+        int gridY = (int) ((y - (getHeight() - matrixHeight * blockSize) / 2) / blockSize);
 
         if (gridX >= 0 && gridX < matrixWidth && gridY >= 0 && gridY < matrixHeight) {
             // 在触摸前保存当前状态到撤销栈

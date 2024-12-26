@@ -203,6 +203,7 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // 在这里重新加载数据
+        textView.setText(user.getName());
         userController.getAvatar(user.getUserId()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

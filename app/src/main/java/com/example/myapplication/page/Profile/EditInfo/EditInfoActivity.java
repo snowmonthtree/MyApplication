@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -83,7 +84,7 @@ public class EditInfoActivity extends AppCompatActivity {
                     }
                 }
         );
-
+        etNickname.setVisibility(View.GONE);
         // 注册密码修改的结果回调
         changePasswordLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -122,9 +123,7 @@ public class EditInfoActivity extends AppCompatActivity {
             }
         }
         String nickname = etNickname.getText().toString().trim();
-        if (nickname.isEmpty()) {
-            Toast.makeText(this, "昵称不能为空", Toast.LENGTH_SHORT).show();
-        } else {
+
             try {
                 File file = getFileFromUri(EditInfoActivity.this, selectedImageUri);
 
@@ -147,7 +146,7 @@ public class EditInfoActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 // 成功处理
                                 Toast.makeText(EditInfoActivity.this, "信息已保存", Toast.LENGTH_SHORT).show();
-
+                                finish();
                             } else {
                                 // 错误处理
                                 System.out.println("上传失败: " + response.code()+response.errorBody().toString());
@@ -161,16 +160,16 @@ public class EditInfoActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    System.out.println("文件不存在！");
+                    Toast.makeText(this, "请选择图片", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }
+
 
         // 保存昵称和其他信息
         // 这里可以调用您的后端 API 或者更新本地数据存储
-        finish();
+
 
     }
     @SuppressLint("Range")

@@ -26,6 +26,7 @@ import android.graphics.BitmapFactory;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.myapplication.BluetoothAnimationSender;
 import com.example.myapplication.Controller.LedListController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.R;
@@ -38,10 +39,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import okhttp3.ResponseBody;
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +62,7 @@ public class BluetoothActivity extends AppCompatActivity {
 
     private final String DEVICE_NAME = "HC-05"; // 目标蓝牙模块名称
     private final UUID DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // 通用串口 UUID
-
+    private List<Bitmap> listToDisplay;
     private Button btnConnect, btnSend;
     private ImageView imageView;
     private Button btnTest;
@@ -67,6 +71,7 @@ public class BluetoothActivity extends AppCompatActivity {
     private LedResourceController ledResourceController;
     private Retrofit retrofit;
     private String resourceId;
+    private BluetoothAnimationSender bluetoothAnimationSender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +92,7 @@ public class BluetoothActivity extends AppCompatActivity {
         ledListController=retrofit.create(LedListController.class);
         ledResourceController=retrofit.create(LedResourceController.class);
         btnTest.setOnClickListener(view -> test());
-
-
+        listToDisplay=new ArrayList<>();
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // 设置按钮点击事件
@@ -197,6 +201,7 @@ public class BluetoothActivity extends AppCompatActivity {
             bluetoothSocket = targetDevice.createRfcommSocketToServiceRecord(DEVICE_UUID);
             bluetoothSocket.connect();
             outputStream = bluetoothSocket.getOutputStream();
+            bluetoothAnimationSender=new BluetoothAnimationSender(bluetoothSocket);
             showToast("蓝牙连接成功");
         } catch (SecurityException e) {
             Log.e(TAG, "连接蓝牙设备失败：缺少权限", e);
@@ -216,8 +221,8 @@ public class BluetoothActivity extends AppCompatActivity {
             showToast("蓝牙未连接");
             return;
         }
-
-
+        bluetoothAnimationSender.sendAnimationFrames(listToDisplay,100);
+/*
         // 将 ImageView 的图片转换为 Bitmap
        // imageView.setDrawingCacheEnabled(true);
 
@@ -249,7 +254,7 @@ public class BluetoothActivity extends AppCompatActivity {
             showToast("图片发送失败");
         } finally {
             imageView.setDrawingCacheEnabled(false);
-        }
+        }*/
     }
 
     // 输出字节数组到 Logcat
@@ -395,18 +400,32 @@ public class BluetoothActivity extends AppCompatActivity {
 
                         // 读取字节流并判断是否为 GIF 格式
                         if (isGif(imageData)) {
-                            // 如果是 GIF 动图
-                            Glide.with(BluetoothActivity.this)
-                                    .asGif()
-                                    .load(imageData)  // 加载字节数组
-                                    .placeholder(R.drawable.ic_caution_refresh)
-                                    .error(R.drawable.ic_doodle_back)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(imageView);  // 显示 GIF 动图
+                            try {
+                                // 加载 GIF
+                                GifDrawable gifDrawable = new GifDrawable(imageData);
+                                int frameCount = gifDrawable.getNumberOfFrames();
+
+                                Toast.makeText(viewSharer, "hub", Toast.LENGTH_SHORT).show();
+
+                                // 遍历所有帧
+                                for (int i = 0; i < frameCount; i++) {
+                                    // 获取第 i 帧
+                                    Bitmap frame = gifDrawable.seekToFrameAndGet(i);
+                                    // 将缩放后的帧添加到列表中
+                                    listToDisplay.add(frame);
+                                }
+                                // 设置到 ImageView
+                                imageView.setImageDrawable(gifDrawable);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                // 错误处理
+                                imageView.setImageResource(R.drawable.ic_doodle_back);  // 设置错误图片
+                            }
                         } else {
                             // 如果是静态图片（如 PNG, JPEG）
                             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                             if (bitmap != null) {
+                                listToDisplay.add(bitmap);
                                 Glide.with(BluetoothActivity.this)
                                         .load(imageData)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
