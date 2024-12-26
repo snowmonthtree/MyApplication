@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +20,23 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.myapplication.Controller.LedListController;
 import com.example.myapplication.Controller.LedResourceController;
 import com.example.myapplication.R;
 import com.example.myapplication.data.Result.ResultItem;
 import com.example.myapplication.data.ViewSharer;
+import com.example.myapplication.page.Bluetooth.BluetoothActivity;
 import com.example.myapplication.page.Video.PlayVideoActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -141,45 +148,29 @@ public class LedListAdapter extends RecyclerView.Adapter<LedListAdapter.LedListV
             textNo = itemView.findViewById(R.id.textNo);
         }
     }
-    private void fetchImage(String imageName, ImageView imageView) {
-        // 假设 ledResourceController 是 Retrofit 接口，调用 getImage 方法来获取图片
-        ledResourceController.getImage(imageName).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    ResponseBody responseBody = response.body();
-                    Bitmap bitmap = convertResponseBodyToBitmap(responseBody);
-
-                    if (bitmap != null) {
-                        // 使用 Glide 将 Bitmap 加载到 ImageView
-                        Glide.with(imageView.getContext())
-                                .load(bitmap)  // 直接加载 Bitmap
-                                .placeholder(R.drawable.test)  // 占位图
-                                .error(R.drawable.ic_doodle_back)  // 错误图
-                                .into(imageView);  // 将图片显示到 ImageView
-                    } else {
-                        Log.e("Image Fetch", "Bitmap is null");
-                    }
-                } else {
-                    Log.e("Image Fetch", "onResponse: Image fetch failed1");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // 网络请求失败
-                Log.e("Image Fetch", "onFailure: Image fetch failed", t);
-            }
-        });
+    private byte[] readBytesFromStream(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        return byteArrayOutputStream.toByteArray();  // 返回字节数组
     }
-
-    // 将ResponseBody转换为Bitmap
-    private Bitmap convertResponseBodyToBitmap(ResponseBody responseBody) {
-        Bitmap bitmap = null;
+    // 判断是否是 GIF 格式
+    private boolean isGif(byte[] imageData) {
+        if (imageData.length >= 4) {
+            return imageData[0] == 'G' && imageData[1] == 'I' && imageData[2] == 'F';
+        }
+        return false;
+    }
+    // 将ResponseBody转换为字节数组
+    private byte[] convertResponseBodyToBytes(ResponseBody responseBody) {
+        byte[] data = null;
         InputStream inputStream = responseBody.byteStream();
         try {
-            bitmap = BitmapFactory.decodeStream(inputStream);  // 将输入流解码为Bitmap
-        } catch (Exception e) {
+            data = readBytesFromStream(inputStream);  // 读取字节流到字节数组
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -188,6 +179,93 @@ public class LedListAdapter extends RecyclerView.Adapter<LedListAdapter.LedListV
                 e.printStackTrace();
             }
         }
-        return bitmap;
+        return data;
     }
+    private void fetchImage(String viewWebUrl, ImageView imageView) {
+        // 假设 ledResourceController 是 Retrofit 接口，调用 getImage 方法来获取图片
+        ledResourceController.getImage(viewWebUrl).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        ResponseBody responseBody = response.body();
+                        byte[] imageData = convertResponseBodyToBytes(responseBody);  // 获取字节数组
+
+                        // 读取字节流并判断是否为 GIF 格式
+                        if (isGif(imageData)) {
+                            try {
+                                // 加载 GIF
+                                GifDrawable gifDrawable = new GifDrawable(imageData);
+                                // 设置到 ImageView
+                                imageView.setImageDrawable(gifDrawable);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                // 错误处理
+                                imageView.setImageResource(R.drawable.ic_doodle_back);  // 设置错误图片
+                            }
+                        } else {
+                            // 如果是静态图片（如 PNG, JPEG）
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                            if (bitmap != null) {
+                                Glide.with(context)
+                                        .load(imageData)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .placeholder(R.drawable.ic_caution_refresh)
+                                        .error(R.drawable.ic_doodle_back)
+                                        .into(imageView);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Image Fetch", "Failed to process response", e);
+                    }
+                } else {
+                    Log.e("Image Fetch", "onResponse: Image fetch failed");
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // 网络请求失败
+                Log.e("Image Fetch", "onFailure: Image fetch failed", t);
+            }
+        });
+    }
+    public List<Bitmap> getListToDisplay(RecyclerView recyclerView){
+        List<Bitmap> listToDisplay=new ArrayList<>();
+        listToDisplay.clear();
+        for (int j=0;j<getItemCount();j++) {
+            RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(j);
+            if (viewHolder!=null) {
+                ImageView imageView = (viewHolder).itemView.findViewById(R.id.iconImageView);
+
+                // 获取 ImageView 中的 Drawable
+                Drawable drawable = imageView.getDrawable();
+                if (drawable instanceof BitmapDrawable) {
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    listToDisplay.add(bitmap);
+                    // 在这里处理 Bitmap
+                } else if ((drawable instanceof GifDrawable)) {
+                    GifDrawable gifDrawable = (GifDrawable) drawable;
+                    int frameCount = gifDrawable.getNumberOfFrames();
+
+                    // 创建一个 List 来保存缩放后的帧
+
+                    // 遍历所有帧
+                    for (int i = 0; i < frameCount; i++) {
+                        // 获取第 i 帧
+                        Bitmap frame = gifDrawable.seekToFrameAndGet(i);
+                        // 将缩放后的帧添加到列表中
+                        listToDisplay.add(frame);
+                    }
+                }
+                System.out.println(listToDisplay);
+            }
+        }
+        return listToDisplay;
+    }
+
 }

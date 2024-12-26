@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,7 @@ import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.ViewSharer;
 import com.example.myapplication.page.Video.PlayVideoActivity;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -121,12 +123,51 @@ public class BluetoothActivity extends AppCompatActivity {
         }
         else {
             Uri uri=intent.getParcelableExtra("uri");
-            imageView.setImageURI(uri);
+            String fileExtension = getFileExtension(uri);
+            if ("gif".equalsIgnoreCase(fileExtension)) {
+                // 加载 GIF
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    // 使用 BufferedInputStream 来支持标记
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+                    // 创建 GifDrawable 并设置到 ImageView
+                    GifDrawable gifDrawable = new GifDrawable(bufferedInputStream);
+                    imageView.setImageDrawable(gifDrawable);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    imageView.setImageResource(R.drawable.ic_doodle_back);  // 加载失败时显示的默认图
+                }
+            } else {
+                // 加载常规图片（非 GIF）
+                Glide.with(BluetoothActivity.this)
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.ic_caution_refresh)
+                        .error(R.drawable.ic_doodle_back)
+                        .into(imageView);
+            }
             btnTest.setVisibility(View.GONE);
         }
 
     }
-
+    /**
+     * 获取文件扩展名
+     *
+     * @param uri 文件的 Uri
+     * @return 文件扩展名
+     */
+    private String getFileExtension(Uri uri) {
+        String extension = null;
+        String path = uri.getPath();
+        if (path != null) {
+            int dotIndex = path.lastIndexOf(".");
+            if (dotIndex >= 0) {
+                extension = path.substring(dotIndex + 1);
+            }
+        }
+        return extension != null ? extension : "";
+    }
     /**
      * 检查并请求蓝牙相关权限
      */
@@ -221,12 +262,70 @@ public class BluetoothActivity extends AppCompatActivity {
             showToast("蓝牙未连接");
             return;
         }
-        bluetoothAnimationSender.sendAnimationFrames(listToDisplay,100);
-/*
+        Drawable drawable = imageView.getDrawable();
+        listToDisplay.clear();
+        if (drawable instanceof BitmapDrawable) {
+           /* BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            listToDisplay.add(bitmap);
+
+            // 在这里处理 Bitmap*/
+            // 将 ImageView 的图片转换为 Bitmap
+            // imageView.setDrawingCacheEnabled(true);
+
+            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 8, 32, false);
+            imageView.setImageBitmap(bitmap);
+            // Bitmap bitmap = imageView.getDrawingCache();
+
+            if (bitmap == null) {
+                showToast("图片为空");
+                return;
+            }
+
+            byte[] imageData = convertImageToBytes(bitmap);
+
+            // 在发送前将所有 0xFF 替换为 0xFE，避免冲突
+            imageData = replaceByteValue(imageData, (byte) 0xFF, (byte) 0xFE);
+
+
+
+            //调试，将图片的发送数据打印到logcat
+            logByteArray(imageData);
+
+            try {
+                outputStream.write(imageData);
+                showToast("图片数据已发送");
+            } catch (IOException e) {
+                Log.e(TAG, "发送失败", e);
+                showToast("图片发送失败");
+            } finally {
+                imageView.setDrawingCacheEnabled(false);
+            }
+        }
+        else  if ((drawable instanceof GifDrawable)) {
+            GifDrawable gifDrawable = (GifDrawable) drawable;
+            int frameCount = gifDrawable.getNumberOfFrames();
+
+            // 创建一个 List 来保存缩放后的帧
+
+            // 遍历所有帧
+            for (int i = 0; i < frameCount; i++) {
+                // 获取第 i 帧
+                Bitmap frame = gifDrawable.seekToFrameAndGet(i);
+                // 将缩放后的帧添加到列表中
+                listToDisplay.add(frame);
+            }
+        }
+            System.out.println(listToDisplay);
+        if (!listToDisplay.isEmpty()) {
+            bluetoothAnimationSender.sendAnimationFrames(listToDisplay, 200);
+        }
+
         // 将 ImageView 的图片转换为 Bitmap
        // imageView.setDrawingCacheEnabled(true);
 
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+   /*     Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         //bitmap = Bitmap.createScaledBitmap(bitmap, 8, 32, false);
         imageView.setImageBitmap(bitmap);
       // Bitmap bitmap = imageView.getDrawingCache();
@@ -403,17 +502,6 @@ public class BluetoothActivity extends AppCompatActivity {
                             try {
                                 // 加载 GIF
                                 GifDrawable gifDrawable = new GifDrawable(imageData);
-                                int frameCount = gifDrawable.getNumberOfFrames();
-
-                                Toast.makeText(viewSharer, "hub", Toast.LENGTH_SHORT).show();
-
-                                // 遍历所有帧
-                                for (int i = 0; i < frameCount; i++) {
-                                    // 获取第 i 帧
-                                    Bitmap frame = gifDrawable.seekToFrameAndGet(i);
-                                    // 将缩放后的帧添加到列表中
-                                    listToDisplay.add(frame);
-                                }
                                 // 设置到 ImageView
                                 imageView.setImageDrawable(gifDrawable);
                             } catch (IOException e) {
@@ -425,7 +513,6 @@ public class BluetoothActivity extends AppCompatActivity {
                             // 如果是静态图片（如 PNG, JPEG）
                             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                             if (bitmap != null) {
-                                listToDisplay.add(bitmap);
                                 Glide.with(BluetoothActivity.this)
                                         .load(imageData)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)

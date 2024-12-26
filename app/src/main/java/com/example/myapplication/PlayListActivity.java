@@ -66,7 +66,9 @@ public class PlayListActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<PlayList>>() {
             @Override
             public void onResponse(Call<List<PlayList>> call, Response<List<PlayList>> response) {
-                playListAdapter.updateData(response.body());
+                if (response.body() != null) {
+                    playListAdapter.updateData(response.body());
+                }
             }
 
             @Override
