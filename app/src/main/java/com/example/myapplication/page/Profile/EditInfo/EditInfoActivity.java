@@ -147,7 +147,7 @@ public class EditInfoActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 // 成功处理
                                 Toast.makeText(EditInfoActivity.this, "信息已保存", Toast.LENGTH_SHORT).show();
-                                finish();
+
                             } else {
                                 // 错误处理
                                 System.out.println("上传失败: " + response.code()+response.errorBody().toString());
@@ -170,6 +170,7 @@ public class EditInfoActivity extends AppCompatActivity {
 
         // 保存昵称和其他信息
         // 这里可以调用您的后端 API 或者更新本地数据存储
+        finish();
 
     }
     @SuppressLint("Range")

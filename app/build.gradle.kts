@@ -57,4 +57,5 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.converter.scalars)
     implementation(libs.glide)
+    implementation("pub.devrel:easypermissions:3.0.0")
 }

@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -55,10 +56,35 @@ public class ManageCommentActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         manageCommentAdapter=new ManageCommentAdapter(new ArrayList<>(),commentsController,this);// 先传入一个空列表
         recyclerView.setAdapter(manageCommentAdapter);
-        initComment();
+        if (viewSharer.getUser().getPermissionId().equals("1")){
+            initComment();
+        }
+        else if (viewSharer.getUser().getPermissionId().equals("0")){
+            initCommentByUser();
+            searchView.setVisibility(View.GONE);
+        }
     }
     private void initComment(){
         Call<List<Comment>> call=commentsController.getAllComments();
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                if (response.body()!=null) {
+                    manageCommentAdapter.updateData(response.body());
+                }
+                else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+                Toast.makeText(ManageCommentActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void initCommentByUser(){
+        Call<List<Comment>> call=commentsController.getUserComments(viewSharer.getUser().getUserId());
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {

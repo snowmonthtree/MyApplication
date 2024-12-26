@@ -338,25 +338,27 @@ public class CreationCenterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<Uri> localList = new ArrayList<>();
-        File[] files=getFilesDir().listFiles();
-        if (files != null) {
-            // 遍历所有文件
-            for (File file : files) {
-                if (file.isFile()) {
-                    // 处理文件
-                    if (isImageFile(file)) {
-                        localList.add(Uri.fromFile(file));
+       // if (!viewSharer.getUser().getPermissionId().equals("-1")) {
+            List<Uri> localList = new ArrayList<>();
+            File[] files = getFilesDir().listFiles();
+            if (files != null) {
+                // 遍历所有文件
+                for (File file : files) {
+                    if (file.isFile()) {
+                        // 处理文件
+                        if (isImageFile(file)) {
+                            localList.add(Uri.fromFile(file));
+                        }
+                    } else if (file.isDirectory()) {
+                        // 处理子目录
+                        System.out.println("Directory: " + file.getName());
                     }
-                } else if (file.isDirectory()) {
-                    // 处理子目录
-                    System.out.println("Directory: " + file.getName());
                 }
+            } else {
+                System.out.println("No files found in the directory.");
             }
-        } else {
-            System.out.println("No files found in the directory.");
-        }
-        localAdapter.updateData(localList);
+            localAdapter.updateData(localList);
+        //}
     }
 
 }

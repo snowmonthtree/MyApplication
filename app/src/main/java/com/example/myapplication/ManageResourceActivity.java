@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -54,10 +55,71 @@ public class ManageResourceActivity  extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         manageResourceAdapter=new ManageResourceAdapter(new ArrayList<>(),ledResourceController,this);// 先传入一个空列表
         recyclerView.setAdapter(manageResourceAdapter);
-        initResource();
+        if(viewSharer.getUser().getPermissionId().equals("1")){
+            initResource();
+        }
+        else if (viewSharer.getUser().getPermissionId().equals("0")){
+            initResourceByUser();
+            searchView.setVisibility(View.GONE);
+        }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // 当用户提交搜索时，更新结果列表
+                searchResource(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // 当搜索文本变化时，更新结果列表
+                if (newText != null && !newText.trim().isEmpty()) {
+                    searchResource(newText);
+                }
+                return true;
+            }
+        });
     }
     private void initResource(){
         Call<List<LedResource>> call=ledResourceController.getLatestLedResources();
+        call.enqueue(new Callback<List<LedResource>>() {
+            @Override
+            public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
+                if (response.body()!=null) {
+                    manageResourceAdapter.updateData(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LedResource>> call, Throwable t) {
+                Toast.makeText(ManageResourceActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void initResourceByUser(){
+        Call<List<LedResource>> call=ledResourceController.getLatestLedResources();
+        call.enqueue(new Callback<List<LedResource>>() {
+            @Override
+            public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
+                if (response.body()!=null) {
+                    List<LedResource> list=new ArrayList<>();
+                    for (LedResource ledResource:response.body()){
+                        if (ledResource.getUser().getUserId().equals(viewSharer.getUser().getUserId())){
+                            list.add(ledResource);
+                        }
+                    }
+                    manageResourceAdapter.updateData(list);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LedResource>> call, Throwable t) {
+                Toast.makeText(ManageResourceActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void searchResource(String query){
+        Call<List<LedResource>> call=ledResourceController.searchLedResources(query,query);
         call.enqueue(new Callback<List<LedResource>>() {
             @Override
             public void onResponse(Call<List<LedResource>> call, Response<List<LedResource>> response) {
