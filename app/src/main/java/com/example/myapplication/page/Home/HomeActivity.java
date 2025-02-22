@@ -19,6 +19,7 @@ import com.example.myapplication.ManageCommentActivity;
 import com.example.myapplication.ManageResourceActivity;
 import com.example.myapplication.ManageUserActivity;
 import com.example.myapplication.PlayListActivity;
+import com.example.myapplication.page.SwitchUser.SwitchUserActivity;
 import com.example.myapplication.ui.FunctionAdapter;
 import com.example.myapplication.data.Function.FunctionItem;
 import com.example.myapplication.page.Home.DownLoad.downLoadActivity;
@@ -189,6 +190,11 @@ public class HomeActivity extends AppCompatActivity {
                 case "查看举报":
                     Intent manageAuditIntent=new Intent(HomeActivity.this, ManageAuditActivity.class);
                     startActivity(manageAuditIntent);
+                    break;
+                case "登录以使用更多功能...":
+                    Intent loginIntent=new Intent(HomeActivity.this, SwitchUserActivity.class);
+                    startActivity(loginIntent);
+                    finishAffinity();
                     break;
             }
         });

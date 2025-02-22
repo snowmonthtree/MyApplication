@@ -7,13 +7,15 @@
     <!-- ImageView 用于显示图片 -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="640dp"
+        android:minHeight="160dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/test"
+        android:contentDescription=""
         android:scaleType="centerCrop"
-        android:contentDescription="" />
+        android:src="@drawable/test" />
 
     <!-- 连接蓝牙设备按钮 -->
     <Button

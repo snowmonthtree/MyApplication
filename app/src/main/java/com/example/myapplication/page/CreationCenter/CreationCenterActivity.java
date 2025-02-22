@@ -338,7 +338,7 @@ public class CreationCenterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-       // if (!viewSharer.getUser().getPermissionId().equals("-1")) {
+        if (!viewSharer.getUser().getPermissionId().equals("-1")) {
             List<Uri> localList = new ArrayList<>();
             File[] files = getFilesDir().listFiles();
             if (files != null) {
@@ -357,8 +357,8 @@ public class CreationCenterActivity extends AppCompatActivity {
             } else {
                 System.out.println("No files found in the directory.");
             }
-            localAdapter.updateData(localList);
-        //}
-    }
+            if (!localList.isEmpty()) localAdapter.updateData(localList);
+            }
+        }
 
 }

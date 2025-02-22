@@ -85,7 +85,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/park_text_3"
+            android:text="最新素材"
             android:textSize="20sp" />
 
         <TextView
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/park_text_4"
+            android:text="最多播放"
             android:textSize="20sp" />
 
         <TextView
@@ -103,13 +103,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/park_text_5"
+            android:text="最多点赞"
             android:textSize="20sp" />
 
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

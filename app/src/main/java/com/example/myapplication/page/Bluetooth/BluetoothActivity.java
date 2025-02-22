@@ -34,7 +34,6 @@ import com.example.myapplication.R;
 import com.example.myapplication.RetrofitClient;
 import com.example.myapplication.data.LedResource.LedResource;
 import com.example.myapplication.data.ViewSharer;
-import com.example.myapplication.page.Video.PlayVideoActivity;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -61,7 +60,6 @@ public class BluetoothActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothSocket bluetoothSocket;
     private OutputStream outputStream;
-
     private final String DEVICE_NAME = "HC-05"; // 目标蓝牙模块名称
     private final UUID DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // 通用串口 UUID
     private List<Bitmap> listToDisplay;
@@ -99,7 +97,13 @@ public class BluetoothActivity extends AppCompatActivity {
 
         // 设置按钮点击事件
         btnConnect.setOnClickListener(v -> checkAndRequestPermissions());
-        btnSend.setOnClickListener(v -> sendImageData());
+        btnSend.setOnClickListener(v -> {
+            try {
+                sendImageData();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
 
@@ -256,7 +260,7 @@ public class BluetoothActivity extends AppCompatActivity {
     /**
      * 发送图片数据
      */
-    private void sendImageData() {
+    private void sendImageData() throws IOException {
 
         if (outputStream == null) {
             showToast("蓝牙未连接");
@@ -264,20 +268,33 @@ public class BluetoothActivity extends AppCompatActivity {
         }
         Drawable drawable = imageView.getDrawable();
         listToDisplay.clear();
-        if (drawable instanceof BitmapDrawable) {
-           /* BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            listToDisplay.add(bitmap);
+        if (drawable instanceof GifDrawable) {
+            // 如果是 GIF 动画
+            GifDrawable gifDrawable = (GifDrawable) drawable;
+            int frameCount = gifDrawable.getNumberOfFrames();
 
-            // 在这里处理 Bitmap*/
-            // 将 ImageView 的图片转换为 Bitmap
-            // imageView.setDrawingCacheEnabled(true);
-
+            for (int i = 0; i < frameCount; i++) {
+                try {
+                    Bitmap frame = gifDrawable.seekToFrameAndGet(i);
+                    listToDisplay.add(frame);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showToast("处理帧时发生错误");
+                    return;
+                }
+            }
+            if (!listToDisplay.isEmpty()) {
+                bluetoothAnimationSender.sendAnimationFrames(listToDisplay, 100);
+            }
+        } else {
             Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-            //bitmap = Bitmap.createScaledBitmap(bitmap, 8, 32, false);
-            imageView.setImageBitmap(bitmap);
-            // Bitmap bitmap = imageView.getDrawingCache();
-
+            bitmap = Bitmap.createScaledBitmap(bitmap, 32, 8, false);
+            if (bitmap != null) {
+                listToDisplay.add(bitmap);
+            } else {
+                showToast("图片加载失败");
+                return;
+            }
             if (bitmap == null) {
                 showToast("图片为空");
                 return;
@@ -289,10 +306,6 @@ public class BluetoothActivity extends AppCompatActivity {
             imageData = replaceByteValue(imageData, (byte) 0xFF, (byte) 0xFE);
 
 
-
-            //调试，将图片的发送数据打印到logcat
-            logByteArray(imageData);
-
             try {
                 outputStream.write(imageData);
                 showToast("图片数据已发送");
@@ -303,57 +316,9 @@ public class BluetoothActivity extends AppCompatActivity {
                 imageView.setDrawingCacheEnabled(false);
             }
         }
-        else  if ((drawable instanceof GifDrawable)) {
-            GifDrawable gifDrawable = (GifDrawable) drawable;
-            int frameCount = gifDrawable.getNumberOfFrames();
-
-            // 创建一个 List 来保存缩放后的帧
-
-            // 遍历所有帧
-            for (int i = 0; i < frameCount; i++) {
-                // 获取第 i 帧
-                Bitmap frame = gifDrawable.seekToFrameAndGet(i);
-                // 将缩放后的帧添加到列表中
-                listToDisplay.add(frame);
-            }
-        }
-            System.out.println(listToDisplay);
-        if (!listToDisplay.isEmpty()) {
-            bluetoothAnimationSender.sendAnimationFrames(listToDisplay, 200);
-        }
-
-        // 将 ImageView 的图片转换为 Bitmap
-       // imageView.setDrawingCacheEnabled(true);
-
-   /*     Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        //bitmap = Bitmap.createScaledBitmap(bitmap, 8, 32, false);
-        imageView.setImageBitmap(bitmap);
-      // Bitmap bitmap = imageView.getDrawingCache();
-
-        if (bitmap == null) {
-            showToast("图片为空");
-            return;
-        }
-
-        byte[] imageData = convertImageToBytes(bitmap);
-
-        // 在发送前将所有 0xFF 替换为 0xFE，避免冲突
-        imageData = replaceByteValue(imageData, (byte) 0xFF, (byte) 0xFE);
 
 
 
-        //调试，将图片的发送数据打印到logcat
-        logByteArray(imageData);
-
-        try {
-            outputStream.write(imageData);
-            showToast("图片数据已发送");
-        } catch (IOException e) {
-            Log.e(TAG, "发送失败", e);
-            showToast("图片发送失败");
-        } finally {
-            imageView.setDrawingCacheEnabled(false);
-        }*/
     }
 
     // 输出字节数组到 Logcat
@@ -377,8 +342,6 @@ public class BluetoothActivity extends AppCompatActivity {
         if (stringBuilder.length() > 0) {
             Log.d(TAG, "发送的数据: " + stringBuilder.toString());
         }
-
-
 
     }
 
@@ -538,5 +501,17 @@ public class BluetoothActivity extends AppCompatActivity {
                 Log.e("Image Fetch", "onFailure: Image fetch failed", t);
             }
         });
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 释放资源
+        if (bluetoothSocket != null) {
+            try {
+                bluetoothSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

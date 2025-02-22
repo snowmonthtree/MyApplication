@@ -63,7 +63,6 @@ public class ListDetailActivity extends AppCompatActivity {
     private Button showList;
     private Button deleteList;
     private static final String TAG = "BluetoothActivity2";
-    private List<Bitmap> listToDisplay;
     private static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
 
     private BluetoothAdapter bluetoothAdapter;
@@ -93,6 +92,7 @@ public class ListDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         listId = intent.getStringExtra("listId");
         viewSharer = (ViewSharer) getApplication();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         ledListController = retrofit.create(LedListController.class);
         ledResourceController = retrofit.create(LedResourceController.class);
         deleteList = findViewById(R.id.deleteList);
@@ -241,10 +241,25 @@ public class ListDetailActivity extends AppCompatActivity {
             return;
         }
         System.out.println(ledListAdapter.getListToDisplay(recyclerView));
-        bluetoothAnimationSender.sendAnimationFrames(ledListAdapter.getListToDisplay(recyclerView), 100);
+        try {
+            bluetoothAnimationSender.sendAnimationFrames(ledListAdapter.getListToDisplay(recyclerView),100);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     private void showToast(String text) {
         Toast.makeText(this, " " + text, Toast.LENGTH_SHORT).show();
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 释放资源
+        if (bluetoothSocket != null) {
+            try {
+                bluetoothSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

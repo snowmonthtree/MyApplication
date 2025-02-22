@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="设为当前播放列表" />
+            android:text="设为播放列表" />
 
         <Button
             android:id="@+id/deleteList"

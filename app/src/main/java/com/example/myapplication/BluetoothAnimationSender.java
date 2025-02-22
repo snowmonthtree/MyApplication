@@ -29,40 +29,58 @@ public class BluetoothAnimationSender {
      * @param bitmapList   图片帧列表
      * @param frameDelayMs 每帧的延迟时间（毫秒）
      */
-    public void sendAnimationFrames(List<Bitmap> bitmapList, int frameDelayMs) {
+    public void sendAnimationFrames(List<Bitmap> bitmapList, int frameDelayMs) throws IOException {
         if (outputStream == null) {
             Log.e(TAG, "输出流未初始化，蓝牙未连接");
             return;
         }
 
-        for (int i = 0; i < bitmapList.size(); i++) {
-            Bitmap bitmap = bitmapList.get(i);
+        if(bitmapList.size()==1){
+            Bitmap bitmap =bitmapList.get(0);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 32, 8, false);
+
+
             if (bitmap == null) {
-                Log.e(TAG, "第 " + i + " 帧为空，跳过该帧");
-                continue;
+                return;
             }
 
-            try {
-                // 将帧数据转换为字节数组
-                byte[] frameData = convertImageToBytes(bitmap);
+            byte[] imageData = convertImageToBytes(bitmap);
 
-                // 在发送前将所有 0xFF 替换为 0xFE，避免冲突
-                frameData = replaceByteValue(frameData, (byte) 0xFF, (byte) 0xFE);
+            // 在发送前将所有 0xFF 替换为 0xFE，避免冲突
+            imageData = replaceByteValue(imageData, (byte) 0xFF, (byte) 0xFE);
 
-                // 调试用：打印帧数据到 Logcat
-                logByteArray(frameData);
+            outputStream.write(imageData);
+        }
+        else{
+            for (int i = 0; i < bitmapList.size(); i++) {
+                Bitmap bitmap = bitmapList.get(i);
+                if (bitmap == null) {
+                    Log.e(TAG, "第 " + i + " 帧为空，跳过该帧");
+                    continue;
+                }
 
-                // 发送帧数据
-                outputStream.write(frameData);
-                outputStream.flush();
-                Log.d(TAG, "第 " + (i + 1) + " 帧发送成功");
+                try {
+                    // 将帧数据转换为字节数组
+                    byte[] frameData = convertImageToBytes(bitmap);
 
-                // 等待帧间隔时间
-                Thread.sleep(frameDelayMs);
-            } catch (IOException e) {
-                Log.e(TAG, "发送帧失败", e);
-            } catch (InterruptedException e) {
-                Log.e(TAG, "帧延迟被中断", e);
+                    // 在发送前将所有 0xFF 替换为 0xFE，避免冲突
+                    frameData = replaceByteValue(frameData, (byte) 0xFF, (byte) 0xFE);
+
+                    // 调试用：打印帧数据到 Logcat
+                    logByteArray(frameData);
+
+                    // 发送帧数据
+                    outputStream.write(frameData);
+                    outputStream.flush();
+                    Log.d(TAG, "第 " + (i + 1) + " 帧发送成功");
+
+                    // 等待帧间隔时间
+                    Thread.sleep(frameDelayMs);
+                } catch (IOException e) {
+                    Log.e(TAG, "发送帧失败", e);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "帧延迟被中断", e);
+                }
             }
         }
 

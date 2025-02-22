@@ -100,7 +100,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             call.enqueue(new Callback<String>() {
                 public void onResponse(Call<String> call, Response<String> response) {
                     String data = response.body();
-                    Toast.makeText(ChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChangePasswordActivity.this, data+" ", Toast.LENGTH_SHORT).show();
 
                     if (data.equals("success")) {
                         if(viewSharer.getUser().getUserId()!=null){
